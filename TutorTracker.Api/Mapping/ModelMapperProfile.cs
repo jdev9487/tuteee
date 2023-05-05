@@ -2,7 +2,7 @@ namespace TutorTracker.Api.Mapping;
 
 using AutoMapper;
 using M = Model;
-using E = Entities;
+using E = Persistence.Entities;
 
 public class ModelMapperProfile : Profile
 {

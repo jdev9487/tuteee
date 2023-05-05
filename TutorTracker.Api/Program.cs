@@ -1,11 +1,18 @@
+using Microsoft.EntityFrameworkCore;
 using TutorTracker.Api.Mapping;
-using TutorTracker.Api.Repositories;
+using TutorTracker.Api.Parsing;
 using TutorTracker.Api.Routing;
+using TutorTracker.Persistence.Context;
+using TutorTracker.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
-builder.Services.AddSingleton<IRepository, Repository>();
+builder.Services.AddTransient<IRepository, Repository>();
+builder.Services.AddSingleton<IDateParser, DateParser>();
 builder.Services.AddAutoMapper(typeof(ModelMapperProfile));
+builder.Services.AddDbContext<Context>(options => options.UseNpgsql(configuration.GetConnectionString("")),
+    ServiceLifetime.Transient, ServiceLifetime.Transient);
 
 var app = builder.Build();
 app.MapCustomerEndpoints();

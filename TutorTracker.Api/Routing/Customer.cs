@@ -1,11 +1,10 @@
-using TutorTracker.Api.Parsing;
-
 namespace TutorTracker.Api.Routing;
 
+using Parsing;
+using Persistence.Repositories;
 using M = Model;
-using E = Entities;
+using E = Persistence.Entities;
 using AutoMapper;
-using Repositories;
 
 internal static partial class WebApplicationExtensions
 {
@@ -13,13 +12,15 @@ internal static partial class WebApplicationExtensions
     {
         var repo = app.Services.GetRequiredService<IRepository>();
         var mapper = app.Services.GetRequiredService<IMapper>();
-        var monthParser = app.Services.GetRequiredService<IDateParser>();
+        var dateParser = app.Services.GetRequiredService<IDateParser>();
 
-        app.MapPost("/customers", (M.Customer customer) =>
+        app.MapPost("/customers", async (M.Customer customer, CancellationToken token) =>
         {
             try
             {
-                return repo.SaveCustomer(mapper.Map<E.Customer>(customer)) ? Results.Ok() : Results.BadRequest();
+                return await repo.SaveCustomerAsync(mapper.Map<E.Customer>(customer), token)
+                    ? Results.Ok()
+                    : Results.BadRequest();
             }
             catch (Exception ex)
             {
@@ -27,12 +28,14 @@ internal static partial class WebApplicationExtensions
             }
         });
         
-        app.MapGet("customers/{customerId:guid}/lessons/", (Guid customerId, int? month, int? year) =>
+        app.MapGet("customers/{customerId:guid}/lessons/",
+            async (Guid customerId, int? month, int? year, CancellationToken token) =>
         {
             try
             {
-                var period = monthParser.GetPeriod(month, year);
-                var lessons = repo.GetLessonsAssociatedWithCustomer(customerId, period.Start, period.End);
+                var period = dateParser.GetPeriod(month, year);
+                var lessons =
+                    await repo.GetLessonsAssociatedWithCustomerAsync(customerId, period.Start, period.End, token);
                 return Results.Ok(lessons);
             }
             catch (Exception ex)

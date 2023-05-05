@@ -1,25 +1,27 @@
 namespace TutorTracker.Api.Routing;
 
 using M = Model;
-using E = Entities;
+using E = Persistence.Entities;
+using Persistence.Repositories;
 using AutoMapper;
-using Repositories;
 
 internal static partial class WebApplicationExtensions
 {
-    internal static RouteHandlerBuilder MapStudentEndpoints(this WebApplication app)
+    internal static void MapStudentEndpoints(this WebApplication app)
     {
         var repo = app.Services.GetRequiredService<IRepository>();
         var mapper = app.Services.GetRequiredService<IMapper>();
 
-        return app.MapPost("/students", (M.Student student) =>
+        app.MapPost("/students", async (M.Student student, CancellationToken token) =>
         {
             try
             {
+                var invoiceeTask = repo.GetCustomerAsync(student.InvoiceeId, token);
                 var studentEntity = mapper.Map<E.Student>(student);
-                var invoicee = repo.GetCustomer(student.InvoiceeId);
+                var invoicee = await invoiceeTask;
+                if (invoicee is null) return Results.BadRequest();
                 studentEntity.Invoicee = invoicee;
-                return repo.SaveStudent(studentEntity) ? Results.Ok() : Results.BadRequest();
+                return await repo.SaveStudentAsync(studentEntity, token) ? Results.Ok() : Results.BadRequest();
             }
             catch (Exception ex)
             {

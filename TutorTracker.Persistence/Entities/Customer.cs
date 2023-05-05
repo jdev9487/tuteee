@@ -1,6 +1,6 @@
-using System.Collections.ObjectModel;
+namespace TutorTracker.Persistence.Entities;
 
-namespace TutorTracker.Api.Entities;
+using System.Collections.ObjectModel;
 
 public class Customer
 {

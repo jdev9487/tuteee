@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\TutorTracker.Model\TutorTracker.Model.csproj" />
+      <ProjectReference Include="..\TutorTracker.Persistence\TutorTracker.Persistence.csproj" />
     </ItemGroup>
 
     <ItemGroup>
