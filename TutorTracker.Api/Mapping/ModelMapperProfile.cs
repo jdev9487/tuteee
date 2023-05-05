@@ -9,5 +9,6 @@ public class ModelMapperProfile : Profile
     public ModelMapperProfile()
     {
         CreateMap<M.Student, E.Student>();
+        CreateMap<M.Customer, E.Customer>();
     }
 }
