@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+using TutorTracker.Api.Entities;
+using TutorTracker.Api.Repositories;
+
 namespace TutorTracker.Api.Routing;
 
 using Parsing;
-using Persistence.Repositories;
 using M = Model;
-using E = Persistence.Entities;
 using AutoMapper;
 
 internal static partial class WebApplicationExtensions
@@ -18,9 +20,35 @@ internal static partial class WebApplicationExtensions
         {
             try
             {
-                return await repo.SaveCustomerAsync(mapper.Map<E.Customer>(customer), token)
-                    ? Results.Ok()
+                var customerEntity = mapper.Map<Customer>(customer);
+                return await repo.SaveCustomerAsync(customerEntity, token)
+                    ? Results.Ok(customerEntity.Id)
                     : Results.BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return Results.Problem(ex.Message);
+            }
+        });
+
+        app.MapGet("/customers/{customerId:guid}", async (Guid customerId, CancellationToken token) =>
+        {
+            try
+            {
+                var customer = await repo.GetCustomerAsync(customerId, token);
+                return customer is null ? Results.BadRequest() : Results.Ok(customer);
+            }
+            catch (Exception ex)
+            {
+                return Results.Problem(ex.Message);
+            }
+        });
+
+        app.MapGet("/customers", async (CancellationToken token) =>
+        {
+            try
+            {
+                return Results.Ok(await repo.GetCustomersAsync(token));
             }
             catch (Exception ex)
             {

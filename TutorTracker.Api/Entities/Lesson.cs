@@ -1,4 +1,4 @@
-namespace TutorTracker.Persistence.Entities;
+namespace TutorTracker.Api.Entities;
 
 public class Lesson
 {

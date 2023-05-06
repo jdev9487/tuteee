@@ -1,11 +1,12 @@
-namespace TutorTracker.Persistence.Context;
+using TutorTracker.Api.Entities;
+
+namespace TutorTracker.Api.Context;
 
 using Microsoft.EntityFrameworkCore;
-using Entities;
 
-public class Context : DbContext
+public class ApplicationContext : DbContext
 {
-    public Context(DbContextOptions options) : base(options) {}
+    public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) {}
 
     public virtual DbSet<Customer> Customers { get; set; } = default!;
     public virtual DbSet<Student> Students { get; set; } = default!;

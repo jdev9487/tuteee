@@ -1,8 +1,9 @@
+using TutorTracker.Api.Entities;
+using TutorTracker.Api.Repositories;
+
 namespace TutorTracker.Api.Routing;
 
 using M = Model;
-using Persistence.Repositories;
-using E = Persistence.Entities;
 using AutoMapper;
 
 internal static partial class WebApplicationExtensions
@@ -17,7 +18,7 @@ internal static partial class WebApplicationExtensions
             try
             {
                 var studentTask = repo.GetStudentAsync(lesson.StudentId, token);
-                var lessonEntity = mapper.Map<E.Lesson>(lesson);
+                var lessonEntity = mapper.Map<Lesson>(lesson);
                 var student = await studentTask;
                 if (student is null) return Results.BadRequest();
                 lessonEntity.Student = student;
