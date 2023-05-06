@@ -1,6 +1,6 @@
 namespace TutorTracker.Model;
 
-public class Customer
+public class CreateCustomer
 {
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;

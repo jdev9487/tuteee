@@ -3,6 +3,7 @@ namespace TutorTracker.Api.Repositories;
 using Context;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 public class Repository : IRepository
 {
@@ -32,6 +33,21 @@ public class Repository : IRepository
 
     public async Task<IEnumerable<Customer>> GetCustomersAsync(CancellationToken token) =>
         await _applicationContext.Customers.ToArrayAsync(cancellationToken: token);
+
+    public async Task<IEnumerable<Customer>> GetCustomersAsync(string firstName, string lastName,
+        CancellationToken token)
+    {
+        return await _applicationContext.Customers
+            .Where(x => string.Equals(x.FirstName.ToLower(), firstName.ToLower(), StringComparison.OrdinalIgnoreCase))
+            .Where(x => string.Equals(x.LastName.ToLower(), lastName.ToLower(), StringComparison.OrdinalIgnoreCase))
+            .ToArrayAsync(token);
+    }
+    public async Task<IEnumerable<Customer>> GetCustomersAsync(Expression<Func<Customer, bool>> predicate,
+        CancellationToken token)
+    {
+        return await _applicationContext.Customers
+            .Where(predicate).ToArrayAsync(token);
+    }
 
     public async Task<Customer?> GetCustomerAsync(Guid id, CancellationToken token) =>
         await _applicationContext.Customers.FindAsync(new object?[] { id }, token);
