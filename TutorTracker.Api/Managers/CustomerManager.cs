@@ -1,8 +1,5 @@
-using HostingEnvironmentExtensions = Microsoft.Extensions.Hosting.HostingEnvironmentExtensions;
-
 namespace TutorTracker.Api.Managers;
 
-using System.Linq.Expressions;
 using Repositories;
 using Entities;
 using Parsing;
@@ -45,12 +42,12 @@ public class CustomerManager : ICustomerManager
             throw;
         }
     }
-
-    public Task<IEnumerable<Customer>> GetCustomersAsync(CancellationToken token)
+    
+    public Task<IEnumerable<Customer>> GetCustomersAsync(string? firstName, string? lastName, CancellationToken token)
     {
         try
         {
-            return _repository.GetCustomersAsync(token);
+            return _repository.GetCustomersAsync(firstName, lastName, token);
         }
         catch (Exception ex)
         {
@@ -59,18 +56,18 @@ public class CustomerManager : ICustomerManager
         }
     }
 
-    public Task<IEnumerable<Customer>> GetCustomersAsync(Expression<Func<Customer, bool>> predicate, CancellationToken token)
-    {
-        try
-        {
-            return _repository.GetCustomersAsync(predicate, token);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Could not get customers");
-            throw;
-        }
-    }
+    // public Task<IEnumerable<Customer>> GetCustomersAsync(Expression<Func<Customer, bool>> predicate, CancellationToken token)
+    // {
+    //     try
+    //     {
+    //         return _repository.GetCustomersAsync(predicate, token);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         _logger.LogError(ex, "Could not get customers");
+    //         throw;
+    //     }
+    // }
 
     public async Task<IEnumerable<Lesson>> GetLessonsAssociatedWithCustomer(Guid customerId, int? month, int? year,
         CancellationToken token)

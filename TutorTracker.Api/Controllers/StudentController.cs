@@ -16,6 +16,31 @@ public class StudentController
         _mapper = mapper;
     }
 
+    public async Task<IResult> GetStudentsAsync(CancellationToken token)
+    {
+        try
+        {
+            return Results.Ok(await _studentManager.GetStudentsAsync(token));
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+
+    public async Task<IResult> GetStudentAsync(Guid studentId, CancellationToken token)
+    {
+        try
+        {
+            var student = await _studentManager.GetStudentAsync(studentId, token);
+            return student is null ? Results.BadRequest() : Results.Ok(student);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+
     public async Task<IResult> CreateStudentAsync(M.CreateStudent createStudent, CancellationToken token)
     {
         try

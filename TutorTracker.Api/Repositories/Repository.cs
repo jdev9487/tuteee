@@ -3,7 +3,6 @@ namespace TutorTracker.Api.Repositories;
 using Context;
 using Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 public class Repository : IRepository
 {
@@ -31,29 +30,26 @@ public class Repository : IRepository
         return await _applicationContext.SaveChangesAsync(token) > 0;
     }
 
-    public async Task<IEnumerable<Customer>> GetCustomersAsync(CancellationToken token) =>
-        await _applicationContext.Customers.ToArrayAsync(cancellationToken: token);
-
-    public async Task<IEnumerable<Customer>> GetCustomersAsync(string firstName, string lastName,
+    public async Task<IEnumerable<Customer>> GetCustomersAsync(string? firstName, string? lastName,
         CancellationToken token)
     {
-        return await _applicationContext.Customers
-            .Where(x => string.Equals(x.FirstName.ToLower(), firstName.ToLower(), StringComparison.OrdinalIgnoreCase))
-            .Where(x => string.Equals(x.LastName.ToLower(), lastName.ToLower(), StringComparison.OrdinalIgnoreCase))
-            .ToArrayAsync(token);
-    }
-    public async Task<IEnumerable<Customer>> GetCustomersAsync(Expression<Func<Customer, bool>> predicate,
-        CancellationToken token)
-    {
-        return await _applicationContext.Customers
-            .Where(predicate).ToArrayAsync(token);
+        var customers = _applicationContext.Customers.Include(x => x.Students).AsQueryable();
+        if (firstName is not null)
+        {
+            customers = customers.Where(x => string.Equals(x.FirstName.ToLower(), firstName.ToLower()));
+        }
+        if (lastName is not null)
+        {
+            customers = customers.Where(x => string.Equals(x.LastName.ToLower(), lastName.ToLower()));
+        }
+        return await customers.ToArrayAsync(token);
     }
 
     public async Task<Customer?> GetCustomerAsync(Guid id, CancellationToken token) =>
-        await _applicationContext.Customers.FindAsync(new object?[] { id }, token);
+        await _applicationContext.Customers.Include(x => x.Students).FirstOrDefaultAsync(x => x.Id == id, token);
 
     public async Task<Student?> GetStudentAsync(Guid id, CancellationToken token) =>
-        await _applicationContext.Students.FindAsync(new object?[] { id }, token);
+        await _applicationContext.Students.Include(x => x.Lessons).FirstOrDefaultAsync(x => x.Id == id, token);
 
     public async Task<IEnumerable<Lesson>> GetLessonsAssociatedWithCustomerAsync(Guid customerId, DateTimeOffset? from,
         DateTimeOffset? to, CancellationToken token) =>
@@ -61,4 +57,9 @@ public class Repository : IRepository
             .Where(l => l.Student.Invoicee.Id == customerId)
             .Where(l => l.DateTime > from)
             .Where(l => l.DateTime < to).ToArrayAsync(token);
+
+    public Task<IEnumerable<Student>> GetStudentsAsync(CancellationToken token)
+    {
+        throw new NotImplementedException();
+    }
 }

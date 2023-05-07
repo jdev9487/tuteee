@@ -9,6 +9,9 @@ internal static partial class WebApplicationExtensions
     {
         var studentController = app.Services.GetRequiredService<StudentController>();
 
+        app.MapGet("/students", studentController.GetStudentsAsync);
+        app.MapGet("/students/{studentId:guid}", studentController.GetStudentAsync);
+
         app.MapPost("/students", studentController.CreateStudentAsync);
     }
 }

@@ -34,27 +34,7 @@ public class CustomerController
     {
         try
         {
-            IEnumerable<E.Customer> customers;
-            if (firstName is not null && lastName is not null)
-            {
-                customers = await _customerManager.GetCustomersAsync(x => 
-                    string.Equals(x.FirstName.ToLower(), firstName.ToLower()) &&
-                    string.Equals(x.LastName.ToLower(), lastName.ToLower()), token);
-            }
-            else if (firstName is null && lastName is not null)
-            {
-                customers = await _customerManager.GetCustomersAsync(x => 
-                    string.Equals(x.LastName.ToLower(), lastName.ToLower()), token);
-            }
-            else if (firstName is not null && lastName is null)
-            {
-                customers = await _customerManager.GetCustomersAsync(x => 
-                    string.Equals(x.FirstName.ToLower(), firstName.ToLower()), token);
-            }
-            else
-            {
-                customers = await _customerManager.GetCustomersAsync(token);
-            }
+            var customers = await _customerManager.GetCustomersAsync(firstName, lastName, token);
             return Results.Ok(customers.Select(x => _mapper.Map<M.CustomerResult>(x)));
         }
         catch (Exception ex)
