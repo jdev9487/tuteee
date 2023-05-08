@@ -1,11 +1,13 @@
 namespace TutorTracker.Api.Repositories;
 
 using Entities;
+using M = Model;
 
 public interface IRepository
 {
     Task<bool> SaveStudentAsync(Student student, CancellationToken token);
     Task<bool> SaveCustomerAsync(Customer customer, CancellationToken token);
+    Task<Customer?> UpdateCustomerAsync(M.UpdateCustomer customer, CancellationToken token);
     Task<bool> SaveLessonAsync(Lesson lesson, CancellationToken token);
     Task<IEnumerable<Customer>> GetCustomersAsync(string? firstName, string? lastName, CancellationToken token);
     Task<Customer?> GetCustomerAsync(Guid id, CancellationToken token);

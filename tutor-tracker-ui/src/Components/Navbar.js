@@ -8,8 +8,6 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-const pages = ['Customer', 'Student', 'Lesson'];
-
 function Navbar() {
     return (
         <AppBar position="static">
@@ -30,15 +28,6 @@ function Navbar() {
                         }}>
                         Tutor Tracker
                     </Typography>
-                    <Box sx={{ display: 'flex' }}>
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
-                                sx={{ my: 2, color: 'white', display: 'block' }}>
-                                {page}
-                            </Button>
-                        ))}
-                    </Box>
                     <Box sx={{ flexGrow: 0, ml: 8 }}>
                         <IconButton sx={{ p: 0 }}>
                             <AccountCircleIcon fontSize='large' />

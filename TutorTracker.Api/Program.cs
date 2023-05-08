@@ -12,19 +12,21 @@ var configuration = builder.Configuration;
 var services = builder.Services;
 
 services.AddTransient<IRepository, Repository>();
-services.AddSingleton<IDateParser, DateParser>();
-services.AddSingleton<ICustomerManager, CustomerManager>();
-services.AddSingleton<ILessonManager, LessonManager>();
-services.AddSingleton<IStudentManager, StudentManager>();
-services.AddSingleton<CustomerController>();
-services.AddSingleton<LessonController>();
-services.AddSingleton<StudentController>();
+services.AddTransient<IDateParser, DateParser>();
+services.AddTransient<ICustomerManager, CustomerManager>();
+services.AddTransient<ILessonManager, LessonManager>();
+services.AddTransient<IStudentManager, StudentManager>();
+services.AddTransient<CustomerController>();
+services.AddTransient<LessonController>();
+services.AddTransient<StudentController>();
 builder.Services.AddAutoMapper(typeof(ModelMapperProfile));
 var connStr = configuration.GetConnectionString("db");
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connStr),
-    ServiceLifetime.Transient, ServiceLifetime.Transient);
+builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connStr), ServiceLifetime.Transient,
+    ServiceLifetime.Transient);
 
 var app = builder.Build();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.MapCustomerEndpoints();
 app.MapStudentEndpoints();
 app.MapLessonEndpoints();

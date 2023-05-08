@@ -13,5 +13,7 @@ internal static partial class WebApplicationExtensions
         app.MapGet("/customers/{customerId:guid}/lessons", customerController.GetLessonsAssociatedWithCustomer);
         
         app.MapPost("/customers", customerController.CreateCustomerAsync);
+
+        app.MapPatch("/customers", customerController.UpdateCustomerAsync);
     }
 }

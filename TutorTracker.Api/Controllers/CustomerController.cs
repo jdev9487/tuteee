@@ -1,4 +1,6 @@
 
+using TutorTracker.Api.CustomResults;
+
 namespace TutorTracker.Api.Controllers;
 
 using Managers;
@@ -35,7 +37,7 @@ public class CustomerController
         try
         {
             var customers = await _customerManager.GetCustomersAsync(firstName, lastName, token);
-            return Results.Ok(customers.Select(x => _mapper.Map<M.CustomerResult>(x)));
+            return new OkWithHeaders(customers.Select(x => _mapper.Map<M.CustomerResult>(x)));
         }
         catch (Exception ex)
         {
@@ -64,6 +66,19 @@ public class CustomerController
         {
             var id = await _customerManager.CreateCustomerAsync(_mapper.Map<Entities.Customer>(createCustomer), token);
             return id is null ? Results.BadRequest() : Results.Ok(id);
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+
+    public async Task<IResult> UpdateCustomerAsync(M.UpdateCustomer updateCustomer, CancellationToken token)
+    {
+        try
+        {
+            var updated = await _customerManager.UpdateCustomerAsync(updateCustomer, token);
+            return updated is null ? Results.BadRequest() : Results.Ok(_mapper.Map<M.CustomerResult>(updated));    
         }
         catch (Exception ex)
         {

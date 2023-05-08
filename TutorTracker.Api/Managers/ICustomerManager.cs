@@ -1,7 +1,6 @@
-using System.Linq.Expressions;
-
 namespace TutorTracker.Api.Managers;
 
+using M = Model;
 using E = Entities;
 
 public interface ICustomerManager
@@ -11,4 +10,6 @@ public interface ICustomerManager
     Task<IEnumerable<E.Customer>> GetCustomersAsync(string? firstName, string? lastName, CancellationToken token);
     Task<IEnumerable<E.Lesson>> GetLessonsAssociatedWithCustomer(Guid customerId, int? month, int? year,
         CancellationToken token);
+
+    Task<E.Customer?> UpdateCustomerAsync(M.UpdateCustomer customer, CancellationToken token);
 }

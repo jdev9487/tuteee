@@ -3,6 +3,7 @@ namespace TutorTracker.Api.Managers;
 using Repositories;
 using Entities;
 using Parsing;
+using M = Model;
 
 public class CustomerManager : ICustomerManager
 {
@@ -56,19 +57,6 @@ public class CustomerManager : ICustomerManager
         }
     }
 
-    // public Task<IEnumerable<Customer>> GetCustomersAsync(Expression<Func<Customer, bool>> predicate, CancellationToken token)
-    // {
-    //     try
-    //     {
-    //         return _repository.GetCustomersAsync(predicate, token);
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         _logger.LogError(ex, "Could not get customers");
-    //         throw;
-    //     }
-    // }
-
     public async Task<IEnumerable<Lesson>> GetLessonsAssociatedWithCustomer(Guid customerId, int? month, int? year,
         CancellationToken token)
     {
@@ -81,6 +69,20 @@ public class CustomerManager : ICustomerManager
         {
             _logger.LogError(ex, "Could not get lessons associated with customer with customer id {customerId}",
                 customerId);
+            throw;
+        }
+    }
+
+    public async Task<Customer?> UpdateCustomerAsync(M.UpdateCustomer customer, CancellationToken token)
+    {
+        try
+        {
+            return await _repository.UpdateCustomerAsync(customer, token);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Could not update customer with customer id {customerId}",
+                customer.Id);
             throw;
         }
     }

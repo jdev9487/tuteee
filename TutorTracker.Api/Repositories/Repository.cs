@@ -24,6 +24,19 @@ public class Repository : IRepository
         return await _applicationContext.SaveChangesAsync(token) > 0;
     }
 
+    public async Task<Customer?> UpdateCustomerAsync(Model.UpdateCustomer customer, CancellationToken token)
+    {
+        var existingCustomer = await GetCustomerAsync(customer.Id, token);
+        if (existingCustomer is not null)
+        {
+            existingCustomer.FirstName = customer.FirstName ?? existingCustomer.FirstName;
+            existingCustomer.LastName = customer.LastName ?? existingCustomer.LastName;
+            existingCustomer.Phone = customer.Phone ?? existingCustomer.Phone;
+            existingCustomer.Email = customer.Email ?? existingCustomer.Email;
+        }
+        return await _applicationContext.SaveChangesAsync(token) > 0 ? existingCustomer : null;
+    }
+
     public async Task<bool> SaveLessonAsync(Lesson lesson, CancellationToken token)
     {
         _applicationContext.Lessons.Add(lesson);
