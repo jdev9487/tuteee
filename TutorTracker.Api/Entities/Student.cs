@@ -9,5 +9,6 @@ public class Student
     public string LastName { get; set; } = default!;
     
     public Customer Invoicee { get; set; } = default!;
-    public ICollection<Lesson> Lessons = new Collection<Lesson>();
+    
+    public virtual ICollection<Lesson> Lessons { get; set; } = new Collection<Lesson>();
 }

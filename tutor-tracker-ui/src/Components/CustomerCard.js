@@ -21,6 +21,27 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { updateCustomer } from '../Fetch/Customer';
+import { addLesson } from '../Fetch/Lesson';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import Slider from '@mui/material/Slider';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import { EventNote } from '@mui/icons-material';
+
+function halfHourText(value) {
+    const hours = String(Math.floor(value / 2)).padStart(2, '0');
+    const mins = String((value % 2) * 30).padStart(2, '0');
+    
+    const text = `${hours}:${mins}`;
+    return text;
+}
+
+function rateText(value) {
+    return `£ ${value}`;
+}
 
 export default function CustomerCard(props) {
     const [editCustomerOpen, setEditCustomerOpen] = React.useState(false);
@@ -64,7 +85,11 @@ export default function CustomerCard(props) {
     };
     const handleConfirmAddLesson = (event) => {
         event.preventDefault();
-        console.log(studentToAddLessonFor);
+        const dateTime = new Date(event.target[2].value).toISOString();
+        const halfHours = event.target[4].value;
+        const rate = event.target[5].value;
+        const paid = event.target[6].checked;
+        addLesson(studentToAddLessonFor.id, dateTime, rate, halfHours, paid);
         setAddLessonOpen(false);
     }
 
@@ -131,21 +156,50 @@ export default function CustomerCard(props) {
             <Dialog open={addLessonOpen} onClose={handleAddLessonClose}>
                 <DialogTitle>Add lesson for {customerFirstName} {customerLastName}</DialogTitle>
                 <DialogContent>
-                    {/* <DialogContentText align='center'>
-                        ALL ACTIONS ARE FINAL!
-                    </DialogContentText> */}
                     <form id='add-lesson' onSubmit={handleConfirmAddLesson}>
                         <InputLabel id="select-student-for-add-lesson-label">Student</InputLabel>
                         <Select
+                            sx={{mb:2}}
                             labelId="select-student-for-add-lesson-label"
                             id="select-student-for-add-lesson"
                             onChange={handleSetStudentToAddLessonFor}>
-                                {props.students.map(x => {
-                                    return (
-                                        <MenuItem value={x}>{x.firstName} {x.lastName}</MenuItem>
-                                    )
-                                })}
+                            {props.students.map(x => {
+                                return (
+                                    <MenuItem value={x}>{x.firstName} {x.lastName}</MenuItem>
+                                )
+                            })}
                         </Select>
+                        <InputLabel id="add-lesson-datetime">Date & Time</InputLabel>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={['DatePicker']}>
+                                <MobileDateTimePicker sx={{mb:2}} labelId="add-lesson-datetime"/>
+                            </DemoContainer>
+                        </LocalizationProvider>
+                        <InputLabel id="add-lesson-duration-label">Duration</InputLabel>
+                        <Slider
+                            sx={{mb:2}}
+                            labelId="add-lesson-duration-label"
+                            defaultValue={2}
+                            valueLabelFormat={halfHourText}
+                            valueLabelDisplay="auto"
+                            step={1}
+                            marks
+                            min={0}
+                            max={6}
+                        />
+                        <InputLabel id="add-lesson-rate-label">Hourly rate</InputLabel>
+                        <Slider
+                            sx={{mb:2}}
+                            labelId="add-lesson-rate-label"
+                            defaultValue={60}
+                            valueLabelFormat={rateText}
+                            valueLabelDisplay="auto"
+                            step={5}
+                            marks
+                            min={5}
+                            max={100}
+                        />
+                        <FormControlLabel control={<Switch />} label="Paid" />
                     </form>
                 </DialogContent>
                 <DialogActions>

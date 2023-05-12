@@ -12,8 +12,8 @@ using TutorTracker.Api.Context;
 namespace TutorTracker.Api.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230505160047_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230512102935_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,11 +31,19 @@ namespace TutorTracker.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -99,7 +107,7 @@ namespace TutorTracker.Api.Migrations
             modelBuilder.Entity("TutorTracker.Api.Entities.Lesson", b =>
                 {
                     b.HasOne("TutorTracker.Api.Entities.Student", "Student")
-                        .WithMany()
+                        .WithMany("Lessons")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -121,6 +129,11 @@ namespace TutorTracker.Api.Migrations
             modelBuilder.Entity("TutorTracker.Api.Entities.Customer", b =>
                 {
                     b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("TutorTracker.Api.Entities.Student", b =>
+                {
+                    b.Navigation("Lessons");
                 });
 #pragma warning restore 612, 618
         }

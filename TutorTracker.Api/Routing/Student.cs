@@ -11,6 +11,7 @@ internal static partial class WebApplicationExtensions
 
         app.MapGet("/students", studentController.GetStudentsAsync);
         app.MapGet("/students/{studentId:guid}", studentController.GetStudentAsync);
+        app.MapGet("/students/{studentId:guid}/lessons", studentController.GetLessonsAssociatedWithStudent);
 
         app.MapPost("/students", studentController.CreateStudentAsync);
     }

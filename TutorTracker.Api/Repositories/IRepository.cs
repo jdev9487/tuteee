@@ -15,4 +15,5 @@ public interface IRepository
     Task<IEnumerable<Lesson>> GetLessonsAssociatedWithCustomerAsync(Guid customerId, DateTimeOffset? from,
         DateTimeOffset? to, CancellationToken token);
     Task<IEnumerable<Student>> GetStudentsAsync(CancellationToken token);
+    Task<IEnumerable<Lesson>> GetLessonsAssociatedWithStudentAsync(Guid studentId, CancellationToken token);
 }

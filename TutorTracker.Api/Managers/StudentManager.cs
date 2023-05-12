@@ -18,7 +18,8 @@ public class StudentManager : IStudentManager
     {
         try
         {
-            return await _repository.GetStudentsAsync(token);
+            var students = await _repository.GetStudentsAsync(token);
+            return students;
         }
         catch (Exception ex)
         {
@@ -53,6 +54,19 @@ public class StudentManager : IStudentManager
         catch (Exception ex)
         {
             _logger.LogError(ex, "Could not get student with id {id}", studentId);
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<E.Lesson>> GetLessonsAssociatedWithStudent(Guid studentId, CancellationToken token)
+    {
+        try
+        {
+            return await _repository.GetLessonsAssociatedWithStudentAsync(studentId, token);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Could not get lessons for student with id {id}", studentId);
             throw;
         }
     }

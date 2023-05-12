@@ -20,7 +20,8 @@ public class StudentController
     {
         try
         {
-            return Results.Ok(await _studentManager.GetStudentsAsync(token));
+            return Results.Ok(
+                (await _studentManager.GetStudentsAsync(token)).Select(x => _mapper.Map<M.StudentResult>(x)));
         }
         catch (Exception ex)
         {
@@ -33,7 +34,21 @@ public class StudentController
         try
         {
             var student = await _studentManager.GetStudentAsync(studentId, token);
-            return student is null ? Results.BadRequest() : Results.Ok(student);
+            return student is null ? Results.BadRequest() : Results.Ok(_mapper.Map<M.StudentResult>(student));
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+
+    public async Task<IResult> GetLessonsAssociatedWithStudent(Guid studentId, CancellationToken token)
+    {
+        try
+        {
+            return Results.Ok(
+                (await _studentManager.GetLessonsAssociatedWithStudent(studentId, token)).Select(x =>
+                    _mapper.Map<M.LessonResult>(x)));
         }
         catch (Exception ex)
         {

@@ -104,7 +104,7 @@ namespace TutorTracker.Api.Migrations
             modelBuilder.Entity("TutorTracker.Api.Entities.Lesson", b =>
                 {
                     b.HasOne("TutorTracker.Api.Entities.Student", "Student")
-                        .WithMany()
+                        .WithMany("Lessons")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -126,6 +126,11 @@ namespace TutorTracker.Api.Migrations
             modelBuilder.Entity("TutorTracker.Api.Entities.Customer", b =>
                 {
                     b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("TutorTracker.Api.Entities.Student", b =>
+                {
+                    b.Navigation("Lessons");
                 });
 #pragma warning restore 612, 618
         }

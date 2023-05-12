@@ -62,7 +62,8 @@ public class Repository : IRepository
         await _applicationContext.Customers.Include(x => x.Students).FirstOrDefaultAsync(x => x.Id == id, token);
 
     public async Task<Student?> GetStudentAsync(Guid id, CancellationToken token) =>
-        await _applicationContext.Students.Include(x => x.Lessons).FirstOrDefaultAsync(x => x.Id == id, token);
+        await _applicationContext.Students.Include(x => x.Lessons).Include(x => x.Invoicee)
+            .FirstOrDefaultAsync(x => x.Id == id, token);
 
     public async Task<IEnumerable<Lesson>> GetLessonsAssociatedWithCustomerAsync(Guid customerId, DateTimeOffset? from,
         DateTimeOffset? to, CancellationToken token) =>
@@ -71,8 +72,10 @@ public class Repository : IRepository
             .Where(l => l.DateTime > from)
             .Where(l => l.DateTime < to).ToArrayAsync(token);
 
-    public Task<IEnumerable<Student>> GetStudentsAsync(CancellationToken token)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IEnumerable<Student>> GetStudentsAsync(CancellationToken token) => await _applicationContext
+        .Students.Include(x => x.Lessons).Include(x => x.Invoicee).ToArrayAsync(token);
+
+    public async Task<IEnumerable<Lesson>> GetLessonsAssociatedWithStudentAsync(Guid studentId, CancellationToken token)
+        => await _applicationContext.Lessons.Include(x => x.Student).Where(x => x.Student.Id == studentId)
+            .ToArrayAsync(token);
 }
