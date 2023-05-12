@@ -8,11 +8,14 @@ import EmailIcon from '@mui/icons-material/Email';
 import { Box, IconButton } from '@mui/material';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import Divider from '@mui/material/Divider';
+import InputLabel from '@mui/material/InputLabel';
 import EditIcon from '@mui/icons-material/Edit';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -21,14 +24,29 @@ import { updateCustomer } from '../Fetch/Customer';
 
 export default function CustomerCard(props) {
     const [editCustomerOpen, setEditCustomerOpen] = React.useState(false);
+    const [addLessonOpen, setAddLessonOpen] = React.useState(false);
     const [customerFirstName, setCustomerFirstName] = React.useState(props.firstName)
     const [customerLastName, setCustomerLastName] = React.useState(props.lastName)
     const [customerPhone, setCustomerPhone] = React.useState(props.phone)
     const [customerEmail, setCustomerEmail] = React.useState(props.email)
+    const [studentToAddLessonFor, setStudentToAddLessonFor] = React.useState(props.students[0])
 
     const handleEditCustomerOpen = () => {
         setEditCustomerOpen(true);
     };
+    const handleEditCustomerClose = () => {
+        setEditCustomerOpen(false);
+    };
+
+    const handleAddLessonOpen = () => {
+        setAddLessonOpen(true);
+    }
+    const handleAddLessonClose = () => {
+        setAddLessonOpen(false);
+    }
+    const handleSetStudentToAddLessonFor = (event) => {
+        setStudentToAddLessonFor(event.target.value);
+    }
 
     const handleConfirmEditCustomer = (event) => {
         event.preventDefault();
@@ -44,9 +62,11 @@ export default function CustomerCard(props) {
         setEditCustomerOpen(false);
         return true;
     };
-    const handleEditCustomerClose = () => {
-        setEditCustomerOpen(false);
-    };
+    const handleConfirmAddLesson = (event) => {
+        event.preventDefault();
+        console.log(studentToAddLessonFor);
+        setAddLessonOpen(false);
+    }
 
     return (
         <div>
@@ -60,7 +80,7 @@ export default function CustomerCard(props) {
                             <IconButton onClick={handleEditCustomerOpen}>
                                 <EditIcon />
                             </IconButton>
-                            <IconButton>
+                            <IconButton onClick={handleAddLessonOpen}>
                                 <PostAddIcon />
                             </IconButton>
                             <IconButton>
@@ -106,6 +126,31 @@ export default function CustomerCard(props) {
                 <DialogActions>
                     <Button onClick={handleEditCustomerClose}>Cancel</Button>
                     <Button type='submit' color='warning' form='edit-customer-form'>Update</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={addLessonOpen} onClose={handleAddLessonClose}>
+                <DialogTitle>Add lesson for {customerFirstName} {customerLastName}</DialogTitle>
+                <DialogContent>
+                    {/* <DialogContentText align='center'>
+                        ALL ACTIONS ARE FINAL!
+                    </DialogContentText> */}
+                    <form id='add-lesson' onSubmit={handleConfirmAddLesson}>
+                        <InputLabel id="select-student-for-add-lesson-label">Student</InputLabel>
+                        <Select
+                            labelId="select-student-for-add-lesson-label"
+                            id="select-student-for-add-lesson"
+                            onChange={handleSetStudentToAddLessonFor}>
+                                {props.students.map(x => {
+                                    return (
+                                        <MenuItem value={x}>{x.firstName} {x.lastName}</MenuItem>
+                                    )
+                                })}
+                        </Select>
+                    </form>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleAddLessonClose}>Cancel</Button>
+                    <Button type='submit' color='warning' form='add-lesson'>Add lesson</Button>
                 </DialogActions>
             </Dialog>
         </div>
