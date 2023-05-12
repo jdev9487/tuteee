@@ -13,6 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import TextField from '@mui/material/TextField';
+import { NavLink } from "react-router-dom";
 import Dialog from '@mui/material/Dialog';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -121,8 +122,10 @@ export default function CustomerCard(props) {
                         </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        {[].concat(...props.students.map((x, i) => [<Typography key={i} variant='h6' sx={{ textDecoration: 'none' }}>
-                            {x.firstName} {x.lastName}
+                        {[].concat(...props.students.map((x, i) => [<Typography key={i} variant='h6'>
+                            <NavLink to={`/student/${x.id}`}>
+                                {x.firstName} {x.lastName}
+                            </NavLink>
                         </Typography>, <Divider key={i} sx={{ mx: 1 }} orientation="vertical" flexItem />])).slice(0, -1)}
                     </Box>
                 </CardContent>
