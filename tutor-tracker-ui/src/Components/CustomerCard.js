@@ -30,19 +30,7 @@ import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import Slider from '@mui/material/Slider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import { EventNote } from '@mui/icons-material';
-
-function halfHourText(value) {
-    const hours = String(Math.floor(value / 2)).padStart(2, '0');
-    const mins = String((value % 2) * 30).padStart(2, '0');
-    
-    const text = `${hours}:${mins}`;
-    return text;
-}
-
-function rateText(value) {
-    return `£ ${value}`;
-}
+import { halfHourText, rateText } from '../Utility/Format';
 
 export default function CustomerCard(props) {
     const [editCustomerOpen, setEditCustomerOpen] = React.useState(false);

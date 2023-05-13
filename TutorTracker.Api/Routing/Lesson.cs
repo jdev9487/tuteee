@@ -10,5 +10,7 @@ internal static partial class WebApplicationExtensions
         var lessonController = app.Services.GetRequiredService<LessonController>();
 
         app.MapPost("/lessons", lessonController.CreateLessonAsync);
+
+        app.MapPatch("/lessons", lessonController.UpdateLessonAsync);
     }
 }

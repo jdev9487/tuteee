@@ -1,3 +1,5 @@
+using TutorTracker.Model;
+
 namespace TutorTracker.Api.Managers;
 
 using Entities;
@@ -26,6 +28,19 @@ public class LessonManager : ILessonManager
         catch (Exception ex)
         {
             _logger.LogError(ex, "Could not create lesson");
+            throw;
+        }
+    }
+
+    public async Task<Lesson?> UpdateLessonAsync(UpdateLesson updateLesson, CancellationToken token)
+    {
+        try
+        {
+            return await _repository.UpdateLessonAsync(updateLesson, token);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Could not update lesson with id {id}", updateLesson.LessonId);
             throw;
         }
     }

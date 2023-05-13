@@ -29,4 +29,17 @@ public class LessonController
             return Results.Problem(ex.Message);
         }
     }
+
+    public async Task<IResult> UpdateLessonAsync(M.UpdateLesson updateLesson, CancellationToken token)
+    {
+        try
+        {
+            var updated = await _lessonManager.UpdateLessonAsync(updateLesson, token);
+            return updated is null ? Results.BadRequest() : Results.Ok(_mapper.Map<M.LessonResult>(updated));    
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
 }

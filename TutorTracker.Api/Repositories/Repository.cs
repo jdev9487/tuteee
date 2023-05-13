@@ -1,3 +1,5 @@
+using TutorTracker.Model;
+
 namespace TutorTracker.Api.Repositories;
 
 using Context;
@@ -24,7 +26,7 @@ public class Repository : IRepository
         return await _applicationContext.SaveChangesAsync(token) > 0;
     }
 
-    public async Task<Customer?> UpdateCustomerAsync(Model.UpdateCustomer customer, CancellationToken token)
+    public async Task<Customer?> UpdateCustomerAsync(UpdateCustomer customer, CancellationToken token)
     {
         var existingCustomer = await GetCustomerAsync(customer.Id, token);
         if (existingCustomer is not null)
@@ -76,6 +78,24 @@ public class Repository : IRepository
         .Students.Include(x => x.Lessons).Include(x => x.Invoicee).ToArrayAsync(token);
 
     public async Task<IEnumerable<Lesson>> GetLessonsAssociatedWithStudentAsync(Guid studentId, CancellationToken token)
-        => await _applicationContext.Lessons.Include(x => x.Student).Where(x => x.Student.Id == studentId)
+        => await _applicationContext.Lessons.Include(x => x.Student)
+            .Where(x => x.Student.Id == studentId)
+            .OrderByDescending(x => x.DateTime)
             .ToArrayAsync(token);
+
+    public async Task<Lesson?> UpdateLessonAsync(UpdateLesson updateLesson, CancellationToken token)
+    {
+        var existingLesson = await GetLessonAsync(updateLesson.LessonId, token);
+        if (existingLesson is not null)
+        {
+            existingLesson.DateTime = updateLesson.DateTime ?? existingLesson.DateTime;
+            existingLesson.Paid = updateLesson.Paid ?? existingLesson.Paid;
+            existingLesson.HalfHours = updateLesson.HalfHours ?? existingLesson.HalfHours;
+            existingLesson.HourlyRate = updateLesson.HourlyRate ?? existingLesson.HourlyRate;
+        }
+        return await _applicationContext.SaveChangesAsync(token) > 0 ? existingLesson : null;
+    }
+    
+    private async Task<Lesson?> GetLessonAsync(Guid id, CancellationToken token) =>
+        await _applicationContext.Lessons.Include(x => x.Student).FirstOrDefaultAsync(x => x.Id == id, token);
 }
