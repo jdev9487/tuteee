@@ -1,12 +1,10 @@
-
-using TutorTracker.Api.CustomResults;
-
 namespace TutorTracker.Api.Controllers;
 
 using Managers;
 using AutoMapper;
 using M = Model;
 using E = Entities;
+using CR = CustomResults;
 
 public class CustomerController
 {
@@ -37,7 +35,7 @@ public class CustomerController
         try
         {
             var customers = await _customerManager.GetCustomersAsync(firstName, lastName, token);
-            return new OkWithHeaders(customers.Select(x => _mapper.Map<M.CustomerResult>(x)));
+            return Results.Ok(customers.Select(x => _mapper.Map<M.CustomerResult>(x)));
         }
         catch (Exception ex)
         {

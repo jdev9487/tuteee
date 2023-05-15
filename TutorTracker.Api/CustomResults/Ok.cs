@@ -1,10 +1,10 @@
 namespace TutorTracker.Api.CustomResults;
 
-public class OkWithHeaders : IResult
+public class Ok : IResult
 {
     private readonly object _obj;
     
-    public OkWithHeaders(object obj)
+    public Ok(object obj)
     {
         _obj = obj;
     }

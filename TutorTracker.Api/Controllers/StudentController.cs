@@ -4,6 +4,7 @@ using Managers;
 using AutoMapper;
 using M = Model;
 using E = Entities;
+using CR = CustomResults;
 
 public class StudentController
 {

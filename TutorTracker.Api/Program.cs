@@ -19,14 +19,21 @@ services.AddTransient<IStudentManager, StudentManager>();
 services.AddTransient<CustomerController>();
 services.AddTransient<LessonController>();
 services.AddTransient<StudentController>();
-builder.Services.AddAutoMapper(typeof(ModelMapperProfile));
+services.AddAutoMapper(typeof(ModelMapperProfile));
 var connStr = configuration.GetConnectionString("db");
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connStr), ServiceLifetime.Transient,
+var allowedOrigin = configuration.GetSection("AllowedOrigins").Value;
+services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connStr), ServiceLifetime.Transient,
     ServiceLifetime.Transient);
+services.AddCors(opt =>
+{
+    opt.AddPolicy(name: "policy", policy =>
+    {
+        policy.WithOrigins(allowedOrigin!).AllowAnyMethod().AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
-app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseCors("policy");
 app.MapCustomerEndpoints();
 app.MapStudentEndpoints();
 app.MapLessonEndpoints();
