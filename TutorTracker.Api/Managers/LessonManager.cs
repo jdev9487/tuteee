@@ -44,4 +44,17 @@ public class LessonManager : ILessonManager
             throw;
         }
     }
+
+    public async Task<Lesson?> DeleteLessonAsync(Guid lessonId, CancellationToken token)
+    {
+        try
+        {
+            return await _repository.DeleteLessonAsync(lessonId, token);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Could not delete lesson with id {id}", lessonId);
+            throw;
+        }
+    }
 }

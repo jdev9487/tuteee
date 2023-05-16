@@ -95,7 +95,16 @@ public class Repository : IRepository
         }
         return await _applicationContext.SaveChangesAsync(token) > 0 ? existingLesson : null;
     }
-    
+
+    public async Task<Lesson?> DeleteLessonAsync(Guid lessonId, CancellationToken token)
+    {
+        var lesson = await _applicationContext.Lessons.FindAsync(new object?[] { lessonId }, cancellationToken: token);
+        if (lesson is null) return null;
+        _applicationContext.Lessons.Remove(lesson);
+        await _applicationContext.SaveChangesAsync(token);
+        return lesson;
+    }
+
     private async Task<Lesson?> GetLessonAsync(Guid id, CancellationToken token) =>
         await _applicationContext.Lessons.Include(x => x.Student).FirstOrDefaultAsync(x => x.Id == id, token);
 }

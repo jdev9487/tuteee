@@ -17,4 +17,5 @@ public interface IRepository
     Task<IEnumerable<Student>> GetStudentsAsync(CancellationToken token);
     Task<IEnumerable<Lesson>> GetLessonsAssociatedWithStudentAsync(Guid studentId, CancellationToken token);
     Task<Lesson?> UpdateLessonAsync(M.UpdateLesson updateLesson, CancellationToken token);
+    Task<Lesson?> DeleteLessonAsync(Guid lessonId, CancellationToken token);
 }

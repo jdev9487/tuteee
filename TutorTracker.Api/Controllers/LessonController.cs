@@ -48,4 +48,18 @@ public class LessonController
             return Results.Problem(ex.Message);
         }
     }
+    
+    [HttpDelete("{lessonId:guid}")]
+    public async Task<IResult> DeleteLessonAsync(Guid lessonId, CancellationToken token)
+    {
+        try
+        {
+            var deleted = await _lessonManager.DeleteLessonAsync(lessonId, token);
+            return deleted is null ? Results.NotFound() : Results.Ok();
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
 }

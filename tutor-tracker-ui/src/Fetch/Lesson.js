@@ -51,3 +51,16 @@ export const updateLesson = async (id, dateTime, hourlyRate, halfHours, paid, se
         .catch((error) => {
         });
 }
+
+export const deleteLesson = async (lessonId) => {
+    await fetch(`http://localhost:5293/lessons/${lessonId}`, {
+        method: 'DELETE'
+    })
+        .then((response) => {
+            if (response.ok) {
+            } else {
+            }
+        })
+        .catch((error) => {
+        });
+}
