@@ -23,6 +23,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { updateCustomer } from '../Fetch/Customer';
 import { addLesson } from '../Fetch/Lesson';
+import { addStudent } from '../Fetch/Student';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -35,10 +36,12 @@ import { halfHourText, rateText } from '../Utility/Format';
 export default function CustomerCard(props) {
     const [editCustomerOpen, setEditCustomerOpen] = React.useState(false);
     const [addLessonOpen, setAddLessonOpen] = React.useState(false);
+    const [addStudentOpen, setAddStudentOpen] = React.useState(false);
     const [customerFirstName, setCustomerFirstName] = React.useState(props.firstName)
     const [customerLastName, setCustomerLastName] = React.useState(props.lastName)
     const [customerPhone, setCustomerPhone] = React.useState(props.phone)
     const [customerEmail, setCustomerEmail] = React.useState(props.email)
+    const [students, setStudents] = React.useState(props.students);
     const [studentToAddLessonFor, setStudentToAddLessonFor] = React.useState(props.students[0])
 
     const handleEditCustomerOpen = () => {
@@ -54,6 +57,14 @@ export default function CustomerCard(props) {
     const handleAddLessonClose = () => {
         setAddLessonOpen(false);
     }
+
+    const handleAddStudentOpen = _ => {
+        setAddStudentOpen(true);
+    }
+    const handleAddStudentClose = _ => {
+        setAddStudentOpen(false);
+    }
+
     const handleSetStudentToAddLessonFor = (event) => {
         setStudentToAddLessonFor(event.target.value);
     }
@@ -81,6 +92,13 @@ export default function CustomerCard(props) {
         addLesson(studentToAddLessonFor.id, dateTime, rate, halfHours, paid);
         setAddLessonOpen(false);
     }
+    const handleConfirmAddStudent = (event) => {
+        event.preventDefault();
+        const firstName = event.target['first-name'].value;
+        const lastName = event.target['last-name'].value;
+        addStudent(props.id, firstName, lastName, (fn, ln, id) => setStudents(students.concat({firstName: fn, lastName: ln, id: id})));
+        setAddStudentOpen(false);
+    }
 
     return (
         <div>
@@ -97,8 +115,8 @@ export default function CustomerCard(props) {
                             <IconButton onClick={handleAddLessonOpen}>
                                 <PostAddIcon />
                             </IconButton>
-                            <IconButton>
-                                <PersonAddIcon />
+                            <IconButton onClick={handleAddStudentOpen}>
+                                <PersonAddIcon/>
                             </IconButton>
                         </Box>
                         <Typography variant="h6" color='text.secondary' align='right' component="div">
@@ -110,11 +128,11 @@ export default function CustomerCard(props) {
                         </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        {[].concat(...props.students.map((x, i) => [<Typography key={i} variant='h6'>
+                        {[].concat(...students.map((x, i) => [<Typography key={`student${i}`} variant='h6'>
                             <NavLink to={`/student/${x.id}`}>
                                 {x.firstName} {x.lastName}
                             </NavLink>
-                        </Typography>, <Divider key={i} sx={{ mx: 1 }} orientation="vertical" flexItem />])).slice(0, -1)}
+                        </Typography>, <Divider key={`divider${i}`} sx={{ mx: 1 }} orientation="vertical" flexItem />])).slice(0, -1)}
                     </Box>
                 </CardContent>
                 <CardActions>
@@ -126,7 +144,7 @@ export default function CustomerCard(props) {
                     </Button>
                 </CardActions>
             </Card>
-            <Dialog open={editCustomerOpen} onClose={handleEditCustomerClose}>
+            <Dialog open={editCustomerOpen} fullWidth onClose={handleEditCustomerClose}>
                 <DialogTitle>Edit {customerFirstName} {customerLastName}</DialogTitle>
                 <DialogContent>
                     <DialogContentText align='center'>
@@ -144,7 +162,7 @@ export default function CustomerCard(props) {
                     <Button type='submit' color='warning' form='edit-customer-form'>Update</Button>
                 </DialogActions>
             </Dialog>
-            <Dialog open={addLessonOpen} onClose={handleAddLessonClose}>
+            <Dialog open={addLessonOpen} fullWidth onClose={handleAddLessonClose}>
                 <DialogTitle>Add lesson for {customerFirstName} {customerLastName}</DialogTitle>
                 <DialogContent>
                     <form id='add-lesson' onSubmit={handleConfirmAddLesson}>
@@ -196,6 +214,19 @@ export default function CustomerCard(props) {
                 <DialogActions>
                     <Button onClick={handleAddLessonClose}>Cancel</Button>
                     <Button type='submit' color='warning' form='add-lesson'>Add lesson</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={addStudentOpen} fullWidth onClose={handleAddStudentClose}>
+                <DialogTitle>Add student for {customerFirstName} {customerLastName}</DialogTitle>
+                <DialogContent>
+                    <form id='add-student' onSubmit={handleConfirmAddStudent}>
+                        <TextField margin="dense" id="first-name" label="First name" fullWidth variant="standard" />
+                        <TextField margin="dense" id="last-name" label="Last name" fullWidth variant="standard" />
+                    </form>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleAddStudentClose}>Cancel</Button>
+                    <Button type='submit' color='warning' form='add-student'>Add student</Button>
                 </DialogActions>
             </Dialog>
         </div>

@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import { rateText } from '../Utility/Format';
+import { halfHourText, rateText } from '../Utility/Format';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PaidIcon from '@mui/icons-material/Paid';
@@ -18,16 +18,25 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import Slider from '@mui/material/Slider';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import InputLabel from '@mui/material/InputLabel';
 
 export default function LessonCard(props) {
     const {
         id,
-        dateTime,
-        hourlyRate,
-        duration,
     } = props;
 
     const [paid, setPaid] = React.useState(props.paid);
+    const [dateTime, setDateTime] = React.useState(props.dateTime);
+    const [hourlyRate, setHourlyRate] = React.useState(props.hourlyRate);
+    const [duration, setDuration] = React.useState(props.duration);
     const [editLessonOpen, setEditLessonOpen] = React.useState(false);
 
     const handleEditLessonOpen = () => {
@@ -39,11 +48,12 @@ export default function LessonCard(props) {
 
     const handleConfirmEditLesson = (event) => {
         event.preventDefault();
-        console.log(event.target[0]);
-        console.log(event.target[1]);
-        console.log(event.target[2]);
-        console.log(event.target[3]);
-        return true;
+        const newDateTime = new Date(event.target[0].value).toISOString();
+        const newHalfHours = event.target[2].value;
+        const newHourlyRate = event.target[3].value;
+        const newPaid = event.target[4].checked;
+        updateLesson(id, newDateTime, newHourlyRate, newHalfHours, newPaid, (dt) => setDateTime(dt), (hr) => setHourlyRate(hr), (hh) => setDuration(hh), (p) => setPaid(p))
+        setEditLessonOpen(false);
     }
 
     const getFinish = (start, halfHours) => {
@@ -54,51 +64,75 @@ export default function LessonCard(props) {
     };
 
     const setLessonAsPaid = () => {
-        updateLesson(id, null, null, null, true, () => {}, () => {}, () => {}, (value) => setPaid(value))
+        updateLesson(id, null, null, null, true, () => { }, () => { }, () => { }, (value) => setPaid(value))
     }
     const setLessonAsUnpaid = () => {
-        updateLesson(id, null, null, null, false, () => {}, () => {}, () => {}, (value) => setPaid(value))
+        updateLesson(id, null, null, null, false, () => { }, () => { }, () => { }, (value) => setPaid(value))
     }
 
     return (
         <div>
             <Card sx={{ m: 1, background: '#f0f0f0' }}>
                 <CardContent>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb:1 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 1 }}>
                         <CalendarMonthIcon sx={{ mr: 2 }} />
                         <Typography>{(new Date(dateTime)).toDateString()}</Typography>
                     </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb:1 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 1 }}>
                         <AccessTimeIcon sx={{ mr: 2 }} />
                         <Typography>{(new Date(dateTime)).toLocaleTimeString()} - {getFinish(new Date(dateTime), duration).toLocaleTimeString()}</Typography>
                     </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb:1 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 1 }}>
                         <PaidIcon sx={{ mr: 2 }} />
                         <Typography>{rateText(hourlyRate)}/hr</Typography>
                     </Box>
                 </CardContent>
-                <CardActions sx={{justifyContent: 'end'}}>
+                <CardActions sx={{ justifyContent: 'end' }}>
                     {paid ? <IconButton onClick={setLessonAsUnpaid}>
-                        <VerifiedIcon color='success'/>
+                        <VerifiedIcon color='success' />
                     </IconButton> : <IconButton onClick={setLessonAsPaid}>
-                        <CloseIcon color='warning'/>
+                        <CloseIcon color='warning' />
                     </IconButton>}
                     <IconButton onClick={handleEditLessonOpen}>
                         <EditIcon />
                     </IconButton>
                 </CardActions>
             </Card>
-            <Dialog open={editLessonOpen} onClose={handleEditLessonClose}>
+            <Dialog open={editLessonOpen} fullWidth={true} onClose={handleEditLessonClose}>
                 <DialogTitle>Edit lesson</DialogTitle>
                 <DialogContent>
-                    <DialogContentText align='center'>
-                        ALL ACTIONS ARE FINAL!
-                    </DialogContentText>
                     <form id='edit-lesson-form' onSubmit={handleConfirmEditLesson}>
-                        {/* <TextField margin="dense" defaultValue={customerFirstName} id="first-name" label="First name" fullWidth variant="standard" />
-                        <TextField margin="dense" defaultValue={customerLastName} id="last-name" label="Last name" fullWidth variant="standard" />
-                        <TextField margin="dense" defaultValue={customerEmail} id="email" label="Email" type='email' fullWidth variant="standard" />
-                        <TextField margin="dense" defaultValue={customerPhone} id="phone" label="Phone" type='tel' fullWidth variant="standard" /> */}
+                        <InputLabel id="edit-lesson-datetime">Date & Time</InputLabel>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={['DatePicker']}>
+                                <MobileDateTimePicker defaultValue={dayjs(dateTime)} sx={{ mb: 2 }} labelId="edit-lesson-datetime" />
+                            </DemoContainer>
+                        </LocalizationProvider>
+                        <InputLabel id="edit-lesson-duration-label">Duration</InputLabel>
+                        <Slider
+                            sx={{ mb: 2 }}
+                            labelId="edit-lesson-duration-label"
+                            defaultValue={duration}
+                            valueLabelFormat={halfHourText}
+                            valueLabelDisplay="auto"
+                            step={1}
+                            marks
+                            min={0}
+                            max={6}
+                        />
+                        <InputLabel id="edit-lesson-rate-label">Hourly rate</InputLabel>
+                        <Slider
+                            sx={{ mb: 2 }}
+                            labelId="edit-lesson-rate-label"
+                            defaultValue={hourlyRate}
+                            valueLabelFormat={rateText}
+                            valueLabelDisplay="auto"
+                            step={5}
+                            marks
+                            min={5}
+                            max={100}
+                        />
+                        <FormControlLabel control={<Switch defaultChecked={paid}/>} label="Paid" />
                     </form>
                 </DialogContent>
                 <DialogActions>

@@ -5,7 +5,6 @@ using TutorTracker.Api.Managers;
 using TutorTracker.Api.Mapping;
 using TutorTracker.Api.Parsing;
 using TutorTracker.Api.Repositories;
-using TutorTracker.Api.Routing;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -21,9 +20,8 @@ services.AddTransient<LessonController>();
 services.AddTransient<StudentController>();
 services.AddAutoMapper(typeof(ModelMapperProfile));
 var connStr = configuration.GetConnectionString("db");
-var allowedOrigin = configuration.GetSection("AllowedOrigins").Value;
-services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connStr), ServiceLifetime.Transient,
-    ServiceLifetime.Transient);
+var allowedOrigin = configuration.GetSection("AllowedOrigins").Get<string[]>();
+services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connStr));
 services.AddCors(opt =>
 {
     opt.AddPolicy(name: "policy", policy =>
@@ -31,11 +29,11 @@ services.AddCors(opt =>
         policy.WithOrigins(allowedOrigin!).AllowAnyMethod().AllowAnyHeader();
     });
 });
+services.AddControllers();
 
 var app = builder.Build();
 app.UseCors("policy");
-app.MapCustomerEndpoints();
-app.MapStudentEndpoints();
-app.MapLessonEndpoints();
+app.UseRouting();
+app.UseEndpoints(ep => ep.MapControllers());
 
 app.Run();

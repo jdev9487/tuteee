@@ -5,7 +5,10 @@ using AutoMapper;
 using M = Model;
 using E = Entities;
 using CR = CustomResults;
+using Microsoft.AspNetCore.Mvc;
 
+[ApiController]
+[Route("/[controller]s")]
 public class CustomerController
 {
     private readonly ICustomerManager _customerManager;
@@ -17,6 +20,7 @@ public class CustomerController
         _mapper = mapper;
     }
 
+    [HttpGet("{customerId:guid}")]
     public async Task<IResult> GetCustomerAsync(Guid customerId, CancellationToken token)
     {
         try
@@ -30,6 +34,7 @@ public class CustomerController
         }
     }
 
+    [HttpGet("")]
     public async Task<IResult> GetCustomersAsync(string? firstName, string? lastName, CancellationToken token)
     {
         try
@@ -43,6 +48,7 @@ public class CustomerController
         }
     }
 
+    [HttpGet("{customerId:guid}/lessons")]
     public async Task<IResult> GetLessonsAssociatedWithCustomer(Guid customerId, int? month, int? year,
         CancellationToken token)
     {
@@ -58,6 +64,7 @@ public class CustomerController
         }
     }
 
+    [HttpPost("")]
     public async Task<IResult> CreateCustomerAsync(Model.CreateCustomer createCustomer, CancellationToken token)
     {
         try
@@ -71,6 +78,7 @@ public class CustomerController
         }
     }
 
+    [HttpPatch("")]
     public async Task<IResult> UpdateCustomerAsync(M.UpdateCustomer updateCustomer, CancellationToken token)
     {
         try

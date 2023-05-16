@@ -32,8 +32,8 @@ export const updateLesson = async (id, dateTime, hourlyRate, halfHours, paid, se
         body: JSON.stringify({
             lessonId: id,
             dateTime: dateTime,
-            hourlyRate: hourlyRate,
-            halfHours: halfHours,
+            hourlyRate: Number(hourlyRate),
+            halfHours: Number(halfHours),
             paid: paid
         })
     })

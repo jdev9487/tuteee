@@ -5,7 +5,10 @@ using M = Model;
 using AutoMapper;
 using E = Entities;
 using CR = CustomResults;
+using Microsoft.AspNetCore.Mvc;
 
+[ApiController]
+[Route("/[controller]s")]
 public class LessonController
 {
     private readonly IMapper _mapper;
@@ -17,6 +20,7 @@ public class LessonController
         _lessonManager = lessonManager;
     }
 
+    [HttpPost("")]
     public async Task<IResult> CreateLessonAsync(M.Lesson lesson, CancellationToken token)
     {
         try
@@ -31,6 +35,7 @@ public class LessonController
         }
     }
 
+    [HttpPatch("")]
     public async Task<IResult> UpdateLessonAsync(M.UpdateLesson updateLesson, CancellationToken token)
     {
         try

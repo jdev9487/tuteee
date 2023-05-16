@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import CustomerCard from './CustomerCard';
 import { getCustomers } from '../Fetch/Customer'
+import { Typography } from '@mui/material';
 
 export default function Customers() {
 
@@ -12,6 +13,9 @@ export default function Customers() {
 
     return (
         <div>
+            <Typography variant='h2' align='center' m={2}>
+                Customers
+            </Typography>
             {customers.map((x, i) => {
                 return (<CustomerCard
                     key={i}
