@@ -84,6 +84,10 @@ export default function LessonCard(props) {
         return newDateObj;
     };
 
+    const getFee = () => {
+        return duration * hourlyRate / 2;
+    };
+
     return (
         <div>
             <Card sx={{ m: 1, background: '#f0f0f0' }}>
@@ -97,8 +101,12 @@ export default function LessonCard(props) {
                         <Typography>{(new Date(dateTime)).toLocaleTimeString()} - {getFinish(new Date(dateTime), duration).toLocaleTimeString()}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 1 }}>
-                        <PaidIcon color={paid ? 'success' : 'warning'} sx={{ mr: 2 }} />
+                        <Tooltip title={paid ? 'Paid' : 'Not paid'}>
+                            <PaidIcon color={paid ? 'success' : 'warning'} sx={{ mr: 2 }} />
+                        </Tooltip>
                         <Typography sx={{mr:2}}>{rateText(hourlyRate)}/hr</Typography>
+                        <Typography sx={{mr:2}}>={'>'}</Typography>
+                        <Typography sx={{fontWeight: 600}}>£{getFee()}</Typography>
                     </Box>
                 </CardContent>
                 <CardActions sx={{ justifyContent: 'end' }}>

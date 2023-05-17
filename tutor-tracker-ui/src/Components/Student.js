@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, NavLink, useParams } from 'react-router-dom';
 import { getLessonsAssociatedWithStudent, getStudent } from '../Fetch/Student';
 import Grid from '@mui/material/Grid';
 import LessonCard from './LessonCard';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 export default function Student() {
 
@@ -18,7 +18,7 @@ export default function Student() {
 
     return (
         <div>
-            <Typography variant='h2' m={2} align='center'>
+            <Typography variant='h2' m={2}>
                 {name}
             </Typography>
             <Grid container spacing={2}>
