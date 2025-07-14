@@ -1,4 +1,9 @@
 ﻿using JDev.Tuteee.Api.DB;
+using JDev.Tuteee.Api.DTOs;
+using JDev.Tuteee.Api.Endpoints;
+using JDev.Tuteee.Api.Entities;
+using JDev.Tuteee.Api.Mapping;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,11 +23,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/tutees/{id:int}", (int id, Context context) =>
-    {
-        var tutee =  context.Tutees.Include(t => t.Guardian).FirstOrDefault();
-        return "hello again";
-    })
-    .WithOpenApi();
+app.RegisterTuteeEndpoints();
+app.RegisterGuardianEndpoints();
 
 app.Run();
