@@ -40,7 +40,48 @@ namespace JDev.Tuteee.Api.Migrations
 
                     b.HasKey("GuardianId");
 
-                    b.ToTable("Guardians");
+                    b.ToTable("Guardian", (string)null);
+                });
+
+            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Homework", b =>
+                {
+                    b.Property<int>("HomeworkId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Instructions")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("LessonId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("HomeworkId");
+
+                    b.HasIndex("LessonId")
+                        .IsUnique();
+
+                    b.ToTable("Homework", (string)null);
+                });
+
+            modelBuilder.Entity("JDev.Tuteee.Api.Entities.HomeworkAttachment", b =>
+                {
+                    b.Property<int>("HomeworkAttachmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("HomeworkId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("HomeworkAttachmentId");
+
+                    b.HasIndex("HomeworkId");
+
+                    b.ToTable("HomeworkAttachment", (string)null);
                 });
 
             modelBuilder.Entity("JDev.Tuteee.Api.Entities.Lesson", b =>
@@ -62,7 +103,29 @@ namespace JDev.Tuteee.Api.Migrations
 
                     b.HasIndex("TuteeId");
 
-                    b.ToTable("Lessons");
+                    b.ToTable("Lesson", (string)null);
+                });
+
+            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Rate", b =>
+                {
+                    b.Property<int>("RateId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ActiveFrom")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PencePerHour")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TuteeId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("RateId");
+
+                    b.HasIndex("TuteeId");
+
+                    b.ToTable("Rate", (string)null);
                 });
 
             modelBuilder.Entity("JDev.Tuteee.Api.Entities.Tutee", b =>
@@ -90,13 +153,46 @@ namespace JDev.Tuteee.Api.Migrations
 
                     b.HasIndex("GuardianId");
 
-                    b.ToTable("Tutees");
+                    b.ToTable("Tutee", (string)null);
+                });
+
+            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Homework", b =>
+                {
+                    b.HasOne("JDev.Tuteee.Api.Entities.Lesson", "Lesson")
+                        .WithOne("Homework")
+                        .HasForeignKey("JDev.Tuteee.Api.Entities.Homework", "LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+                });
+
+            modelBuilder.Entity("JDev.Tuteee.Api.Entities.HomeworkAttachment", b =>
+                {
+                    b.HasOne("JDev.Tuteee.Api.Entities.Homework", "Homework")
+                        .WithMany("HomeworkAttachments")
+                        .HasForeignKey("HomeworkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Homework");
                 });
 
             modelBuilder.Entity("JDev.Tuteee.Api.Entities.Lesson", b =>
                 {
                     b.HasOne("JDev.Tuteee.Api.Entities.Tutee", "Tutee")
                         .WithMany("Lessons")
+                        .HasForeignKey("TuteeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tutee");
+                });
+
+            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Rate", b =>
+                {
+                    b.HasOne("JDev.Tuteee.Api.Entities.Tutee", "Tutee")
+                        .WithMany("Rates")
                         .HasForeignKey("TuteeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -120,9 +216,21 @@ namespace JDev.Tuteee.Api.Migrations
                     b.Navigation("Tutees");
                 });
 
+            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Homework", b =>
+                {
+                    b.Navigation("HomeworkAttachments");
+                });
+
+            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Lesson", b =>
+                {
+                    b.Navigation("Homework");
+                });
+
             modelBuilder.Entity("JDev.Tuteee.Api.Entities.Tutee", b =>
                 {
                     b.Navigation("Lessons");
+
+                    b.Navigation("Rates");
                 });
 #pragma warning restore 612, 618
         }

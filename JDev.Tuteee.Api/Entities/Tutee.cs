@@ -2,11 +2,12 @@ namespace JDev.Tuteee.Api.Entities;
 
 public class Tutee
 {
-    public virtual int TuteeId { get; set; }
-    public virtual string FirstName { get; set; } = default!;
-    public virtual string LastName { get; set; } = default!;
-    public virtual string EmailAddress { get; set; } = default!;
-    public virtual int GuardianId { get; set; }
-    public virtual Guardian Guardian { get; set; } = default!;
-    public virtual IList<Lesson> Lessons { get; set; } = [];
+    public int TuteeId { get; set; }
+    public string FirstName { get; set; } = default!;
+    public string LastName { get; set; } = default!;
+    public string EmailAddress { get; set; } = default!;
+    public int GuardianId { get; set; }
+    public Guardian Guardian { get; set; } = default!;
+    public IList<Lesson> Lessons { get; set; } = [];
+    public IList<Rate> Rates { get; set; } = [];
 }
