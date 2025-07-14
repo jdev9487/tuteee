@@ -1,3 +1,3 @@
 # Tuteee
 
-REST api for managing tutor session
+REST api for managing tutor sessions
