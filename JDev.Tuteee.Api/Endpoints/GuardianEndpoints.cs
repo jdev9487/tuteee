@@ -6,27 +6,26 @@ using Mapping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-public static class GuardianEndpoints
+public class GuardianEndpoints : IEndpoints
 {
-    public static void RegisterGuardianEndpoints(this WebApplication app)
+    public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {
-        app.MapGet("/guardians/{id:int}",
-                async Task<Results<Ok<GuardianDto>, NotFound>> (int id, Context context, CancellationToken token) =>
-                {
-                    var guardian = await context.Guardians
-                        .Include(t => t.Tutees)
-                        .SingleOrDefaultAsync(g => g.GuardianId == id, cancellationToken: token);
-                    return guardian is null ? TypedResults.NotFound() : TypedResults.Ok(GuardianMap.Map(guardian));
-                })
-            .WithOpenApi();
+        routeBuilder.MapGet("/guardians/{id:int}",
+            async Task<Results<Ok<GuardianDto>, NotFound>> (int id, Context context, CancellationToken token) =>
+            {
+                var guardian = await context.Guardians
+                    .Include(t => t.Tutees)
+                    .SingleOrDefaultAsync(g => g.GuardianId == id, cancellationToken: token);
+                return guardian is null ? TypedResults.NotFound() : TypedResults.Ok(GuardianMap.Map(guardian));
+            });
 
-        app.MapPost("/guardians", async (GuardianDto dto, Context context, CancellationToken token) =>
+        routeBuilder.MapPost("/guardians",
+            async (GuardianDto dto, Context context, CancellationToken token) =>
             {
                 var entity = GuardianMap.Map(dto);
                 await context.Guardians.AddAsync(entity, token);
                 await context.SaveChangesAsync(token);
                 return TypedResults.Created();
-            })
-            .WithOpenApi();
+            });
     }
 }
