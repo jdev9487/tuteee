@@ -4,17 +4,17 @@ using DB;
 using DTOs;
 using Mapping;
 
-public static class LessonEndpoints
+public class LessonEndpoints : IEndpoints
 {
-    public static void RegisterLessonEndpoints(this WebApplication app)
+    public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {
-        app.MapPost("/lessons", async (LessonDto dto, Context context, CancellationToken token) =>
+        routeBuilder.MapPost("/lessons",
+            async (LessonDto dto, Context context, CancellationToken token) =>
             {
                 var entity = LessonMap.Map(dto);
                 await context.Lessons.AddAsync(entity, token);
                 await context.SaveChangesAsync(token);
                 return TypedResults.Created();
-            })
-            .WithOpenApi();
+            });
     }
 }
