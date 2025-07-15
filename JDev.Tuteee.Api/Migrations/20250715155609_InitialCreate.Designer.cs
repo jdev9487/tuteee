@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JDev.Tuteee.Api.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250714195214_InitialCreate")]
+    [Migration("20250715155609_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
