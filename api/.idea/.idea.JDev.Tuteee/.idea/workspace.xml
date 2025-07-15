@@ -18,7 +18,7 @@
     <option name="autoShow" value="false" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -105,6 +105,7 @@
       <workItem from="1752512448032" duration="412000" />
       <workItem from="1752512868420" duration="6302000" />
       <workItem from="1752578686027" duration="9349000" />
+      <workItem from="1752595463976" duration="95000" />
     </task>
     <servers />
   </component>
