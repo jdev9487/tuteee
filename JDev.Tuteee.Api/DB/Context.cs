@@ -52,4 +52,5 @@ public class Context(IConfiguration configuration) : DbContext
     public DbSet<Guardian> Guardians { get; set; } = default!;
     public DbSet<Tutee> Tutees { get; set; } = default!;
     public DbSet<Lesson> Lessons { get; set; } = default!;
+    public DbSet<Homework> Homeworks { get; set; } = default!;
 }

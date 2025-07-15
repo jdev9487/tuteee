@@ -16,4 +16,13 @@ public static class TuteeMap
             LessonIds = entity.Lessons.Select(l => l.LessonId),
             RateIds = entity.Rates.Select(l => l.RateId)
         };
+    
+    public static Tutee Map(TuteeDto dto) =>
+        new()
+        {
+            GuardianId = dto.GuardianId,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            EmailAddress = dto.EmailAddress,
+        };
 }
