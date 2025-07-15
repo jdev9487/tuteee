@@ -15,4 +15,13 @@ public static class GuardianMap
             PhoneNumber = entity.PhoneNumber,
             TuteeIds = entity.Tutees.Select(t => t.TuteeId)
         };
+
+    public static Guardian Map(GuardianDto dto) =>
+        new()
+        {
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            EmailAddress = dto.EmailAddress,
+            PhoneNumber = dto.PhoneNumber
+        };
 }

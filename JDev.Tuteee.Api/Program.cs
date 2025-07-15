@@ -25,5 +25,7 @@ app.UseHttpsRedirection();
 
 app.RegisterTuteeEndpoints();
 app.RegisterGuardianEndpoints();
+app.RegisterLessonEndpoints();
+app.RegisterHomeworkEndpoints();
 
 app.Run();
