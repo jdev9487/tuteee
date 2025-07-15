@@ -1,5 +1,6 @@
 ﻿using JDev.Tuteee.Api.DB;
 using JDev.Tuteee.Api.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<Context>();
+builder.Services.AddDbContext<Context>(ServiceLifetime.Transient);
 
 builder.Services.AddEndpoints();
 
@@ -19,6 +20,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.MapOpenApi();
 }
+
+var context = app.Services.GetRequiredService<Context>();
+await context.Database.MigrateAsync();
+await context.Database.EnsureCreatedAsync();
 
 app.UseHttpsRedirection();
 
