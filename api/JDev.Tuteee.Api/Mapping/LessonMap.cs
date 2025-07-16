@@ -12,4 +12,13 @@ public static class LessonMap
             EndTime = dto.EndTime,
             TuteeId = dto.TuteeId,
         };
+    
+    public static LessonDto Map(Lesson entity) =>
+        new()
+        {
+            LessonId = entity.LessonId,
+            StartTime = entity.StartTime,
+            EndTime = entity.EndTime,
+            TuteeId = entity.TuteeId
+        };
 }
