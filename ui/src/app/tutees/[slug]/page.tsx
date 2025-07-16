@@ -25,7 +25,7 @@ export default async function Page({
 
   return (
     <div>
-      <h1>{tutee.firstName} {tutee.lastName}</h1>
+      <h1>{tutee.firstName} {tutee.lastName} (Tutee)</h1>
       <h2>Lessons</h2>
       <table>
         <thead>
