@@ -15,8 +15,7 @@ export default async function Page({
     {
       return (
         <div>
-          <h2>Children</h2>
-          {guardian.tutees.map((t, i) => <Link href={`/tutees/${t.tuteeId}`} key={i}><p>{t.firstName} {t.lastName}</p></Link>)}
+          {guardian.tutees.map((t, i) => <p key={i}><Link href={`/tutees/${t.tuteeId}`}>{t.firstName} {t.lastName}</Link> (Tutee)</p>)}
         </div>
       )
     }
@@ -24,7 +23,7 @@ export default async function Page({
 
   return (
     <div>
-      <h1>{guardian.firstName} {guardian.lastName}</h1>
+      <h1>{guardian.firstName} {guardian.lastName} (Guardian)</h1>
       {getChildren()}
     </div>
   )

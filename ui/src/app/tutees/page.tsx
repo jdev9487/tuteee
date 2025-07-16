@@ -7,7 +7,22 @@ export default async function Page() {
   return (
     <div>
       <h1>Tutees</h1>
-      {tutees.map((t, i) => <Link key={i} href={`/tutees/${t.tuteeId}`}><p>{`${t.firstName} ${t.lastName}`}</p></Link>)}
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email address</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tutees.map((t, i) => 
+            <tr key={i}>
+              <td><Link href={`/tutees/${t.tuteeId}`}><p>{`${t.firstName} ${t.lastName}`}</p></Link></td>
+              <td>{t.emailAddress}</td>
+            </tr>
+          )}
+        </tbody>
+      </table> 
     </div>
   )
 }
