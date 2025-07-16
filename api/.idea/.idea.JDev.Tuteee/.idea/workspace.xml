@@ -8,7 +8,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6eb5dafa-e358-452f-b8d3-0b20fa37af04" name="Changes" comment="" />
+    <list default="true" id="6eb5dafa-e358-452f-b8d3-0b20fa37af04" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.JDev.Tuteee/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JDev.Tuteee/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JDev.Tuteee.Api/Endpoints/GuardianEndpoints.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JDev.Tuteee.Api/Endpoints/GuardianEndpoints.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JDev.Tuteee.Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JDev.Tuteee.Api/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../ui/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ui/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../ui/src/app/page.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,6 +42,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0d7520fa86234b67a15059abb18337e542600/6d/531f5f25/TypedResults.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/363c1765261146f1a68840a2d3ce7e39291438/25/c3db8d94/EntityFrameworkServiceCollectionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9e9c7c8efa3f43459392223403b3f86d19e00/7a/cf482dfe/WebApplication.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b8639821894946d588eac2b63b6d3e5a14200/37/f49a256f/CorsPolicyBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ed1859bd3ec24d7aa53c02198802906d2fb28/45/65222d9a/OpenApiEndpointConventionBuilderExtensions.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
@@ -55,27 +62,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.JDev.Tuteee.Api: http.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Project.JDev.Tuteee.Api.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;13-ui-framework&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.JDev.Tuteee.Api: http.executor": "Run",
+    ".NET Project.JDev.Tuteee.Api.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "15-list-guardians-page",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;/Users/johngould/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache&quot;,
-      &quot;/Users/johngould/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache&quot;,
-      &quot;/Users/johngould/Library/Application Support/Symbols/src&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite"
+    ],
+    "rider.external.source.directories": [
+      "/Users/johngould/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache",
+      "/Users/johngould/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache",
+      "/Users/johngould/Library/Application Support/Symbols/src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="JDev.Tuteee.Api: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/JDev.Tuteee.Api/JDev.Tuteee.Api.csproj" />
@@ -106,6 +116,7 @@
       <workItem from="1752512868420" duration="6302000" />
       <workItem from="1752578686027" duration="9349000" />
       <workItem from="1752595463976" duration="95000" />
+      <workItem from="1752669698255" duration="1889000" />
     </task>
     <servers />
   </component>

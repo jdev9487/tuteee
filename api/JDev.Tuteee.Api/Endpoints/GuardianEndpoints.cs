@@ -18,6 +18,15 @@ public class GuardianEndpoints : IEndpoints
                     .SingleOrDefaultAsync(g => g.GuardianId == id, cancellationToken: token);
                 return guardian is null ? TypedResults.NotFound() : TypedResults.Ok(GuardianMap.Map(guardian));
             });
+        
+        routeBuilder.MapGet("/guardians",
+            async (Context context, CancellationToken token) =>
+            {
+                var entities = await context.Guardians
+                    .Include(g => g.Tutees)
+                    .ToListAsync(cancellationToken: token);
+                return TypedResults.Ok(entities.Select(GuardianMap.Map));
+            });
 
         routeBuilder.MapPost("/guardians",
             async (GuardianDto dto, Context context, CancellationToken token) =>
