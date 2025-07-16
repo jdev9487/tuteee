@@ -44,6 +44,16 @@ public class Context(IConfiguration configuration) : DbContext
         
         modelBuilder.Entity<Lesson>()
             .ToTable("Lesson");
+        modelBuilder.Entity<Lesson>()
+            .Property(l => l.StartTime)
+            .HasConversion(
+                dto => dto.ToString("O"),
+                str => DateTimeOffset.Parse(str));
+        modelBuilder.Entity<Lesson>()
+            .Property(l => l.EndTime)
+            .HasConversion(
+                dto => dto.ToString("O"),
+                str => DateTimeOffset.Parse(str));
         
         modelBuilder.Entity<Rate>()
             .ToTable("Rate");
