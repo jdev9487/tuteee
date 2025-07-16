@@ -15,6 +15,7 @@ public class TuteeEndpoints : IEndpoints
             {
                 var entity = await context.Tutees
                     .Include(t => t.Guardian)
+                    .Include(t => t.Lessons)
                     .SingleOrDefaultAsync(t => t.TuteeId == id, cancellationToken: token);
                 return entity is null ? TypedResults.NotFound() : TypedResults.Ok(TuteeMap.Map(entity));
             });

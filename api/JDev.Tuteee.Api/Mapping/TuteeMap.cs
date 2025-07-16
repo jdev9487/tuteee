@@ -13,7 +13,7 @@ public static class TuteeMap
             FirstName = entity.FirstName,
             LastName = entity.LastName,
             EmailAddress = entity.EmailAddress,
-            LessonIds = entity.Lessons.Select(l => l.LessonId),
+            Lessons = entity.Lessons.Select(LessonMap.Map),
             RateIds = entity.Rates.Select(l => l.RateId)
         };
     

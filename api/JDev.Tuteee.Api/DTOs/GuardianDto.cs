@@ -7,5 +7,5 @@ public class GuardianDto
     public required string LastName { get; set; } = default!;
     public required string EmailAddress { get; set; } = default!;
     public required string PhoneNumber { get; set; } = default!;
-    public IEnumerable<int>? TuteeIds { get; set; } = [];
+    public IEnumerable<TuteeDto>? Tutees { get; set; } = [];
 }

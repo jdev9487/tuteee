@@ -13,7 +13,7 @@ public static class GuardianMap
             LastName = entity.LastName,
             EmailAddress = entity.EmailAddress,
             PhoneNumber = entity.PhoneNumber,
-            TuteeIds = entity.Tutees.Select(t => t.TuteeId)
+            Tutees = entity.Tutees.Select(TuteeMap.Map)
         };
 
     public static Guardian Map(GuardianDto dto) =>
