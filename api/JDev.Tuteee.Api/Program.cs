@@ -17,7 +17,6 @@ var app = builder.Build();
 
 var context = app.Services.GetRequiredService<Context>();
 await context.Database.MigrateAsync();
-await context.Database.EnsureCreatedAsync();
 
 if (app.Environment.IsDevelopment())
 {
