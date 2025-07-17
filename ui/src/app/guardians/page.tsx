@@ -2,7 +2,7 @@ import Link from "next/link"
 import { guardianResponse } from "../types/GuardianResponse"
 
 export default async function Page() {
-  const data = await fetch('http://localhost:5078/guardians')
+  const data = await fetch(`${process.env.NEXT_PUBLIC_API}/guardians`, { cache: 'no-store' })
   const guardians = (await data.json()) as guardianResponse[]
   return (
     <div>
