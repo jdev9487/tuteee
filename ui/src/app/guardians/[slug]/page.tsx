@@ -7,7 +7,7 @@ export default async function Page({
   params: Promise<{ slug: number }>
 }) {
   const { slug } = await params
-  const data = await fetch(`http://localhost:5078/guardians/${slug}`)
+  const data = await fetch(`${process.env.NEXT_PUBLIC_API}/guardians/${slug}`, { cache: 'no-store' })
   const guardian = (await data.json()) as guardianResponse
 
   function getChildren(){

@@ -6,7 +6,7 @@ export default async function Page({
   params: Promise<{ slug: number }>
 }) {
   const { slug } = await params
-  const data = await fetch(`http://localhost:5078/tutees/${slug}`)
+  const data = await fetch(`${process.env.NEXT_PUBLIC_API}/tutees/${slug}`, { cache: 'no-store' })
   const tutee = (await data.json()) as tuteeResponse
 
   function getDate(dateStr: string) {

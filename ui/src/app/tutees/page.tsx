@@ -2,7 +2,7 @@ import Link from "next/link"
 import { tuteeResponse } from "../types/TuteeResponse"
 
 export default async function Page() {
-  const data = await fetch('http://localhost:5078/tutees')
+  const data = await fetch(`${process.env.NEXT_PUBLIC_API}/tutees`, { cache: 'no-store' })
   const tutees = (await data.json()) as tuteeResponse[]
   return (
     <div>
