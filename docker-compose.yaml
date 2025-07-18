@@ -11,6 +11,8 @@ services:
       - ./DB:/App/DB
   ui:
     build: ./ui
+    env_file:
+      - ./ui.env
     depends_on:
       proxy:
         condition: service_started
