@@ -14,12 +14,12 @@ public class Context(IConfiguration configuration) : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Guardian>()
-            .ToTable("Guardian");
-        modelBuilder.Entity<Guardian>()
+        modelBuilder.Entity<Account>()
+            .ToTable("Account");
+        modelBuilder.Entity<Account>()
             .HasMany(g => g.Tutees)
-            .WithOne(t => t.Guardian)
-            .HasForeignKey("GuardianId");
+            .WithOne(t => t.Account)
+            .HasForeignKey("AccountId");
 
         modelBuilder.Entity<Tutee>()
             .ToTable("Tutee");
@@ -59,7 +59,7 @@ public class Context(IConfiguration configuration) : DbContext
             .ToTable("Rate");
     }
 
-    public DbSet<Guardian> Guardians { get; set; } = default!;
+    public DbSet<Account> Accounts { get; set; } = default!;
     public DbSet<Tutee> Tutees { get; set; } = default!;
     public DbSet<Lesson> Lessons { get; set; } = default!;
     public DbSet<Homework> Homeworks { get; set; } = default!;

@@ -1,9 +1,9 @@
 import { tuteeResponse } from "./TuteeResponse"
 
-export type guardianResponse = {
-    guardianId: number, 
-    firstName: string,
-    lastName: string,
+export type accountResponse = {
+    accountId: number, 
+    holderFirstName: string,
+    holderLastName: string,
     tutees: tuteeResponse[]
 }
 
