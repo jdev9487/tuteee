@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { guardianResponse } from "../types/GuardianResponse"
 
+export const dynamic = "force-dynamic"
+
 export default async function Page() {
   const data = await fetch(`${process.env.NEXT_PUBLIC_API}/guardians`, { cache: 'no-store' })
   const guardians = (await data.json()) as guardianResponse[]
