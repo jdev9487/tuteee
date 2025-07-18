@@ -9,7 +9,7 @@ public static class TuteeMap
         new()
         {
             TuteeId = entity.TuteeId,
-            GuardianId = entity.GuardianId,
+            AccountId = entity.AccountId,
             FirstName = entity.FirstName,
             LastName = entity.LastName,
             EmailAddress = entity.EmailAddress,
@@ -20,7 +20,7 @@ public static class TuteeMap
     public static Tutee Map(TuteeDto dto) =>
         new()
         {
-            GuardianId = dto.GuardianId,
+            AccountId = dto.AccountId,
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             EmailAddress = dto.EmailAddress,

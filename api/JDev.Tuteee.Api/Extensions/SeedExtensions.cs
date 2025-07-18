@@ -9,21 +9,21 @@ public static class SeedExtensions
     public static async Task SeedDevelopmentDataAsync(this Context context, CancellationToken token)
     {
         var tomRogers =
-            await context.Guardians.FirstOrDefaultAsync(g => g.FirstName == "Tom" && g.LastName == "Rogers",
+            await context.Accounts.FirstOrDefaultAsync(g => g.HolderFirstName == "Tom" && g.HolderLastName == "Rogers",
                 cancellationToken: token);
         if (tomRogers is null)
         {
-            tomRogers = new Guardian
+            tomRogers = new Account
             {
-                FirstName = "Tom",
-                LastName = "Rogers",
+                HolderFirstName = "Tom",
+                HolderLastName = "Rogers",
                 EmailAddress = "tr@mail.com",
                 PhoneNumber = "07123456789"
             };
-            await context.Guardians.AddAsync(tomRogers, token);
+            await context.Accounts.AddAsync(tomRogers, token);
             var lucyBassett = new Tutee
             {
-                Guardian = tomRogers,
+                Account = tomRogers,
                 FirstName = "Lucy",
                 LastName = "Bassett",
                 EmailAddress = "lb@mail.com"
@@ -31,7 +31,7 @@ public static class SeedExtensions
             await context.Tutees.AddAsync(lucyBassett, token);
             var zaraAhmed = new Tutee
             {
-                Guardian = tomRogers,
+                Account = tomRogers,
                 FirstName = "Zara",
                 LastName = "Ahmed",
                 EmailAddress = "za@mail.com"
@@ -52,21 +52,21 @@ public static class SeedExtensions
             await context.Lessons.AddRangeAsync(lucyLesson1, lucyLesson2);
         }
         var xuexueXiang =
-            await context.Guardians.FirstOrDefaultAsync(g => g.FirstName == "Xuexue" && g.LastName == "Xiang",
+            await context.Accounts.FirstOrDefaultAsync(g => g.HolderFirstName == "Xuexue" && g.HolderLastName == "Xiang",
                 cancellationToken: token);
         if (xuexueXiang is null)
         {
-            xuexueXiang = new Guardian
+            xuexueXiang = new Account
             {
-                FirstName = "Xuexue",
-                LastName = "Xiang",
+                HolderFirstName = "Xuexue",
+                HolderLastName = "Xiang",
                 EmailAddress = "xx@mail.com",
                 PhoneNumber = "07999999999"
             };
-            await context.Guardians.AddAsync(xuexueXiang, token);
+            await context.Accounts.AddAsync(xuexueXiang, token);
             var yaraGrant = new Tutee
             {
-                Guardian = xuexueXiang,
+                Account = xuexueXiang,
                 FirstName = "Yara",
                 LastName = "Grant",
                 EmailAddress = "yg@mail.com"
@@ -74,7 +74,7 @@ public static class SeedExtensions
             await context.Tutees.AddAsync(yaraGrant, token);
             var johnGraham = new Tutee
             {
-                Guardian = xuexueXiang,
+                Account = xuexueXiang,
                 FirstName = "John",
                 LastName = "Graham",
                 EmailAddress = "jg@mail.com"
