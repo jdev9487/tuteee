@@ -20,6 +20,7 @@ await context.Database.MigrateAsync();
 
 if (app.Environment.IsDevelopment())
 {
+    await context.SeedDevelopmentDataAsync(default);
     app.UseSwagger();
     app.UseSwaggerUI();
     app.MapOpenApi();
