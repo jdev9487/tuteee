@@ -3,7 +3,7 @@ namespace JDev.Tuteee.Api.Extensions;
 using Endpoints;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-public static class Extensions
+public static class EndpointExtensions
 {
     public static IServiceCollection AddEndpoints(this IServiceCollection services)
     {
