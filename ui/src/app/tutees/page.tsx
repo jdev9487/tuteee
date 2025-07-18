@@ -1,28 +1,35 @@
 import Link from "next/link"
 import { tuteeResponse } from "../types/TuteeResponse"
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
 
 export default async function Page() {
   const data = await fetch(`${process.env.NEXT_PUBLIC_API}/tutees`, { cache: 'no-store' })
   const tutees = (await data.json()) as tuteeResponse[]
   return (
     <div>
-      <h1>Tutees</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email address</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tutees.map((t, i) => 
-            <tr key={i}>
-              <td><Link href={`/tutees/${t.tuteeId}`}><p>{`${t.firstName} ${t.lastName}`}</p></Link></td>
-              <td>{t.emailAddress}</td>
-            </tr>
-          )}
-        </tbody>
-      </table> 
+      <Typography variant="h1" align="center">Tutees</Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Email address</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tutees.map((t, i) => 
+              <TableRow key={i}>
+                <TableCell>
+                  <Typography><Link href={`/tutees/${t.tuteeId}`}>{`${t.firstName} ${t.lastName}`}</Link></Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>{t.emailAddress}</Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }

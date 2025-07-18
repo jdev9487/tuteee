@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { guardianResponse } from "../../types/GuardianResponse"
+import { List, ListItem, ListItemText, Typography } from "@mui/material"
 
 export default async function Page({
   params,
@@ -10,12 +11,17 @@ export default async function Page({
   const data = await fetch(`${process.env.NEXT_PUBLIC_API}/guardians/${slug}`, { cache: 'no-store' })
   const guardian = (await data.json()) as guardianResponse
 
-  function getChildren(){
-    if (guardian.tutees.length !== 0)
-    {
+  function getChildren() {
+    if (guardian.tutees.length !== 0) {
       return (
         <div>
-          {guardian.tutees.map((t, i) => <p key={i}><Link href={`/tutees/${t.tuteeId}`}>{t.firstName} {t.lastName}</Link> (Tutee)</p>)}
+          <List>
+            {guardian.tutees.map((t, i) => 
+              <ListItem key={i} disablePadding>
+                <Link href={`/tutees/${t.tuteeId}`}><ListItemText primary={`${t.firstName} ${t.lastName}`} /></Link>
+              </ListItem>
+            )}
+          </List>
         </div>
       )
     }
@@ -23,7 +29,12 @@ export default async function Page({
 
   return (
     <div>
-      <h1>{guardian.firstName} {guardian.lastName} (Guardian)</h1>
+      <Typography variant="h1" align="center">
+        {guardian.firstName} {guardian.lastName} 🧑
+      </Typography>
+      <Typography variant="h3">
+        Children
+      </Typography>
       {getChildren()}
     </div>
   )

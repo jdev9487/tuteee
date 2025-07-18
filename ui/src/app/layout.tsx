@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Typography from '@mui/material/Typography';
 
 export const metadata: Metadata = {
-  title: "asdf",
-  description: "qwer"
+  title: "Tuteee",
+  description: "Manage lessons, homework and auditing"
 };
 
 export default function RootLayout({
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Link href="/"><h1>Home</h1></Link>
+        <Link href="/"><Typography variant="h4">🏠</Typography></Link>
         {children}
       </body>
     </html>

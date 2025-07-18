@@ -1,3 +1,4 @@
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
 import { tuteeResponse } from "../../types/TuteeResponse"
 
 export default async function Page({
@@ -11,7 +12,7 @@ export default async function Page({
 
   function getDate(dateStr: string) {
     const date = new Date(dateStr)
-    const formattedMonth = `${date.getMonth()}`.padStart(2, '0')
+    const formattedMonth = `${date.getMonth() + 1}`.padStart(2, '0')
     const formattedDay = `${date.getDate()}`.padStart(2, '0')
     return `${formattedDay}/${formattedMonth}/${date.getFullYear()}`
   }
@@ -25,26 +26,34 @@ export default async function Page({
 
   return (
     <div>
-      <h1>{tutee.firstName} {tutee.lastName} (Tutee)</h1>
-      <h2>Lessons</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Start</th>
-            <th>End</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tutee.lessons.map((l, i) => 
-            <tr key={i}>
-              <td>{getDate(l.startTime)}</td>
-              <td>{getTime(l.startTime)}</td>
-              <td>{getTime(l.endTime)}</td>
-            </tr>
-          )}
-        </tbody>
-      </table> 
+      <Typography variant="h1" align="center">{tutee.firstName} {tutee.lastName} 🎓</Typography>
+      <Typography variant="h3">Lessons</Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Date</TableCell>
+              <TableCell>Start</TableCell>
+              <TableCell>End</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tutee.lessons.map((l, i) => 
+              <TableRow key={i}>
+                <TableCell>
+                  <Typography>{getDate(l.startTime)}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>{getTime(l.startTime)}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>{getTime(l.endTime)}</Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }
