@@ -22,4 +22,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\JDev.Tuteee.ApiClient\JDev.Tuteee.ApiClient.csproj" />
+    </ItemGroup>
+
 </Project>

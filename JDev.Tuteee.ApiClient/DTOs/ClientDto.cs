@@ -1,6 +1,6 @@
-namespace JDev.Tuteee.Api.DTOs;
+namespace JDev.Tuteee.ApiClient.DTOs;
 
-public class AccountDto
+public class ClientDto
 {
     public int? AccountId { get; set; }
     public required string HolderFirstName { get; set; } = default!;

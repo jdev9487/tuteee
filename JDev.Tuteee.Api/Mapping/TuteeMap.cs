@@ -1,6 +1,6 @@
 namespace JDev.Tuteee.Api.Mapping;
 
-using DTOs;
+using ApiClient.DTOs;
 using Entities;
 
 public static class TuteeMap

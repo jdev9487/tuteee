@@ -1,4 +1,4 @@
-namespace JDev.Tuteee.Api.DTOs;
+namespace JDev.Tuteee.ApiClient.DTOs;
 
 public class HomeworkAttachmentDto
 {

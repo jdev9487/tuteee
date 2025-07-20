@@ -1,0 +1,60 @@
+@page "/tutees/{TuteeId:int}"
+@using System.Text.Json
+@using JDev.Tuteee.ApiClient.DTOs
+@inject HttpClient Http
+
+<PageTitle>@TuteeName</PageTitle>
+
+<h1>@TuteeName</h1>
+
+@if (_tutee == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <h3>Lessons</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Start</th>
+            <th>End</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (_tutee.Lessons is not null)
+        {
+            @foreach (var lesson in _tutee.Lessons)
+            {
+                <tr>
+                    <td>@lesson.StartTime.ToString("dd MMMM yy")</td>
+                    <td>@lesson.StartTime.ToString("T")</td>
+                    <td>@lesson.EndTime.ToString("T")</td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public int TuteeId { get; set; }
+    private TuteeDto? _tutee;
+
+    private string TuteeName => $"{_tutee?.FirstName} {_tutee?.LastName}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.GetAsync($"/tutees/{TuteeId}");
+        var json = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+        _tutee = JsonSerializer.Deserialize<TuteeDto>(json, options);
+    }
+}
