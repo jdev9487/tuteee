@@ -1,0 +1,56 @@
+﻿@page "/clients"
+@using System.Text.Json
+@inject HttpClient Http
+
+<PageTitle>Clients</PageTitle>
+
+<h1>Clients</h1>
+
+@if (_clients == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Contact</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var client in _clients)
+        {
+            <tr>
+                <td>@client.holderFirstName @client.holderLastName</td>
+                <td>@client.emailAddress</td>
+                <td>@client.phoneNumber</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Client[]? _clients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.GetAsync("http://localhost:5078/accounts");
+        var json = await response.Content.ReadAsStringAsync();
+        _clients = JsonSerializer.Deserialize<Client[]>(json);
+    }
+
+    public class Client
+    {
+        public string holderFirstName { get; set; } = default!;
+        public string holderLastName { get; set; } = default!;
+        public string emailAddress { get; set; } = default!;
+        public string phoneNumber { get; set; } = default!;
+    }
+
+}
