@@ -1,0 +1,62 @@
+@page "/clients/{ClientId:int}"
+@using System.Text.Json
+@using JDev.Tuteee.ApiClient.DTOs
+@inject HttpClient Http
+
+<PageTitle>@ClientName</PageTitle>
+
+<h1>@ClientName</h1>
+
+<h3>Tutees</h3>
+@if (_client == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (_client.Tutees is not null)
+        {
+            @foreach (var tutee in _client.Tutees)
+            {
+                <tr>
+                    <td>
+                        <NavLink class="nav-link" href=@($"/tutees/{tutee.TuteeId}") Match="NavLinkMatch.All">
+                            @tutee.FirstName @tutee.LastName
+                        </NavLink>
+                    </td>
+                    <td>@tutee.EmailAddress</td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public int ClientId { get; set; }
+    private ClientDto? _client;
+
+    private string ClientName => $"{_client?.HolderFirstName} {_client?.HolderLastName}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.GetAsync($"/accounts/{ClientId}");
+        var json = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+        _client = JsonSerializer.Deserialize<ClientDto>(json, options);
+    }
+}

@@ -1,7 +1,7 @@
 namespace JDev.Tuteee.Api.Endpoints;
 
+using ApiClient.DTOs;
 using DB;
-using DTOs;
 using Mapping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -11,7 +11,7 @@ public class AccountEndpoints : IEndpoints
     public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {
         routeBuilder.MapGet("/accounts/{id:int}",
-            async Task<Results<Ok<AccountDto>, NotFound>> (int id, Context context, CancellationToken token) =>
+            async Task<Results<Ok<ClientDto>, NotFound>> (int id, Context context, CancellationToken token) =>
             {
                 var account = await context.Accounts
                     .Include(t => t.Tutees)
@@ -29,7 +29,7 @@ public class AccountEndpoints : IEndpoints
             });
 
         routeBuilder.MapPost("/accounts",
-            async (AccountDto dto, Context context, CancellationToken token) =>
+            async (ClientDto dto, Context context, CancellationToken token) =>
             {
                 var entity = AccountMap.Map(dto);
                 await context.Accounts.AddAsync(entity, token);

@@ -1,11 +1,11 @@
 namespace JDev.Tuteee.Api.Mapping;
 
-using DTOs;
+using ApiClient.DTOs;
 using Entities;
 
 public static class AccountMap
 {
-    public static AccountDto Map(Account entity) =>
+    public static ClientDto Map(Account entity) =>
         new()
         {
             AccountId = entity.AccountId,
@@ -16,7 +16,7 @@ public static class AccountMap
             Tutees = entity.Tutees.Select(TuteeMap.Map)
         };
 
-    public static Account Map(AccountDto dto) =>
+    public static Account Map(ClientDto dto) =>
         new()
         {
             HolderFirstName = dto.HolderFirstName,
