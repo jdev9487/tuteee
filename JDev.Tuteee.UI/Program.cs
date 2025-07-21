@@ -8,5 +8,6 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddApiClient();
+builder.Services.AddBlazorBootstrap();
 
 await builder.Build().RunAsync();

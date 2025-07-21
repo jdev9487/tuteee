@@ -1,7 +1,5 @@
 ﻿@page "/"
 @page "/clients"
-@using System.Net.Http.Headers
-@using System.Text.Json
 @using JDev.Tuteee.ApiClient
 @using JDev.Tuteee.ApiClient.DTOs
 @inject IApiClient Client;
@@ -10,6 +8,23 @@
 
 <h1>Clients</h1>
 
+<Modal @ref="_modal" Title="Enter new client details">
+    <BodyTemplate>
+        First name
+        <TextInput @bind-Value="_newClientFirstName"></TextInput>
+        Last name
+        <TextInput @bind-Value="_newClientLastName"></TextInput>
+        Email address
+        <TextInput @bind-Value="_newClientEmailAddress"></TextInput>
+        Phone number
+        <TextInput @bind-Value="_newClientPhoneNumber"></TextInput>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideAddClientModal">Add client</Button>
+    </FooterTemplate>
+</Modal>
+
+<Button Color="ButtonColor.Primary" @onclick="OnShowAddClientModal">Add client</Button>
 @if (_clients == null)
 {
     <p>
@@ -18,7 +33,6 @@
 }
 else
 {
-    @* <button @onclick="NewClient">Add client</button> *@
     <table class="table">
         <thead>
         <tr>
@@ -45,36 +59,46 @@ else
 }
 
 @code {
-    private ClientDto[]? _clients;
+    private IEnumerable<ClientDto>? _clients;
+    private Modal _modal = default!;
+    private string _newClientFirstName = default!;
+    private string _newClientLastName = default!;
+    private string _newClientEmailAddress = default!;
+    private string _newClientPhoneNumber = default!;
+
+    private async Task OnShowAddClientModal()
+    {
+        await _modal.ShowAsync();
+    }
+
+    private async Task OnHideAddClientModal()
+    {
+        var dto = new ClientDto
+        {
+            HolderFirstName = _newClientFirstName,
+            HolderLastName = _newClientLastName,
+            EmailAddress = _newClientEmailAddress,
+            PhoneNumber = _newClientPhoneNumber
+        };
+        await Client.AddClientAsync(dto);
+
+        ResetNewClientInfo();
+        
+        _clients = await Client.GetClientsAsync();
+        
+        await _modal.HideAsync();
+    }
+
+    private void ResetNewClientInfo()
+    {
+        _newClientFirstName = "";
+        _newClientLastName = "";
+        _newClientEmailAddress = "";
+        _newClientPhoneNumber = "";
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        _clients = (await Client.GetClientsAsync()).ToArray();
+        _clients = await Client.GetClientsAsync();
     }
-    //
-    // private async Task NewClient()
-    // {
-    //     var dto = new ClientDto
-    //     {
-    //         HolderFirstName = "Ted",
-    //         HolderLastName = "Shaw",
-    //         EmailAddress = "ts@mail.com",
-    //         PhoneNumber = "07123123123"
-    //     };
-    //
-    //     var request = JsonSerializer.Serialize(dto);
-    //     var buffer = System.Text.Encoding.UTF8.GetBytes(request);
-    //     var byteContent = new ByteArrayContent(buffer);
-    //     byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-    //     await Http.PostAsync("/accounts", byteContent);
-    //     
-    //     var response = await Http.GetAsync("/accounts");
-    //     var json = await response.Content.ReadAsStringAsync();
-    //     var options = new JsonSerializerOptions
-    //     {
-    //     PropertyNameCaseInsensitive = true
-    //     };
-    //     _clients = JsonSerializer.Deserialize<ClientDto[]>(json, options);
-    // }
-    //
 }
