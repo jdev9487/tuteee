@@ -1,7 +1,7 @@
 @page "/tutees/{TuteeId:int}"
-@using System.Text.Json
+@using JDev.Tuteee.ApiClient
 @using JDev.Tuteee.ApiClient.DTOs
-@inject HttpClient Http
+@inject IApiClient Client
 
 <PageTitle>@TuteeName</PageTitle>
 
@@ -49,12 +49,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await Http.GetAsync($"/tutees/{TuteeId}");
-        var json = await response.Content.ReadAsStringAsync();
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        };
-        _tutee = JsonSerializer.Deserialize<TuteeDto>(json, options);
+        _tutee = await Client.GetTuteeAsync(TuteeId);
     }
 }

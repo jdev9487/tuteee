@@ -1,0 +1,80 @@
+﻿@page "/"
+@page "/clients"
+@using System.Net.Http.Headers
+@using System.Text.Json
+@using JDev.Tuteee.ApiClient
+@using JDev.Tuteee.ApiClient.DTOs
+@inject IApiClient Client;
+
+<PageTitle>Clients</PageTitle>
+
+<h1>Clients</h1>
+
+@if (_clients == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    @* <button @onclick="NewClient">Add client</button> *@
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Contact</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var client in _clients)
+        {
+            <tr>
+                <td>
+                    <NavLink class="nav-link" href=@($"/clients/{client.AccountId}") Match="NavLinkMatch.All">
+                        @client.HolderFirstName @client.HolderLastName
+                    </NavLink>
+                </td>
+                <td>@client.EmailAddress</td>
+                <td>@client.PhoneNumber</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private ClientDto[]? _clients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _clients = (await Client.GetClientsAsync()).ToArray();
+    }
+    //
+    // private async Task NewClient()
+    // {
+    //     var dto = new ClientDto
+    //     {
+    //         HolderFirstName = "Ted",
+    //         HolderLastName = "Shaw",
+    //         EmailAddress = "ts@mail.com",
+    //         PhoneNumber = "07123123123"
+    //     };
+    //
+    //     var request = JsonSerializer.Serialize(dto);
+    //     var buffer = System.Text.Encoding.UTF8.GetBytes(request);
+    //     var byteContent = new ByteArrayContent(buffer);
+    //     byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+    //     await Http.PostAsync("/accounts", byteContent);
+    //     
+    //     var response = await Http.GetAsync("/accounts");
+    //     var json = await response.Content.ReadAsStringAsync();
+    //     var options = new JsonSerializerOptions
+    //     {
+    //     PropertyNameCaseInsensitive = true
+    //     };
+    //     _clients = JsonSerializer.Deserialize<ClientDto[]>(json, options);
+    // }
+    //
+}
