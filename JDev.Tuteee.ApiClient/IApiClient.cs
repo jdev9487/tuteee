@@ -9,4 +9,5 @@ public interface IApiClient
     Task AddClientAsync(ClientDto clientDto);
     Task<TuteeDto?> GetTuteeAsync(int id);
     Task AddTuteeAsync(TuteeDto tutee);
+    Task AddLessonAsync(LessonDto lesson);
 }

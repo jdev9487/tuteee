@@ -16,6 +16,8 @@ public class ApiClient(HttpClient client) : IApiClient
     public async Task<TuteeDto?> GetTuteeAsync(int id) => await GetAsync<TuteeDto?>($"/tutees/{id}");
     
     public async Task AddTuteeAsync(TuteeDto tutee) => await PostAsync("/tutees", tutee);
+    
+    public async Task AddLessonAsync(LessonDto lesson) => await PostAsync("/lessons", lesson);
 
     private async Task<TResponseObject?> GetAsync<TResponseObject>(string uri)
     {

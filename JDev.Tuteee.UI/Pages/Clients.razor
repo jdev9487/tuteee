@@ -6,7 +6,10 @@
 
 <PageTitle>Clients</PageTitle>
 
-<h1>Clients</h1>
+<div class="d-flex flex-row justify-content-between mb-2">
+    <h1>Clients</h1>
+    <Button Color="ButtonColor.Primary" @onclick="OnShowAddClientModal">Add client</Button>
+</div>
 
 <Modal @ref="_modal" Title="Enter new client details">
     <BodyTemplate>
@@ -24,7 +27,6 @@
     </FooterTemplate>
 </Modal>
 
-<Button Color="ButtonColor.Primary" @onclick="OnShowAddClientModal">Add client</Button>
 @if (_clients == null)
 {
     <p>
@@ -33,34 +35,36 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Contact</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var client in _clients)
-        {
-            <tr>
-                <td>
-                    <NavLink class="nav-link" href=@($"/clients/{client.ClientId}") Match="NavLinkMatch.All">
-                        @client.HolderFirstName @client.HolderLastName
-                    </NavLink>
-                </td>
-                <td>@client.EmailAddress</td>
-                <td>@client.PhoneNumber</td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    <Grid @ref="_clientGrid"
+          TItem="ClientDto"
+          Class="table table-hover table-bordered table-striped"
+          DataProvider="ClientsDataProvider"
+          Responsive="true">
+        <GridColumns>
+            <GridColumn TItem="ClientDto" HeaderText="First name" PropertyName="HolderFirstName">
+                <NavLink class="nav-link" href=@($"/clients/{context.ClientId}") Match="NavLinkMatch.All">
+                    @context.HolderFirstName
+                </NavLink>
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Last name" PropertyName="HolderLastName">
+                <NavLink class="nav-link" href=@($"/clients/{context.ClientId}") Match="NavLinkMatch.All">
+                    @context.HolderLastName
+                </NavLink>
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Email" PropertyName="EmailAddress">
+                @context.EmailAddress
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Contact" PropertyName="PhoneNumer">
+                @context.PhoneNumber
+            </GridColumn>
+        </GridColumns>
+    </Grid>
 }
 
 @code {
     private IEnumerable<ClientDto>? _clients;
     private Modal _modal = default!;
+    private Grid<ClientDto> _clientGrid = default!;
     private string _newClientFirstName = default!;
     private string _newClientLastName = default!;
     private string _newClientEmailAddress = default!;
@@ -85,6 +89,7 @@ else
         ResetNewClientInfo();
         
         _clients = await Client.GetClientsAsync();
+        await _clientGrid.RefreshDataAsync();
         
         await _modal.HideAsync();
     }
@@ -100,5 +105,10 @@ else
     protected override async Task OnInitializedAsync()
     {
         _clients = await Client.GetClientsAsync();
+    }
+
+    private async Task<GridDataProviderResult<ClientDto>> ClientsDataProvider(GridDataProviderRequest<ClientDto> request)
+    {
+        return await Task.FromResult(request.ApplyTo(_clients));
     }
 }
