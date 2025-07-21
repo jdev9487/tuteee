@@ -1,0 +1,104 @@
+﻿@page "/"
+@page "/clients"
+@using JDev.Tuteee.ApiClient
+@using JDev.Tuteee.ApiClient.DTOs
+@inject IApiClient Client;
+
+<PageTitle>Clients</PageTitle>
+
+<h1>Clients</h1>
+
+<Modal @ref="_modal" Title="Enter new client details">
+    <BodyTemplate>
+        First name
+        <TextInput @bind-Value="_newClientFirstName"></TextInput>
+        Last name
+        <TextInput @bind-Value="_newClientLastName"></TextInput>
+        Email address
+        <TextInput @bind-Value="_newClientEmailAddress"></TextInput>
+        Phone number
+        <TextInput @bind-Value="_newClientPhoneNumber"></TextInput>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideAddClientModal">Add client</Button>
+    </FooterTemplate>
+</Modal>
+
+<Button Color="ButtonColor.Primary" @onclick="OnShowAddClientModal">Add client</Button>
+@if (_clients == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Contact</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var client in _clients)
+        {
+            <tr>
+                <td>
+                    <NavLink class="nav-link" href=@($"/clients/{client.AccountId}") Match="NavLinkMatch.All">
+                        @client.HolderFirstName @client.HolderLastName
+                    </NavLink>
+                </td>
+                <td>@client.EmailAddress</td>
+                <td>@client.PhoneNumber</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<ClientDto>? _clients;
+    private Modal _modal = default!;
+    private string _newClientFirstName = default!;
+    private string _newClientLastName = default!;
+    private string _newClientEmailAddress = default!;
+    private string _newClientPhoneNumber = default!;
+
+    private async Task OnShowAddClientModal()
+    {
+        await _modal.ShowAsync();
+    }
+
+    private async Task OnHideAddClientModal()
+    {
+        var dto = new ClientDto
+        {
+            HolderFirstName = _newClientFirstName,
+            HolderLastName = _newClientLastName,
+            EmailAddress = _newClientEmailAddress,
+            PhoneNumber = _newClientPhoneNumber
+        };
+        await Client.AddClientAsync(dto);
+
+        ResetNewClientInfo();
+        
+        _clients = await Client.GetClientsAsync();
+        
+        await _modal.HideAsync();
+    }
+
+    private void ResetNewClientInfo()
+    {
+        _newClientFirstName = "";
+        _newClientLastName = "";
+        _newClientEmailAddress = "";
+        _newClientPhoneNumber = "";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _clients = await Client.GetClientsAsync();
+    }
+}
