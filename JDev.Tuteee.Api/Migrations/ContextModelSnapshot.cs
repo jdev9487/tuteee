@@ -16,9 +16,9 @@ namespace JDev.Tuteee.Api.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
 
-            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Account", b =>
+            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Client", b =>
                 {
-                    b.Property<int>("AccountId")
+                    b.Property<int>("ClientId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -38,9 +38,9 @@ namespace JDev.Tuteee.Api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("AccountId");
+                    b.HasKey("ClientId");
 
-                    b.ToTable("Account", (string)null);
+                    b.ToTable("Client", (string)null);
                 });
 
             modelBuilder.Entity("JDev.Tuteee.Api.Entities.Homework", b =>
@@ -136,7 +136,7 @@ namespace JDev.Tuteee.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AccountId")
+                    b.Property<int>("ClientId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("EmailAddress")
@@ -153,7 +153,7 @@ namespace JDev.Tuteee.Api.Migrations
 
                     b.HasKey("TuteeId");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("ClientId");
 
                     b.ToTable("Tutee", (string)null);
                 });
@@ -204,16 +204,16 @@ namespace JDev.Tuteee.Api.Migrations
 
             modelBuilder.Entity("JDev.Tuteee.Api.Entities.Tutee", b =>
                 {
-                    b.HasOne("JDev.Tuteee.Api.Entities.Account", "Account")
+                    b.HasOne("JDev.Tuteee.Api.Entities.Client", "Client")
                         .WithMany("Tutees")
-                        .HasForeignKey("AccountId")
+                        .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Account", b =>
+            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Client", b =>
                 {
                     b.Navigation("Tutees");
                 });

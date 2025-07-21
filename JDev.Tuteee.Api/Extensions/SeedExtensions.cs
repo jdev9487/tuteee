@@ -9,21 +9,21 @@ public static class SeedExtensions
     public static async Task SeedDevelopmentDataAsync(this Context context, CancellationToken token)
     {
         var tomRogers =
-            await context.Accounts.FirstOrDefaultAsync(g => g.HolderFirstName == "Tom" && g.HolderLastName == "Rogers",
+            await context.Clients.FirstOrDefaultAsync(g => g.HolderFirstName == "Tom" && g.HolderLastName == "Rogers",
                 cancellationToken: token);
         if (tomRogers is null)
         {
-            tomRogers = new Account
+            tomRogers = new Client
             {
                 HolderFirstName = "Tom",
                 HolderLastName = "Rogers",
                 EmailAddress = "tr@mail.com",
                 PhoneNumber = "07123456789"
             };
-            await context.Accounts.AddAsync(tomRogers, token);
+            await context.Clients.AddAsync(tomRogers, token);
             var lucyBassett = new Tutee
             {
-                Account = tomRogers,
+                Client = tomRogers,
                 FirstName = "Lucy",
                 LastName = "Bassett",
                 EmailAddress = "lb@mail.com"
@@ -31,7 +31,7 @@ public static class SeedExtensions
             await context.Tutees.AddAsync(lucyBassett, token);
             var zaraAhmed = new Tutee
             {
-                Account = tomRogers,
+                Client = tomRogers,
                 FirstName = "Zara",
                 LastName = "Ahmed",
                 EmailAddress = "za@mail.com"
@@ -52,21 +52,21 @@ public static class SeedExtensions
             await context.Lessons.AddRangeAsync(lucyLesson1, lucyLesson2);
         }
         var xuexueXiang =
-            await context.Accounts.FirstOrDefaultAsync(g => g.HolderFirstName == "Xuexue" && g.HolderLastName == "Xiang",
+            await context.Clients.FirstOrDefaultAsync(g => g.HolderFirstName == "Xuexue" && g.HolderLastName == "Xiang",
                 cancellationToken: token);
         if (xuexueXiang is null)
         {
-            xuexueXiang = new Account
+            xuexueXiang = new Client
             {
                 HolderFirstName = "Xuexue",
                 HolderLastName = "Xiang",
                 EmailAddress = "xx@mail.com",
                 PhoneNumber = "07999999999"
             };
-            await context.Accounts.AddAsync(xuexueXiang, token);
+            await context.Clients.AddAsync(xuexueXiang, token);
             var yaraGrant = new Tutee
             {
-                Account = xuexueXiang,
+                Client = xuexueXiang,
                 FirstName = "Yara",
                 LastName = "Grant",
                 EmailAddress = "yg@mail.com"
@@ -74,7 +74,7 @@ public static class SeedExtensions
             await context.Tutees.AddAsync(yaraGrant, token);
             var johnGraham = new Tutee
             {
-                Account = xuexueXiang,
+                Client = xuexueXiang,
                 FirstName = "John",
                 LastName = "Graham",
                 EmailAddress = "jg@mail.com"

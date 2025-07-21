@@ -8,4 +8,5 @@ public interface IApiClient
     Task<IReadOnlyList<ClientDto>> GetClientsAsync();
     Task AddClientAsync(ClientDto clientDto);
     Task<TuteeDto?> GetTuteeAsync(int id);
+    Task AddTuteeAsync(TuteeDto tutee);
 }

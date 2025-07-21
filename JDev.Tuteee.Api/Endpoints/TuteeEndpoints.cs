@@ -14,7 +14,7 @@ public class TuteeEndpoints : IEndpoints
             async Task<Results<Ok<TuteeDto>, NotFound>> (int id, Context context, CancellationToken token) =>
             {
                 var entity = await context.Tutees
-                    .Include(t => t.Account)
+                    .Include(t => t.Client)
                     .Include(t => t.Lessons)
                     .SingleOrDefaultAsync(t => t.TuteeId == id, cancellationToken: token);
                 return entity is null ? TypedResults.NotFound() : TypedResults.Ok(TuteeMap.Map(entity));
@@ -24,7 +24,7 @@ public class TuteeEndpoints : IEndpoints
             async (Context context, CancellationToken token) =>
             {
                 var entities = await context.Tutees
-                    .Include(t => t.Account)
+                    .Include(t => t.Client)
                     .Include(t => t.Lessons)
                     .ToListAsync(cancellationToken: token);
                 return TypedResults.Ok(entities.Select(TuteeMap.Map));

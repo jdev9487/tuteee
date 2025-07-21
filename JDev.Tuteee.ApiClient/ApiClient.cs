@@ -6,14 +6,16 @@ using DTOs;
 
 public class ApiClient(HttpClient client) : IApiClient
 {
-    public async Task<ClientDto?> GetClientAsync(int id) => await GetAsync<ClientDto?>($"/accounts/{id}");
+    public async Task<ClientDto?> GetClientAsync(int id) => await GetAsync<ClientDto?>($"/clients/{id}");
 
     public async Task<IReadOnlyList<ClientDto>> GetClientsAsync() =>
-        await GetAsync<IReadOnlyList<ClientDto>>("/accounts") ?? [];
+        await GetAsync<IReadOnlyList<ClientDto>>("/clients") ?? [];
 
-    public async Task AddClientAsync(ClientDto clientDto) => await PostAsync("/accounts", clientDto);
+    public async Task AddClientAsync(ClientDto clientDto) => await PostAsync("/clients", clientDto);
 
     public async Task<TuteeDto?> GetTuteeAsync(int id) => await GetAsync<TuteeDto?>($"/tutees/{id}");
+    
+    public async Task AddTuteeAsync(TuteeDto tutee) => await PostAsync("/tutees", tutee);
 
     private async Task<TResponseObject?> GetAsync<TResponseObject>(string uri)
     {

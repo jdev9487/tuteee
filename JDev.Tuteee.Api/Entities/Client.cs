@@ -1,8 +1,8 @@
 namespace JDev.Tuteee.Api.Entities;
 
-public class Account
+public class Client
 {
-    public int AccountId { get; set; }
+    public int ClientId { get; set; }
     public string HolderFirstName { get; set; } = default!;
     public string HolderLastName { get; set; } = default!;
     public string EmailAddress { get; set; } = default!;

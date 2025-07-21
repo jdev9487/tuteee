@@ -8,6 +8,20 @@
 <h1>@ClientName</h1>
 
 <h3>Tutees</h3>
+<Modal @ref="_modal" Title="Enter new tutee details">
+    <BodyTemplate>
+        First name
+        <TextInput @bind-Value="_newTuteeFirstName"></TextInput>
+        Last name
+        <TextInput @bind-Value="_newTuteeLastName"></TextInput>
+        Email address
+        <TextInput @bind-Value="_newTuteeEmailAddress"></TextInput>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideAddTuteeModal">Add tutee</Button>
+    </FooterTemplate>
+</Modal>
+<Button Color="ButtonColor.Primary" @onclick="OnShowAddTuteeModal">Add client</Button>
 @if (_client == null)
 {
     <p>
@@ -46,11 +60,42 @@ else
     [Parameter]
     public int ClientId { get; set; }
     private ClientDto? _client;
+    private Modal _modal = default!;
+    private string _newTuteeFirstName = default!;
+    private string _newTuteeLastName = default!;
+    private string _newTuteeEmailAddress = default!;
 
     private string ClientName => $"{_client?.HolderFirstName} {_client?.HolderLastName}";
 
     protected override async Task OnInitializedAsync()
     {
         _client = await ApiClient.GetClientAsync(ClientId);
+    }
+    private async Task OnShowAddTuteeModal()
+    {
+        await _modal.ShowAsync();
+    }
+
+    private async Task OnHideAddTuteeModal()
+    {
+        var dto = new TuteeDto
+        {
+            FirstName = _newTuteeFirstName,
+            LastName = _newTuteeLastName,
+            EmailAddress = _newTuteeEmailAddress,
+            ClientId = ClientId
+        };
+        await ApiClient.AddTuteeAsync(dto);
+
+        ResetNewClientInfo();
+
+        _client = await ApiClient.GetClientAsync(ClientId);
+        await _modal.HideAsync();
+    }
+    private void ResetNewClientInfo()
+    {
+        _newTuteeFirstName = "";
+        _newTuteeLastName = "";
+        _newTuteeEmailAddress = "";
     }
 }

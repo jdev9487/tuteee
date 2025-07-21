@@ -5,25 +5,25 @@
 namespace JDev.Tuteee.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Guardian",
+                name: "Client",
                 columns: table => new
                 {
-                    GuardianId = table.Column<int>(type: "INTEGER", nullable: false)
+                    ClientId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    HolderFirstName = table.Column<string>(type: "TEXT", nullable: false),
+                    HolderLastName = table.Column<string>(type: "TEXT", nullable: false),
                     EmailAddress = table.Column<string>(type: "TEXT", nullable: false),
                     PhoneNumber = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Guardian", x => x.GuardianId);
+                    table.PrimaryKey("PK_Client", x => x.ClientId);
                 });
 
             migrationBuilder.CreateTable(
@@ -35,16 +35,16 @@ namespace JDev.Tuteee.Api.Migrations
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
                     EmailAddress = table.Column<string>(type: "TEXT", nullable: false),
-                    GuardianId = table.Column<int>(type: "INTEGER", nullable: false)
+                    ClientId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tutee", x => x.TuteeId);
                     table.ForeignKey(
-                        name: "FK_Tutee_Guardian_GuardianId",
-                        column: x => x.GuardianId,
-                        principalTable: "Guardian",
-                        principalColumn: "GuardianId",
+                        name: "FK_Tutee_Client_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Client",
+                        principalColumn: "ClientId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -54,8 +54,8 @@ namespace JDev.Tuteee.Api.Migrations
                 {
                     LessonId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    StartTime = table.Column<int>(type: "INTEGER", nullable: false),
-                    EndTime = table.Column<int>(type: "INTEGER", nullable: false),
+                    StartTime = table.Column<string>(type: "TEXT", nullable: false),
+                    EndTime = table.Column<string>(type: "TEXT", nullable: false),
                     TuteeId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -152,9 +152,9 @@ namespace JDev.Tuteee.Api.Migrations
                 column: "TuteeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tutee_GuardianId",
+                name: "IX_Tutee_ClientId",
                 table: "Tutee",
-                column: "GuardianId");
+                column: "ClientId");
         }
 
         /// <inheritdoc />
@@ -176,7 +176,7 @@ namespace JDev.Tuteee.Api.Migrations
                 name: "Tutee");
 
             migrationBuilder.DropTable(
-                name: "Guardian");
+                name: "Client");
         }
     }
 }
