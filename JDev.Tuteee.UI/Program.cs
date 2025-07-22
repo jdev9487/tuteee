@@ -7,7 +7,8 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddApiClient();
+builder.Services.AddApiClient(builder.Configuration.GetSection("ApiUrl").Value);
+
 builder.Services.AddBlazorBootstrap();
 
 await builder.Build().RunAsync();
