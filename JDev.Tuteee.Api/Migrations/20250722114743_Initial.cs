@@ -56,7 +56,8 @@ namespace JDev.Tuteee.Api.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     StartTime = table.Column<string>(type: "TEXT", nullable: false),
                     EndTime = table.Column<string>(type: "TEXT", nullable: false),
-                    TuteeId = table.Column<int>(type: "INTEGER", nullable: false)
+                    TuteeId = table.Column<int>(type: "INTEGER", nullable: false),
+                    HomeworkInstructions = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -90,57 +91,6 @@ namespace JDev.Tuteee.Api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Homework",
-                columns: table => new
-                {
-                    HomeworkId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Instructions = table.Column<string>(type: "TEXT", nullable: false),
-                    LessonId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Homework", x => x.HomeworkId);
-                    table.ForeignKey(
-                        name: "FK_Homework_Lesson_LessonId",
-                        column: x => x.LessonId,
-                        principalTable: "Lesson",
-                        principalColumn: "LessonId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "HomeworkAttachment",
-                columns: table => new
-                {
-                    HomeworkAttachmentId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FileName = table.Column<string>(type: "TEXT", nullable: false),
-                    HomeworkId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HomeworkAttachment", x => x.HomeworkAttachmentId);
-                    table.ForeignKey(
-                        name: "FK_HomeworkAttachment_Homework_HomeworkId",
-                        column: x => x.HomeworkId,
-                        principalTable: "Homework",
-                        principalColumn: "HomeworkId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Homework_LessonId",
-                table: "Homework",
-                column: "LessonId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_HomeworkAttachment_HomeworkId",
-                table: "HomeworkAttachment",
-                column: "HomeworkId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Lesson_TuteeId",
                 table: "Lesson",
@@ -161,16 +111,10 @@ namespace JDev.Tuteee.Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "HomeworkAttachment");
+                name: "Lesson");
 
             migrationBuilder.DropTable(
                 name: "Rate");
-
-            migrationBuilder.DropTable(
-                name: "Homework");
-
-            migrationBuilder.DropTable(
-                name: "Lesson");
 
             migrationBuilder.DropTable(
                 name: "Tutee");

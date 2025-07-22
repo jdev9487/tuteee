@@ -41,13 +41,15 @@ public static class SeedExtensions
             {
                 Tutee = lucyBassett,
                 StartTime = new DateTimeOffset(2025, 1, 1, 9, 0, 0, TimeSpan.Zero),
-                EndTime = new DateTimeOffset(2025, 1, 1, 10, 0, 0, TimeSpan.Zero)
+                EndTime = new DateTimeOffset(2025, 1, 1, 10, 0, 0, TimeSpan.Zero),
+                HomeworkInstructions = "Do questions in book!"
             };
             var lucyLesson2 = new Lesson
             {
                 Tutee = lucyBassett,
                 StartTime = new DateTimeOffset(2025, 1, 8, 9, 0, 0, TimeSpan.Zero),
-                EndTime = new DateTimeOffset(2025, 1, 8, 10, 0, 0, TimeSpan.Zero)
+                EndTime = new DateTimeOffset(2025, 1, 8, 10, 0, 0, TimeSpan.Zero),
+                HomeworkInstructions = "Do questions from paper!"
             };
             await context.Lessons.AddRangeAsync(lucyLesson1, lucyLesson2);
         }

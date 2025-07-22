@@ -32,16 +32,6 @@ public class Context(IConfiguration configuration) : DbContext
             .WithOne(l => l.Tutee)
             .HasForeignKey("TuteeId");
         
-        modelBuilder.Entity<Homework>()
-            .ToTable("Homework");
-        modelBuilder.Entity<Homework>()
-            .HasMany(h => h.HomeworkAttachments)
-            .WithOne(ha => ha.Homework)
-            .HasForeignKey("HomeworkId");
-        
-        modelBuilder.Entity<HomeworkAttachment>()
-            .ToTable("HomeworkAttachment");
-        
         modelBuilder.Entity<Lesson>()
             .ToTable("Lesson");
         modelBuilder.Entity<Lesson>()
@@ -62,5 +52,4 @@ public class Context(IConfiguration configuration) : DbContext
     public DbSet<Client> Clients { get; set; } = default!;
     public DbSet<Tutee> Tutees { get; set; } = default!;
     public DbSet<Lesson> Lessons { get; set; } = default!;
-    public DbSet<Homework> Homeworks { get; set; } = default!;
 }

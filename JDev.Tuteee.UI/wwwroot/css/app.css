@@ -112,3 +112,10 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+a {
+    color: blue;
+}
+a.styled-pointer:not([href]) {
+    cursor: pointer;
+}
