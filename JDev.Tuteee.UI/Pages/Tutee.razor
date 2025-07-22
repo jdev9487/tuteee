@@ -42,13 +42,18 @@ else
           Responsive="true">
         <GridColumns>
             <GridColumn TItem="LessonDto" HeaderText="Date" SortKeySelector="item => item.StartTime">
-                @context.StartTime.ToString("D")
+                <NavLink class="nav-link" href=@($"/lessons/{context.LessonId}") Match="NavLinkMatch.All">
+                    @context.StartTime.ToString("D")
+                </NavLink>
             </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="Start" PropertyName="StartTime">
                 @context.StartTime.ToString("h:mm:ss tt zz")
             </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="End" PropertyName="EndTime">
                 @context.EndTime.ToString("h:mm:ss tt zz")
+            </GridColumn>
+            <GridColumn TItem="LessonDto" HeaderText="Homework" PropertyName="HomeworkInstructions">
+                @DisplayHomeworkInstructions(@context.HomeworkInstructions)
             </GridColumn>
         </GridColumns>
     </Grid>
@@ -117,4 +122,6 @@ else
     {
         return await Task.FromResult(request.ApplyTo(_tutee.Lessons));
     }
+
+    private string DisplayHomeworkInstructions(string? s) => s ?? "None set";
 }

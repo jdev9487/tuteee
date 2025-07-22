@@ -9,5 +9,9 @@ public interface IApiClient
     Task AddClientAsync(ClientDto clientDto);
     Task<TuteeDto?> GetTuteeAsync(int id);
     Task AddTuteeAsync(TuteeDto tutee);
+    Task<LessonDto?> GetLessonAsync(int id);
     Task AddLessonAsync(LessonDto lesson);
+    Task SaveTemporaryFile(TemporaryFileDto temporaryFile);
+    Task SaveHomeworkAttachment(HomeworkAttachmentDto homeworkAttachmentDto);
+    Task<IReadOnlyList<HomeworkAttachmentDto>> GetHomeworkAttachments(int lessonId);
 }

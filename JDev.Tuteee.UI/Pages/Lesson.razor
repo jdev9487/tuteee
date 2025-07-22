@@ -1,0 +1,116 @@
+@page "/lessons/{LessonId:int}"
+@using JDev.Tuteee.ApiClient
+@using JDev.Tuteee.ApiClient.DTOs
+@inject IApiClient Client
+
+<PageTitle>@TuteeName</PageTitle>
+
+<Breadcrumb Items="_navItems"></Breadcrumb>
+
+<Modal @ref="_modal" Title="Enter lesson details">
+    <BodyTemplate>
+        <div class="d-flex flex-column">
+            <InputFile OnChange="LoadFile"/>
+            Filename
+            <TextInput @bind-Value="@_filename"/>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideAddAttachmentModal">Add attachment</Button>
+    </FooterTemplate>
+</Modal>
+
+<div class="d-flex flex-row justify-content-between my-2">
+    <h4>Homework</h4>
+    <Button Color="ButtonColor.Primary">Edit</Button>
+</div>
+
+@if (_lesson is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <p>@_lesson.HomeworkInstructions</p>
+    <div class="d-flex flex-row justify-content-between my-2">
+        <h4>Homework attachments</h4>
+        <Button Color="ButtonColor.Primary" @onclick="OnShowAddAttachmentModal">Add attachments</Button>
+    </div>
+    @foreach (var ha in _homeworkAttachments)
+    {
+        <div class="d-flex flex-row">
+            <a class="styled-pointer" @onclick="DownloadFile">@Path.GetFileName(ha.FileName)</a>
+            <p>🗑️</p>
+        </div>
+    }
+}
+
+
+@code {
+    [Parameter]
+    public int LessonId { get; set; }
+    private List<BreadcrumbItem> _navItems = default!;
+    private Modal _modal = default!;
+    private LessonDto? _lesson;
+    private TuteeDto? _tutee;
+    private ClientDto? _client;
+    private IReadOnlyList<HomeworkAttachmentDto> _homeworkAttachments = [];
+    private string _filename;
+    private string _temporaryFileName = default!;
+
+    private string TuteeName => $"{_tutee?.FirstName} {_tutee?.LastName}";
+    private string ClientName => $"{_client?.HolderFirstName} {_client?.HolderLastName}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        _lesson = await Client.GetLessonAsync(LessonId);
+        _tutee = await Client.GetTuteeAsync(_lesson.TuteeId);
+        _client = await Client.GetClientAsync(_tutee.ClientId);
+        _homeworkAttachments = await Client.GetHomeworkAttachments(LessonId);
+        _navItems =
+        [
+            new BreadcrumbItem { Text = $"{ClientName} 📂", Href = $"/clients/{_client.ClientId}" },
+            new BreadcrumbItem { Text = $"{TuteeName} 🎓", Href = $"/tutees/{_tutee.TuteeId}" },
+            new BreadcrumbItem { Text = $"{_lesson.StartTime:MM/dd/yyyy} 📚", IsCurrentPage = true }
+        ];
+    }
+
+    private void DownloadFile()
+    {
+    }
+
+    private async Task OnHideAddAttachmentModal()
+    {
+        await Client.SaveHomeworkAttachment(new HomeworkAttachmentDto
+        {
+            FileName = _filename,
+            TemporaryFileName = _temporaryFileName,
+            LessonId = _lesson.LessonId
+        });
+        _homeworkAttachments = await Client.GetHomeworkAttachments(LessonId);
+        await _modal.HideAsync();
+    }
+
+    private async Task OnShowAddAttachmentModal()
+    {
+        await _modal.ShowAsync();
+    }
+
+    private async Task LoadFile(InputFileChangeEventArgs obj)
+    {
+        var file = obj.File;
+        var tempName = $"{Guid.NewGuid()}{Path.GetExtension(file.Name)}";
+        _temporaryFileName = tempName;
+        _filename = file.Name;
+        using var memoryStream = new MemoryStream();
+        await file.OpenReadStream().CopyToAsync(memoryStream);
+        var byteArray = memoryStream.ToArray();
+        await Client.SaveTemporaryFile(new TemporaryFileDto
+        {
+            Contents = byteArray,
+            Filename = tempName
+        });
+    }
+}

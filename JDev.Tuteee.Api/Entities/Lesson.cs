@@ -7,5 +7,5 @@ public class Lesson
     public DateTimeOffset EndTime { get; set; }
     public int TuteeId { get; set; }
     public Tutee Tutee { get; set; } = default!;
-    public Homework? Homework { get; set; } = default!;
+    public string? HomeworkInstructions { get; set; }
 }

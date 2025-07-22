@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JDev.Tuteee.Api.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250721124854_Initial")]
+    [Migration("20250722114743_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -46,47 +46,6 @@ namespace JDev.Tuteee.Api.Migrations
                     b.ToTable("Client", (string)null);
                 });
 
-            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Homework", b =>
-                {
-                    b.Property<int>("HomeworkId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Instructions")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("LessonId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("HomeworkId");
-
-                    b.HasIndex("LessonId")
-                        .IsUnique();
-
-                    b.ToTable("Homework", (string)null);
-                });
-
-            modelBuilder.Entity("JDev.Tuteee.Api.Entities.HomeworkAttachment", b =>
-                {
-                    b.Property<int>("HomeworkAttachmentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("HomeworkId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("HomeworkAttachmentId");
-
-                    b.HasIndex("HomeworkId");
-
-                    b.ToTable("HomeworkAttachment", (string)null);
-                });
-
             modelBuilder.Entity("JDev.Tuteee.Api.Entities.Lesson", b =>
                 {
                     b.Property<int>("LessonId")
@@ -95,6 +54,9 @@ namespace JDev.Tuteee.Api.Migrations
 
                     b.Property<string>("EndTime")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HomeworkInstructions")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("StartTime")
@@ -161,28 +123,6 @@ namespace JDev.Tuteee.Api.Migrations
                     b.ToTable("Tutee", (string)null);
                 });
 
-            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Homework", b =>
-                {
-                    b.HasOne("JDev.Tuteee.Api.Entities.Lesson", "Lesson")
-                        .WithOne("Homework")
-                        .HasForeignKey("JDev.Tuteee.Api.Entities.Homework", "LessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Lesson");
-                });
-
-            modelBuilder.Entity("JDev.Tuteee.Api.Entities.HomeworkAttachment", b =>
-                {
-                    b.HasOne("JDev.Tuteee.Api.Entities.Homework", "Homework")
-                        .WithMany("HomeworkAttachments")
-                        .HasForeignKey("HomeworkId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Homework");
-                });
-
             modelBuilder.Entity("JDev.Tuteee.Api.Entities.Lesson", b =>
                 {
                     b.HasOne("JDev.Tuteee.Api.Entities.Tutee", "Tutee")
@@ -219,16 +159,6 @@ namespace JDev.Tuteee.Api.Migrations
             modelBuilder.Entity("JDev.Tuteee.Api.Entities.Client", b =>
                 {
                     b.Navigation("Tutees");
-                });
-
-            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Homework", b =>
-                {
-                    b.Navigation("HomeworkAttachments");
-                });
-
-            modelBuilder.Entity("JDev.Tuteee.Api.Entities.Lesson", b =>
-                {
-                    b.Navigation("Homework");
                 });
 
             modelBuilder.Entity("JDev.Tuteee.Api.Entities.Tutee", b =>

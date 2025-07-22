@@ -17,7 +17,17 @@ public class ApiClient(HttpClient client) : IApiClient
     
     public async Task AddTuteeAsync(TuteeDto tutee) => await PostAsync("/tutees", tutee);
     
+    public async Task<LessonDto?> GetLessonAsync(int id) => await GetAsync<LessonDto?>($"/lessons/{id}");
     public async Task AddLessonAsync(LessonDto lesson) => await PostAsync("/lessons", lesson);
+
+    public async Task SaveTemporaryFile(TemporaryFileDto temporaryFile) =>
+        await PostAsync("/temporary-files", temporaryFile);
+
+    public async Task SaveHomeworkAttachment(HomeworkAttachmentDto homeworkAttachmentDto) =>
+        await PostAsync("/homework-files", homeworkAttachmentDto);
+
+    public async Task<IReadOnlyList<HomeworkAttachmentDto>> GetHomeworkAttachments(int lessonId) =>
+        await GetAsync<IReadOnlyList<HomeworkAttachmentDto>>($"/homework-files/{lessonId}") ?? [];
 
     private async Task<TResponseObject?> GetAsync<TResponseObject>(string uri)
     {
