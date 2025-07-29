@@ -1,20 +1,15 @@
 services:
-  proxy:
-    image: nginx
+  api:
+    build:
+      context: .
+      dockerfile: Api.Dockerfile
+    volumes:
+      - ./DB:/app/DB
+  ui:
+    build:
+      context: .
+      dockerfile: UI.Dockerfile
     ports:
       - 80:80
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-  api:
-    build: ./api
-    ports:
-      - 5001:8080
-    volumes:
-      - ./DB:/App/DB
-  ui:
-    build: ./ui
-    env_file:
-      - ./ui.env
-    depends_on:
-      proxy:
-        condition: service_started

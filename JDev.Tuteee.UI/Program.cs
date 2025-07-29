@@ -8,6 +8,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddApiClient(builder.Configuration.GetSection("ApiUrl").Value);
+// builder.Services.AddApiClient("http://localhost/api/");
 
 builder.Services.AddBlazorBootstrap();
 
