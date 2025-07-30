@@ -24,13 +24,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.MapOpenApi();
-    app.UseCors(cpb =>
-    {
-        cpb.AllowAnyOrigin();
-        cpb.AllowAnyMethod();
-        cpb.AllowAnyHeader();
-    });
 }
+
+app.UseCors(cpb =>
+{
+    cpb.AllowAnyOrigin();
+    cpb.AllowAnyMethod();
+    cpb.AllowAnyHeader();
+});
 
 app.UseHttpsRedirection();
 

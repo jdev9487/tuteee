@@ -17,12 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Update="appsettings.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\JDev.Tuteee.ApiClient\JDev.Tuteee.ApiClient.csproj" />
     </ItemGroup>
 

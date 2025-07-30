@@ -3,31 +3,32 @@ namespace JDev.Tuteee.ApiClient;
 using System.Text;
 using System.Text.Json;
 using DTOs;
+using Microsoft.Extensions.Logging;
 
 public class ApiClient(HttpClient client) : IApiClient
 {
-    public async Task<ClientDto?> GetClientAsync(int id) => await GetAsync<ClientDto?>($"/clients/{id}");
+    public async Task<ClientDto?> GetClientAsync(int id) => await GetAsync<ClientDto?>($"clients/{id}");
 
     public async Task<IReadOnlyList<ClientDto>> GetClientsAsync() =>
-        await GetAsync<IReadOnlyList<ClientDto>>("/clients") ?? [];
+        await GetAsync<IReadOnlyList<ClientDto>>("clients") ?? [];
 
-    public async Task AddClientAsync(ClientDto clientDto) => await PostAsync("/clients", clientDto);
+    public async Task AddClientAsync(ClientDto clientDto) => await PostAsync("clients", clientDto);
 
-    public async Task<TuteeDto?> GetTuteeAsync(int id) => await GetAsync<TuteeDto?>($"/tutees/{id}");
+    public async Task<TuteeDto?> GetTuteeAsync(int id) => await GetAsync<TuteeDto?>($"tutees/{id}");
     
-    public async Task AddTuteeAsync(TuteeDto tutee) => await PostAsync("/tutees", tutee);
+    public async Task AddTuteeAsync(TuteeDto tutee) => await PostAsync("tutees", tutee);
     
-    public async Task<LessonDto?> GetLessonAsync(int id) => await GetAsync<LessonDto?>($"/lessons/{id}");
-    public async Task AddLessonAsync(LessonDto lesson) => await PostAsync("/lessons", lesson);
+    public async Task<LessonDto?> GetLessonAsync(int id) => await GetAsync<LessonDto?>($"lessons/{id}");
+    public async Task AddLessonAsync(LessonDto lesson) => await PostAsync("lessons", lesson);
 
     public async Task SaveTemporaryFile(TemporaryFileDto temporaryFile) =>
-        await PostAsync("/temporary-files", temporaryFile);
+        await PostAsync("temporary-files", temporaryFile);
 
     public async Task SaveHomeworkAttachment(HomeworkAttachmentDto homeworkAttachmentDto) =>
-        await PostAsync("/homework-files", homeworkAttachmentDto);
+        await PostAsync("homework-files", homeworkAttachmentDto);
 
     public async Task<IReadOnlyList<HomeworkAttachmentDto>> GetHomeworkAttachments(int lessonId) =>
-        await GetAsync<IReadOnlyList<HomeworkAttachmentDto>>($"/homework-files/{lessonId}") ?? [];
+        await GetAsync<IReadOnlyList<HomeworkAttachmentDto>>($"homework-files/{lessonId}") ?? [];
 
     private async Task<TResponseObject?> GetAsync<TResponseObject>(string uri)
     {
