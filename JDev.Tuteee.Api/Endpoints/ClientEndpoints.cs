@@ -27,7 +27,7 @@ public class ClientEndpoints : IEndpoints
                     .Include(g => g.Tutees)
                     .ToListAsync(cancellationToken: token);
                 return TypedResults.Ok(entities.Select(ClientMap.Map));
-            }).RequireAuthorization();
+            });
 
         routeBuilder.MapPost("/clients",
             async (ClientDto dto, Context context, CancellationToken token) =>

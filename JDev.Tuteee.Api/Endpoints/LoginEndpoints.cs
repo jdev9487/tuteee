@@ -5,15 +5,17 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
-public class LoginEndpoints : IEndpoints
+public class LoginEndpoints(IOptions<Auth> auth) : IEndpoints
 {
+    private readonly Auth _auth = auth.Value;
     public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {
         routeBuilder.MapPost("/login",
-            async Task<Results<Ok<string>, UnauthorizedHttpResult>> ([FromBody] UserLogin userLogin, [FromServices] UserManager<User> manager,
+            async Task<Results<Ok<string>, UnauthorizedHttpResult>> (UserLogin userLogin, UserManager<User> manager,
                 CancellationToken _) =>
             {
                 var user = await manager.FindByEmailAsync(userLogin.Username);
@@ -26,7 +28,7 @@ public class LoginEndpoints : IEndpoints
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                     };
         
-                    var key = new SymmetricSecurityKey("your_super_secret_key_that_cannot_be_discovered_ever"u8.ToArray());
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_auth.SymmetricSecurityKey));
                     var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         
                     var token = new JwtSecurityToken(
@@ -40,6 +42,8 @@ public class LoginEndpoints : IEndpoints
                 }
         
                 return TypedResults.Unauthorized();
-            });
+            }).AllowAnonymous();
     }
+
+    private record UserLogin(string Username, string Password);
 }
