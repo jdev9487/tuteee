@@ -1,5 +1,6 @@
 namespace JDev.Tuteee.Api.Endpoints;
 
+using System.Security.Claims;
 using ApiClient.DTOs;
 using DB;
 using Mapping;
@@ -18,7 +19,7 @@ public class ClientEndpoints : IEndpoints
                     .SingleOrDefaultAsync(g => g.ClientId == id, cancellationToken: token);
                 return account is null ? TypedResults.NotFound() : TypedResults.Ok(ClientMap.Map(account));
             });
-        
+
         routeBuilder.MapGet("/clients",
             async (Context context, CancellationToken token) =>
             {
@@ -26,7 +27,7 @@ public class ClientEndpoints : IEndpoints
                     .Include(g => g.Tutees)
                     .ToListAsync(cancellationToken: token);
                 return TypedResults.Ok(entities.Select(ClientMap.Map));
-            });
+            }).RequireAuthorization();
 
         routeBuilder.MapPost("/clients",
             async (ClientDto dto, Context context, CancellationToken token) =>
