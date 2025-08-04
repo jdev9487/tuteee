@@ -1,8 +1,10 @@
 namespace JDev.Tuteee.Api.Extensions;
 
+using System.Security.Claims;
 using System.Text;
 using DB;
 using Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -27,11 +29,14 @@ internal static class AuthExtensions
                     IssuerSigningKey =
                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(symmetricSecurityKey))
                 };
-            });
+            })
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
         services.AddAuthorizationBuilder()
             .SetFallbackPolicy(new AuthorizationPolicyBuilder()
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
                 .RequireAuthenticatedUser()
+                .RequireRole("Admin")
                 .Build());
         services.AddIdentityCore<User>()
             .AddRoles<IdentityRole>()

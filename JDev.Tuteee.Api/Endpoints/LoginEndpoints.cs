@@ -12,10 +12,13 @@ using Microsoft.Extensions.Options;
 public class LoginEndpoints(IOptions<Auth> auth) : IEndpoints
 {
     private readonly Auth _auth = auth.Value;
+    
     public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {
         routeBuilder.MapPost("/login",
-            async Task<Results<Ok<string>, UnauthorizedHttpResult>> (UserLogin userLogin, UserManager<User> manager,
+            async Task<Results<Ok, UnauthorizedHttpResult>> (UserLogin userLogin,
+                HttpContext context, 
+                UserManager<User> manager,
                 CancellationToken _) =>
             {
                 var user = await manager.FindByEmailAsync(userLogin.Username);
@@ -25,6 +28,7 @@ public class LoginEndpoints(IOptions<Auth> auth) : IEndpoints
                     var claims = new[]
                     {
                         new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                        new Claim(ClaimTypes.Role, await manager.IsInRoleAsync(user, "Admin") ? "Admin" : "User" ),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                     };
         
@@ -37,8 +41,11 @@ public class LoginEndpoints(IOptions<Auth> auth) : IEndpoints
                         claims: claims,
                         expires: DateTime.Now.AddMinutes(30),
                         signingCredentials: credentials);
+
+                    var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
         
-                    return TypedResults.Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                    context.Response.Cookies.Append("access-token", tokenString);
+                    return TypedResults.Ok();
                 }
         
                 return TypedResults.Unauthorized();

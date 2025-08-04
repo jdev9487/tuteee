@@ -100,7 +100,7 @@ internal static class SeedExtensions
         await context.SaveChangesAsync(token);
     }
 
-    internal static async Task SeedAdminAsync(this WebApplication app)
+    internal static async Task SeedAdminAsync(this IHost app, string username, string password)
     {
         await using var roleScope = app.Services.CreateAsyncScope();
         var roleManager = roleScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -109,11 +109,16 @@ internal static class SeedExtensions
 
         await using var userScope = app.Services.CreateAsyncScope();
         var userManager = roleScope.ServiceProvider.GetRequiredService<UserManager<User>>();
-        if (await userManager.FindByEmailAsync("admin@admin.com") is null)
+        if (await userManager.FindByEmailAsync(username) is null)
         {
-            var user = new User { Email = "admin@admin.com", UserName = "admin@admin.com" };
-            await userManager.CreateAsync(user, "SuperSafe1!");
+            var user = new User { Email = username, UserName = username };
+            await userManager.CreateAsync(user, password);
             await userManager.AddToRoleAsync(user, "Admin");
+        }
+        if (await userManager.FindByEmailAsync("user@user.com") is null)
+        {
+            var user = new User { Email = "user@user.com", UserName = "user@user.com" };
+            await userManager.CreateAsync(user, "MyUs3rPa55word!£$%");
         }
     }
 }

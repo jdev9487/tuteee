@@ -10,7 +10,6 @@ var auth = authConfigSection.Get<Auth>();
 builder.Services.Configure<Auth>(authConfigSection);
 builder.Services.AddJwtAuth(auth!.SymmetricSecurityKey);
 
-
 builder.Services.AddDbContext<Context>(ServiceLifetime.Transient);
 
 builder.Services.AddEndpoints();
@@ -28,6 +27,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.RegisterEndpoints();
 
-await app.SeedAdminAsync();
+await app.SeedAdminAsync(auth.AdminUsername, auth.AdminPassword);
 
 app.Run();
