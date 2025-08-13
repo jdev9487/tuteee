@@ -1,9 +1,8 @@
 namespace JDev.Tuteee.ApiClient;
 
+using DTOs;
 using System.Text;
 using System.Text.Json;
-using DTOs;
-using Microsoft.Extensions.Logging;
 
 public class ApiClient(HttpClient client) : IApiClient
 {

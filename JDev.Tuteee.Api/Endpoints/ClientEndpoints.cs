@@ -1,9 +1,8 @@
 namespace JDev.Tuteee.Api.Endpoints;
 
-using System.Security.Claims;
-using ApiClient.DTOs;
 using DB;
 using Mapping;
+using ApiClient.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
 
