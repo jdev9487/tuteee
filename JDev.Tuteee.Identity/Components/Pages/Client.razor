@@ -1,7 +1,11 @@
 @page "/clients/{ClientId:int}"
 @using JDev.Tuteee.ApiClient
 @using JDev.Tuteee.ApiClient.DTOs
+@using Microsoft.AspNetCore.Authorization
 @inject IApiClient ApiClient
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@attribute [Authorize]
 
 <PageTitle>@ClientName</PageTitle>
 
@@ -22,7 +26,7 @@
 </Modal>
 
 <div class="d-flex flex-row justify-content-between mb-2">
-    <h4>Tutees</h4>
+    <h3>Tutees</h3>
     <Button Color="ButtonColor.Primary" @onclick="OnShowAddTuteeModal">Add Tutee</Button>
 </div>
 
@@ -110,6 +114,6 @@ else
 
     private async Task<GridDataProviderResult<TuteeDto>> ClientsDataProvider(GridDataProviderRequest<TuteeDto> request)
     {
-        return await Task.FromResult(request.ApplyTo(_client.Tutees));
+        return await Task.FromResult(request.ApplyTo(_client?.Tutees ?? []));
     }
 }

@@ -36,7 +36,7 @@ builder.Services.AddIdentityCore<ApplicationUser>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-builder.Services.AddApiClient("http://localhost:5078");
+builder.Services.AddApiClient(builder.Configuration.GetSection("ApiUrl").Value);
 builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();

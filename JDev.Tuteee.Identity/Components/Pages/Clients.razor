@@ -11,11 +11,6 @@
 
 <PageTitle>Clients</PageTitle>
 
-<div class="d-flex flex-row justify-content-between mb-2">
-    <h3>Clients</h3>
-    <Button Color="ButtonColor.Primary" @onclick="OnShowAddClientModal">Add client</Button>
-</div>
-
 <Modal @ref="_modal" Title="Enter new client details">
     <BodyTemplate>
         First name
@@ -31,6 +26,11 @@
         <Button Color="ButtonColor.Primary" @onclick="OnHideAddClientModal">Add client</Button>
     </FooterTemplate>
 </Modal>
+
+<div class="d-flex flex-row justify-content-between mb-2">
+    <h3>Clients</h3>
+    <Button Color="ButtonColor.Primary" @onclick="OnShowAddClientModal">Add client</Button>
+</div>
 
 @if (_clients is null)
 {

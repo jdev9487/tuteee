@@ -1,7 +1,11 @@
 @page "/tutees/{TuteeId:int}"
 @using JDev.Tuteee.ApiClient
 @using JDev.Tuteee.ApiClient.DTOs
+@using Microsoft.AspNetCore.Authorization
 @inject IApiClient Client
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@attribute [Authorize]
 
 <PageTitle>@TuteeName</PageTitle>
 
@@ -80,10 +84,10 @@ else
         _lessonStart = TimeOnly.FromDateTime(DateTime.Now);
         _lessonEnd = TimeOnly.FromDateTime(DateTime.Now);
         _tutee = await Client.GetTuteeAsync(TuteeId);
-        _client = await Client.GetClientAsync(_tutee.ClientId);
+        _client = await Client.GetClientAsync(_tutee!.ClientId);
         _navItems = new List<BreadcrumbItem>
         {
-            new() { Text = $"{ClientName} 📂", Href = $"/clients/{_client.ClientId}" },
+            new() { Text = $"{ClientName} 📂", Href = $"/clients/{_client!.ClientId}" },
             new() { Text = $"{TuteeName} 🎓", IsCurrentPage = true }
         };
     }
@@ -120,8 +124,8 @@ else
 
     private async Task<GridDataProviderResult<LessonDto>> LessonsDataProvider(GridDataProviderRequest<LessonDto> request)
     {
-        return await Task.FromResult(request.ApplyTo(_tutee.Lessons));
+        return await Task.FromResult(request.ApplyTo(_tutee?.Lessons ?? []));
     }
 
-    private string DisplayHomeworkInstructions(string? s) => s ?? "None set";
+    private static string DisplayHomeworkInstructions(string? s) => s ?? "None set";
 }

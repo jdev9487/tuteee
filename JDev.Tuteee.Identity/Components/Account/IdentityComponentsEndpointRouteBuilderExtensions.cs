@@ -30,7 +30,6 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             IEnumerable<KeyValuePair<string, StringValues>> query =
             [
                 new("ReturnUrl", returnUrl),
-                new("Action", ExternalLogin.LoginCallbackAction)
             ];
 
             var redirectUrl = UriHelper.BuildRelative(

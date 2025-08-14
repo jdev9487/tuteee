@@ -1,7 +1,11 @@
 @page "/lessons/{LessonId:int}"
 @using JDev.Tuteee.ApiClient
 @using JDev.Tuteee.ApiClient.DTOs
+@using Microsoft.AspNetCore.Authorization
 @inject IApiClient Client
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@attribute [Authorize]
 
 <PageTitle>@TuteeName</PageTitle>
 
@@ -57,7 +61,7 @@ else
     private TuteeDto? _tutee;
     private ClientDto? _client;
     private IReadOnlyList<HomeworkAttachmentDto> _homeworkAttachments = [];
-    private string _filename;
+    private string _filename = default!;
     private string _temporaryFileName = default!;
 
     private string TuteeName => $"{_tutee?.FirstName} {_tutee?.LastName}";
@@ -66,18 +70,18 @@ else
     protected override async Task OnInitializedAsync()
     {
         _lesson = await Client.GetLessonAsync(LessonId);
-        _tutee = await Client.GetTuteeAsync(_lesson.TuteeId);
-        _client = await Client.GetClientAsync(_tutee.ClientId);
+        _tutee = await Client.GetTuteeAsync(_lesson!.TuteeId);
+        _client = await Client.GetClientAsync(_tutee!.ClientId);
         _homeworkAttachments = await Client.GetHomeworkAttachments(LessonId);
         _navItems =
         [
-            new BreadcrumbItem { Text = $"{ClientName} 📂", Href = $"/clients/{_client.ClientId}" },
+            new BreadcrumbItem { Text = $"{ClientName} 📂", Href = $"/clients/{_client!.ClientId}" },
             new BreadcrumbItem { Text = $"{TuteeName} 🎓", Href = $"/tutees/{_tutee.TuteeId}" },
             new BreadcrumbItem { Text = $"{_lesson.StartTime:MM/dd/yyyy} 📚", IsCurrentPage = true }
         ];
     }
 
-    private void DownloadFile()
+    private static void DownloadFile()
     {
     }
 
@@ -87,7 +91,7 @@ else
         {
             FileName = _filename,
             TemporaryFileName = _temporaryFileName,
-            LessonId = _lesson.LessonId
+            LessonId = _lesson!.LessonId
         });
         _homeworkAttachments = await Client.GetHomeworkAttachments(LessonId);
         await _modal.HideAsync();
