@@ -7,7 +7,7 @@
 @inject IApiClient ApiClient;
 @attribute [StreamRendering]
 @rendermode InteractiveServer
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Clients</PageTitle>
 

@@ -5,7 +5,7 @@
 @inject IApiClient Client
 @attribute [StreamRendering]
 @rendermode InteractiveServer
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>@TuteeName</PageTitle>
 
