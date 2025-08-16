@@ -1,0 +1,116 @@
+@page "/"
+@page "/clients"
+
+@using JDev.Tuteee.ApiClient
+@using JDev.Tuteee.ApiClient.DTOs
+@using Microsoft.AspNetCore.Authorization
+@inject IApiClient ApiClient;
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Clients</PageTitle>
+
+<Modal @ref="_modal" Title="Enter new client details">
+    <BodyTemplate>
+        First name
+        <TextInput @bind-Value="_newClientFirstName"></TextInput>
+        Last name
+        <TextInput @bind-Value="_newClientLastName"></TextInput>
+        Email address
+        <TextInput @bind-Value="_newClientEmailAddress"></TextInput>
+        Phone number
+        <TextInput @bind-Value="_newClientPhoneNumber"></TextInput>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideAddClientModal">Add client</Button>
+    </FooterTemplate>
+</Modal>
+
+<div class="d-flex flex-row justify-content-between mb-2">
+    <h3>Clients</h3>
+    <Button Color="ButtonColor.Primary" @onclick="OnShowAddClientModal">Add client</Button>
+</div>
+
+@if (_clients is null)
+{
+    <p>Loading</p>
+}
+else
+{
+    <Grid @ref="_clientGrid"
+          TItem="ClientDto"
+          Class="table table-hover table-bordered table-striped"
+          DataProvider="ClientsDataProvider"
+          Responsive="true">
+        <GridColumns>
+            <GridColumn TItem="ClientDto" HeaderText="First name" PropertyName="HolderFirstName">
+                <NavLink class="nav-link" href=@($"/clients/{context.ClientId}") Match="NavLinkMatch.All">
+                    @context.HolderFirstName
+                </NavLink>
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Last name" PropertyName="HolderLastName">
+                <NavLink class="nav-link" href=@($"/clients/{context.ClientId}") Match="NavLinkMatch.All">
+                    @context.HolderLastName
+                </NavLink>
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Email" PropertyName="EmailAddress">
+                @context.EmailAddress
+            </GridColumn>
+            <GridColumn TItem="ClientDto" HeaderText="Contact" PropertyName="PhoneNumer">
+                @context.PhoneNumber
+            </GridColumn>
+        </GridColumns>
+    </Grid>
+}
+
+@code {
+    private IReadOnlyList<ClientDto>? _clients;
+    private Grid<ClientDto> _clientGrid = default!;
+    private Modal _modal = default!;
+    private string _newClientFirstName = default!;
+    private string _newClientLastName = default!;
+    private string _newClientEmailAddress = default!;
+    private string _newClientPhoneNumber = default!;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _clients = await ApiClient.GetClientsAsync();
+    }
+    
+    private async Task<GridDataProviderResult<ClientDto>> ClientsDataProvider(GridDataProviderRequest<ClientDto> request)
+    {
+        return await Task.FromResult(request.ApplyTo(_clients ?? []));
+    }
+
+    private async Task OnShowAddClientModal()
+    {
+        await _modal.ShowAsync();
+    }
+    private async Task OnHideAddClientModal()
+    {
+        var dto = new ClientDto
+        {
+            HolderFirstName = _newClientFirstName,
+            HolderLastName = _newClientLastName,
+            EmailAddress = _newClientEmailAddress,
+            PhoneNumber = _newClientPhoneNumber
+        };
+        await ApiClient.AddClientAsync(dto);
+
+        ResetNewClientInfo();
+
+        _clients = await ApiClient.GetClientsAsync();
+        await _clientGrid.RefreshDataAsync();
+
+        await _modal.HideAsync();
+    }
+
+    private void ResetNewClientInfo()
+    {
+        _newClientFirstName = "";
+        _newClientLastName = "";
+        _newClientEmailAddress = "";
+        _newClientPhoneNumber = "";
+    }
+}

@@ -1,0 +1,131 @@
+@page "/tutees/{TuteeId:int}"
+@using JDev.Tuteee.ApiClient
+@using JDev.Tuteee.ApiClient.DTOs
+@using Microsoft.AspNetCore.Authorization
+@inject IApiClient Client
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>@TuteeName</PageTitle>
+
+<Breadcrumb Items="_navItems"></Breadcrumb>
+
+<Modal @ref="_modal" Title="Enter lesson details">
+    <BodyTemplate>
+        Date
+        <DateInput TValue="DateOnly" @bind-Value="@_lessonDate" Placeholder="Enter date" />
+        Start
+        <TimeInput TValue="TimeOnly" @bind-Value="@_lessonStart" />
+        Finish
+        <TimeInput TValue="TimeOnly" @bind-Value="@_lessonEnd" />
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideAddLessonModal">Schedule lesson</Button>
+    </FooterTemplate>
+</Modal>
+
+<div class="d-flex flex-row justify-content-between my-2">
+    <h4>Lessons</h4>
+    <Button Color="ButtonColor.Primary" @onclick="OnShowAddLessonModal">Schedule lesson</Button>
+</div>
+
+@if (_tutee == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <Grid @ref="_lessonGrid"
+          TItem="LessonDto"
+          Class="table table-hover table-bordered table-striped"
+          DataProvider="LessonsDataProvider"
+          AllowSorting="true"
+          Responsive="true">
+        <GridColumns>
+            <GridColumn TItem="LessonDto" HeaderText="Date" SortKeySelector="item => item.StartTime">
+                <NavLink class="nav-link" href=@($"/lessons/{context.LessonId}") Match="NavLinkMatch.All">
+                    @context.StartTime.ToString("D")
+                </NavLink>
+            </GridColumn>
+            <GridColumn TItem="LessonDto" HeaderText="Start" PropertyName="StartTime">
+                @context.StartTime.ToString("h:mm:ss tt zz")
+            </GridColumn>
+            <GridColumn TItem="LessonDto" HeaderText="End" PropertyName="EndTime">
+                @context.EndTime.ToString("h:mm:ss tt zz")
+            </GridColumn>
+            <GridColumn TItem="LessonDto" HeaderText="Homework" PropertyName="HomeworkInstructions">
+                @DisplayHomeworkInstructions(@context.HomeworkInstructions)
+            </GridColumn>
+        </GridColumns>
+    </Grid>
+}
+
+@code {
+    [Parameter]
+    public int TuteeId { get; set; }
+    private TuteeDto? _tutee;
+    private ClientDto? _client;
+    private Grid<LessonDto> _lessonGrid = default!;
+    private Modal _modal = default!;
+    private List<BreadcrumbItem> _navItems = default!;
+    private DateOnly _lessonDate;
+    private TimeOnly _lessonStart;
+    private TimeOnly _lessonEnd;
+
+    private string TuteeName => $"{_tutee?.FirstName} {_tutee?.LastName}";
+    private string ClientName => $"{_client?.HolderFirstName} {_client?.HolderLastName}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        _lessonDate = DateOnly.FromDateTime(DateTime.Now);
+        _lessonStart = TimeOnly.FromDateTime(DateTime.Now);
+        _lessonEnd = TimeOnly.FromDateTime(DateTime.Now);
+        _tutee = await Client.GetTuteeAsync(TuteeId);
+        _client = await Client.GetClientAsync(_tutee!.ClientId);
+        _navItems = new List<BreadcrumbItem>
+        {
+            new() { Text = $"{ClientName} 📂", Href = $"/clients/{_client!.ClientId}" },
+            new() { Text = $"{TuteeName} 🎓", IsCurrentPage = true }
+        };
+    }
+
+    private async Task OnHideAddLessonModal()
+    {
+        await Client.AddLessonAsync(new LessonDto
+        {
+            TuteeId = TuteeId,
+            StartTime = new DateTimeOffset(
+                _lessonDate.Year,
+                _lessonDate.Month,
+                _lessonDate.Day,
+                _lessonStart.Hour,
+                _lessonStart.Minute,
+                0, TimeSpan.Zero),
+            EndTime = new DateTimeOffset(
+                _lessonDate.Year,
+                _lessonDate.Month,
+                _lessonDate.Day,
+                _lessonEnd.Hour,
+                _lessonEnd.Minute,
+                0, TimeSpan.Zero)
+        });
+        _tutee = await Client.GetTuteeAsync(TuteeId);
+        await _lessonGrid.RefreshDataAsync();
+        await _modal.HideAsync();
+    }
+
+    private async Task OnShowAddLessonModal()
+    {
+        await _modal.ShowAsync();
+    }
+
+    private async Task<GridDataProviderResult<LessonDto>> LessonsDataProvider(GridDataProviderRequest<LessonDto> request)
+    {
+        return await Task.FromResult(request.ApplyTo(_tutee?.Lessons ?? []));
+    }
+
+    private static string DisplayHomeworkInstructions(string? s) => s ?? "None set";
+}
