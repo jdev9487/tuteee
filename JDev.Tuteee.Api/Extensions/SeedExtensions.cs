@@ -2,11 +2,12 @@ namespace JDev.Tuteee.Api.Extensions;
 
 using DB;
 using Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-public static class SeedExtensions
+internal static class SeedExtensions
 {
-    public static async Task SeedDevelopmentDataAsync(this Context context, CancellationToken token)
+    internal static async Task SeedDevelopmentDataAsync(this Context context, CancellationToken token)
     {
         var tomRogers =
             await context.Clients.FirstOrDefaultAsync(g => g.HolderFirstName == "Tom" && g.HolderLastName == "Rogers",
@@ -97,5 +98,27 @@ public static class SeedExtensions
             await context.Lessons.AddRangeAsync(yaraLesson1, yaraLesson2);
         }
         await context.SaveChangesAsync(token);
+    }
+
+    internal static async Task SeedAdminAsync(this IHost app, string username, string password)
+    {
+        await using var roleScope = app.Services.CreateAsyncScope();
+        var roleManager = roleScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        if (!await roleManager.RoleExistsAsync("Admin"))
+            await roleManager.CreateAsync(new IdentityRole("Admin"));
+
+        await using var userScope = app.Services.CreateAsyncScope();
+        var userManager = roleScope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        if (await userManager.FindByEmailAsync(username) is null)
+        {
+            var user = new User { Email = username, UserName = username };
+            await userManager.CreateAsync(user, password);
+            await userManager.AddToRoleAsync(user, "Admin");
+        }
+        if (await userManager.FindByEmailAsync("user@user.com") is null)
+        {
+            var user = new User { Email = "user@user.com", UserName = "user@user.com" };
+            await userManager.CreateAsync(user, "MyUs3rPa55word!£$%");
+        }
     }
 }

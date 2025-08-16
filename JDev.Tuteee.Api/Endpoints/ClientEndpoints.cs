@@ -1,8 +1,8 @@
 namespace JDev.Tuteee.Api.Endpoints;
 
-using ApiClient.DTOs;
 using DB;
 using Mapping;
+using ApiClient.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -18,7 +18,7 @@ public class ClientEndpoints : IEndpoints
                     .SingleOrDefaultAsync(g => g.ClientId == id, cancellationToken: token);
                 return account is null ? TypedResults.NotFound() : TypedResults.Ok(ClientMap.Map(account));
             });
-        
+
         routeBuilder.MapGet("/clients",
             async (Context context, CancellationToken token) =>
             {

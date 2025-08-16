@@ -1,0 +1,43 @@
+@inherits ComponentBase
+
+@inject NavigationManager NavigationManager
+
+<div class="top-row px-4">
+    <AuthorizeView>
+        <Authorized>
+            <form action="Account/Logout" method="post">
+                <AntiforgeryToken/>
+                <input type="hidden" name="ReturnUrl" value="@currentUrl"/>
+                <button type="submit" class="nav-link">
+                    Logout
+                </button>
+            </form>
+        </Authorized>
+    </AuthorizeView>
+</div>
+
+@code
+{
+    private string? currentUrl;
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+}
+
+<style>
+    .top-row {
+        height: 3.5rem;
+        background-color: rgba(1,1,1,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: right;
+    }
+</style>
