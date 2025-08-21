@@ -17,8 +17,12 @@ public class Context(IConfiguration configuration) : DbContext
         modelBuilder.Entity<Client>()
             .ToTable("Client");
         modelBuilder.Entity<Client>()
-            .HasMany(g => g.Tutees)
+            .HasMany(c => c.Tutees)
             .WithOne(t => t.Client)
+            .HasForeignKey("ClientId");
+        modelBuilder.Entity<Client>()
+            .HasMany(c => c.Invoices)
+            .WithOne(i => i.Client)
             .HasForeignKey("ClientId");
 
         modelBuilder.Entity<Tutee>()
@@ -31,6 +35,11 @@ public class Context(IConfiguration configuration) : DbContext
             .HasMany(t => t.Rates)
             .WithOne(l => l.Tutee)
             .HasForeignKey("TuteeId");
+
+        modelBuilder.Entity<Invoice>()
+            .HasMany(i => i.Lessons)
+            .WithOne(l => l.Invoice)
+            .HasForeignKey("InvoiceId");
         
         modelBuilder.Entity<Lesson>()
             .ToTable("Lesson");
