@@ -37,6 +37,8 @@ public class Context(IConfiguration configuration) : DbContext
             .HasForeignKey("TuteeId");
 
         modelBuilder.Entity<Invoice>()
+            .ToTable("Invoice");
+        modelBuilder.Entity<Invoice>()
             .HasMany(i => i.Lessons)
             .WithOne(l => l.Invoice)
             .HasForeignKey("InvoiceId");
@@ -61,4 +63,5 @@ public class Context(IConfiguration configuration) : DbContext
     public DbSet<Client> Clients { get; set; } = default!;
     public DbSet<Tutee> Tutees { get; set; } = default!;
     public DbSet<Lesson> Lessons { get; set; } = default!;
+    public DbSet<Invoice> Invoices { get; set; } = default!;
 }

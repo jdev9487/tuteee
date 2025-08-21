@@ -5,18 +5,14 @@ using Entities;
 
 public static class LessonMap
 {
-    public static Lesson Map(LessonDto dto)
-    {
-        var l = new Lesson
+    public static Lesson Map(LessonDto dto) =>
+        new()
         {
             StartTime = dto.StartTime,
             EndTime = dto.EndTime,
             TuteeId = dto.TuteeId,
             HomeworkInstructions = dto.HomeworkInstructions
         };
-        
-        return l;
-    }
 
     public static LessonDto Map(Lesson entity) =>
         new()
