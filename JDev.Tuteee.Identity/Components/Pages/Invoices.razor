@@ -1,0 +1,87 @@
+@page "/invoices"
+
+@using JDev.Tuteee.ApiClient
+@using JDev.Tuteee.ApiClient.DTOs
+@using Microsoft.AspNetCore.Authorization
+@inject IApiClient ApiClient;
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Invoices</PageTitle>
+
+<Modal @ref="_modal" Title="Enter new client details">
+    <BodyTemplate>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideAddInvoiceModal">Create Invoice</Button>
+    </FooterTemplate>
+</Modal>
+
+<div class="d-flex flex-row justify-content-between mb-2">
+    <h3>Invoices</h3>
+    <Button Color="ButtonColor.Primary" @onclick="OnShowAddInvoiceModal">Create Invoice</Button>
+</div>
+
+@if (_invoices is null)
+{
+    <p>Loading</p>
+}
+else
+{
+    <Grid @ref="_invoiceGrid"
+          TItem="InvoiceDto"
+          Class="table table-hover table-bordered table-striped"
+          DataProvider="InvoicesDataProvider"
+          Responsive="true">
+        <GridColumns>
+            <GridColumn TItem="InvoiceDto" HeaderText="Client" PropertyName="FirstName">
+                @context.Client.HolderFirstName @context.Client.HolderLastName
+            </GridColumn>
+            <GridColumn TItem="InvoiceDto" HeaderText="Lessons" PropertyName="FirstName">
+                @GetLessonIdsString(context.Lessons)
+            </GridColumn>
+            <GridColumn TItem="InvoiceDto" HeaderText="Amount" PropertyName="Amount">
+                @context.Lessons.First().
+            </GridColumn>
+            <GridColumn TItem="InvoiceDto" HeaderText="Paid" PropertyName="Paid">
+                @GetPaidString(context.Paid)
+            </GridColumn>
+        </GridColumns>
+    </Grid>
+}
+
+@code {
+    private IReadOnlyList<InvoiceDto>? _invoices;
+    private Grid<InvoiceDto> _invoiceGrid = default!;
+    private Modal _modal = default!;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _invoices = await ApiClient.GetInvoicesAsync();
+    }
+    
+    private async Task<GridDataProviderResult<InvoiceDto>> InvoicesDataProvider(GridDataProviderRequest<InvoiceDto> request)
+    {
+        return await Task.FromResult(request.ApplyTo(_invoices ?? []));
+    }
+
+    private async Task OnShowAddInvoiceModal()
+    {
+        await _modal.ShowAsync();
+    }
+    private async Task OnHideAddInvoiceModal()
+    {
+        _invoices = await ApiClient.GetInvoicesAsync();
+        await _invoiceGrid.RefreshDataAsync();
+
+        await _modal.HideAsync();
+    }
+
+    private static string GetLessonIdsString(IEnumerable<LessonDto> lessonDtos)
+    {
+        return string.Join(',', lessonDtos.Select(l => l.LessonId.ToString()));
+    }
+
+    private static string GetPaidString(bool paid) => paid ? "✅" : "❌";
+}

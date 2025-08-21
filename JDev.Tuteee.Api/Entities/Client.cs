@@ -8,4 +8,5 @@ public class Client
     public string EmailAddress { get; set; } = default!;
     public string PhoneNumber { get; set; } = default!;
     public IList<Tutee> Tutees { get; set; } = [];
+    public IList<Invoice> Invoices { get; set; } = [];
 }

@@ -29,6 +29,9 @@ public class ApiClient(HttpClient client) : IApiClient
     public async Task<IReadOnlyList<HomeworkAttachmentDto>> GetHomeworkAttachments(int lessonId) =>
         await GetAsync<IReadOnlyList<HomeworkAttachmentDto>>($"homework-files/{lessonId}") ?? [];
 
+    public async Task<IReadOnlyList<InvoiceDto>> GetInvoicesAsync() =>
+        await GetAsync<IReadOnlyList<InvoiceDto>>("invoices") ?? [];
+
     private async Task<TResponseObject?> GetAsync<TResponseObject>(string uri)
     {
         var response = await client.GetAsync(uri);
