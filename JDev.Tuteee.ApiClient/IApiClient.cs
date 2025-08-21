@@ -14,4 +14,5 @@ public interface IApiClient
     Task SaveTemporaryFile(TemporaryFileDto temporaryFile);
     Task SaveHomeworkAttachment(HomeworkAttachmentDto homeworkAttachmentDto);
     Task<IReadOnlyList<HomeworkAttachmentDto>> GetHomeworkAttachments(int lessonId);
+    Task<IReadOnlyList<InvoiceDto>> GetInvoicesAsync();
 }

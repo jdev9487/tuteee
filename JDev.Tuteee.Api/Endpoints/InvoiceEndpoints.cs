@@ -26,6 +26,16 @@ public class InvoiceEndpoints : IEndpoints
                 return TypedResults.Created();
             });
 
+        routeBuilder.MapGet("/invoices",
+            async (Context context, CancellationToken token) =>
+            {
+                var entities = await context.Invoices
+                    .Include(i => i.Client)
+                    .Include(i => i.Lessons)
+                    .ToListAsync(cancellationToken: token);
+                return TypedResults.Ok(entities.Select(InvoiceMap.Map));
+            });
+
         routeBuilder.MapGet("/invoices/{id:int}",
             async Task<Results<Ok<InvoiceDto>, NotFound>> (int id, Context context, CancellationToken token) =>
             {

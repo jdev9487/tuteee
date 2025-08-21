@@ -17,6 +17,7 @@ public static class InvoiceMap
         {
             InvoiceId = entity.InvoiceId,
             ClientId = entity.ClientId,
+            Client = ClientMap.Map(entity.Client),
             Paid = entity.Paid,
             Lessons = entity.Lessons.Select(LessonMap.Map)
         };
