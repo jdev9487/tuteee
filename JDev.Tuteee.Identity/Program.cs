@@ -50,6 +50,8 @@ builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();
 
+app.UsePathBase("/tutoring");
+
 await using var scope = app.Services.CreateAsyncScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 await context.Database.MigrateAsync();
@@ -84,6 +86,8 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.UseAuthorization();
 
 app.MapAdditionalIdentityEndpoints();
 
