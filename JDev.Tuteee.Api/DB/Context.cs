@@ -58,6 +58,11 @@ public class Context(IConfiguration configuration) : DbContext
         
         modelBuilder.Entity<Rate>()
             .ToTable("Rate");
+        modelBuilder.Entity<Rate>()
+            .Property(r => r.ActiveFrom)
+            .HasConversion(
+                dto => dto.ToString("O"),
+                str => DateTimeOffset.Parse(str));
     }
 
     public DbSet<Client> Clients { get; set; } = default!;
