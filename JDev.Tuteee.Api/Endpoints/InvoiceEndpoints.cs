@@ -1,5 +1,6 @@
 namespace JDev.Tuteee.Api.Endpoints;
 
+using ApiClient;
 using DB;
 using ApiClient.DTOs;
 using Mapping;
@@ -10,7 +11,8 @@ public class InvoiceEndpoints : IEndpoints
 {
     public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {
-        routeBuilder.MapPost("/invoices",
+        var groupBuilder = routeBuilder.MapGroup($"/{Endpoint.InvoiceBase}");
+        groupBuilder.MapPost("",
             async Task<Results<Created, NotFound>>(InvoiceDto dto, Context context, CancellationToken token) =>
             {
                 var invoice = InvoiceMap.Map(dto);
@@ -26,7 +28,7 @@ public class InvoiceEndpoints : IEndpoints
                 return TypedResults.Created();
             });
 
-        routeBuilder.MapGet("/invoices",
+        groupBuilder.MapGet("",
             async (Context context, CancellationToken token) =>
             {
                 var entities = await context.Invoices
@@ -36,7 +38,7 @@ public class InvoiceEndpoints : IEndpoints
                 return TypedResults.Ok(entities.Select(InvoiceMap.Map));
             });
 
-        routeBuilder.MapGet("/invoices/{id:int}",
+        groupBuilder.MapGet("/{id:int}",
             async Task<Results<Ok<InvoiceDto>, NotFound>> (int id, Context context, CancellationToken token) =>
             {
                 var invoice = await context.Invoices
