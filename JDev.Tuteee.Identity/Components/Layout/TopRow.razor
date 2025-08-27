@@ -5,9 +5,8 @@
 <div class="top-row px-4">
     <AuthorizeView>
         <Authorized>
-            <form action="Account/Logout" method="post">
+            <form action="@Routing.Logout" method="post">
                 <AntiforgeryToken/>
-                <input type="hidden" name="ReturnUrl" value="@currentUrl"/>
                 <button type="submit" class="nav-link">
                     Logout
                 </button>
@@ -18,16 +17,13 @@
 
 @code
 {
-    private string? currentUrl;
     protected override void OnInitialized()
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
         StateHasChanged();
     }
 }

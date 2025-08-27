@@ -1,4 +1,5 @@
-@page "/lessons/{LessonId:int}"
+@attribute [Route($"/{Routing.Lesson}")]
+
 @using JDev.Tuteee.ApiClient
 @using JDev.Tuteee.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
@@ -75,8 +76,8 @@ else
         _homeworkAttachments = await Client.GetHomeworkAttachments(LessonId);
         _navItems =
         [
-            new BreadcrumbItem { Text = $"{ClientName} 📂", Href = $"/clients/{_client!.ClientId}" },
-            new BreadcrumbItem { Text = $"{TuteeName} 🎓", Href = $"/tutees/{_tutee.TuteeId}" },
+            new BreadcrumbItem { Text = $"{ClientName} 📂", Href = $"clients/{_client!.ClientId}" },
+            new BreadcrumbItem { Text = $"{TuteeName} 🎓", Href = $"tutees/{_tutee.TuteeId}" },
             new BreadcrumbItem { Text = $"{_lesson.StartTime:MM/dd/yyyy} 📚", IsCurrentPage = true }
         ];
     }

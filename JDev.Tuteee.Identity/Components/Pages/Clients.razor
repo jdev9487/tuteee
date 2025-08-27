@@ -1,5 +1,5 @@
-@page "/"
-@page "/clients"
+@attribute [Route("/")]
+@attribute [Route($"/{Routing.Clients}")]
 
 @using JDev.Tuteee.ApiClient
 @using JDev.Tuteee.ApiClient.DTOs
@@ -45,12 +45,12 @@ else
           Responsive="true">
         <GridColumns>
             <GridColumn TItem="ClientDto" HeaderText="First name" PropertyName="HolderFirstName">
-                <NavLink class="nav-link" href=@($"/clients/{context.ClientId}") Match="NavLinkMatch.All">
+                <NavLink class="nav-link" href=@($"clients/{context.ClientId}") Match="NavLinkMatch.All">
                     @context.HolderFirstName
                 </NavLink>
             </GridColumn>
             <GridColumn TItem="ClientDto" HeaderText="Last name" PropertyName="HolderLastName">
-                <NavLink class="nav-link" href=@($"/clients/{context.ClientId}") Match="NavLinkMatch.All">
+                <NavLink class="nav-link" href=@($"clients/{context.ClientId}") Match="NavLinkMatch.All">
                     @context.HolderLastName
                 </NavLink>
             </GridColumn>

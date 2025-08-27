@@ -1,4 +1,4 @@
-@page "/invoices"
+@attribute [Route($"/{Routing.Invoices}")]
 
 @using JDev.Tuteee.ApiClient
 @using JDev.Tuteee.ApiClient.DTOs
@@ -42,7 +42,6 @@ else
                 @GetLessonIdsString(context.Lessons)
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Amount" PropertyName="Amount">
-                @context.Lessons.First().
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Paid" PropertyName="Paid">
                 @GetPaidString(context.Paid)
