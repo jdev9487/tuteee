@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 public class Context(IConfiguration configuration) : DbContext
 {
-    protected readonly IConfiguration Configuration = configuration;
-
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-        options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase"));
+        options
+            .UseLazyLoadingProxies()
+            .UseSqlite(configuration.GetConnectionString("WebApiDatabase"));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

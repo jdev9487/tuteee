@@ -3,6 +3,7 @@ namespace JDev.Tuteee.ApiClient;
 using DTOs;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public class ApiClient(HttpClient client) : IApiClient
 {
@@ -38,7 +39,8 @@ public class ApiClient(HttpClient client) : IApiClient
         var json = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions
         {
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            ReferenceHandler = ReferenceHandler.Preserve
         };
         return JsonSerializer.Deserialize<TResponseObject>(json, options) ?? default;
     }

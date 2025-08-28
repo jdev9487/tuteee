@@ -2,7 +2,6 @@ namespace JDev.Tuteee.Api.Extensions;
 
 using DB;
 using Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 internal static class SeedExtensions
@@ -22,20 +21,32 @@ internal static class SeedExtensions
                 PhoneNumber = "07123456789"
             };
             await context.Clients.AddAsync(tomRogers, token);
+            var lucyRate = new Rate
+            {
+                PencePerHour = 4500,
+                ActiveFrom = DateTimeOffset.MinValue
+            };
             var lucyBassett = new Tutee
             {
                 Client = tomRogers,
                 FirstName = "Lucy",
                 LastName = "Bassett",
-                EmailAddress = "lb@mail.com"
+                EmailAddress = "lb@mail.com",
+                Rates = [lucyRate]
             };
             await context.Tutees.AddAsync(lucyBassett, token);
+            var zaraRate = new Rate
+            {
+                PencePerHour = 5500,
+                ActiveFrom = DateTimeOffset.MinValue
+            };
             var zaraAhmed = new Tutee
             {
                 Client = tomRogers,
                 FirstName = "Zara",
                 LastName = "Ahmed",
-                EmailAddress = "za@mail.com"
+                EmailAddress = "za@mail.com",
+                Rates = [zaraRate]
             };
             await context.Tutees.AddAsync(zaraAhmed, token);
             var lucyLesson1 = new Lesson
@@ -53,6 +64,13 @@ internal static class SeedExtensions
                 HomeworkInstructions = "Do questions from paper!"
             };
             await context.Lessons.AddRangeAsync(lucyLesson1, lucyLesson2);
+            var tomInvoice = new Invoice
+            {
+                Client = tomRogers,
+                Paid = false,
+                Lessons = [lucyLesson1, lucyLesson2]
+            };
+            await context.Invoices.AddAsync(tomInvoice, token);
         }
         var xuexueXiang =
             await context.Clients.FirstOrDefaultAsync(g => g.HolderFirstName == "Xuexue" && g.HolderLastName == "Xiang",
@@ -67,20 +85,32 @@ internal static class SeedExtensions
                 PhoneNumber = "07999999999"
             };
             await context.Clients.AddAsync(xuexueXiang, token);
+            var yaraRate = new Rate
+            {
+                PencePerHour = 5000,
+                ActiveFrom = DateTimeOffset.MinValue
+            };
             var yaraGrant = new Tutee
             {
                 Client = xuexueXiang,
                 FirstName = "Yara",
                 LastName = "Grant",
-                EmailAddress = "yg@mail.com"
+                EmailAddress = "yg@mail.com",
+                Rates = [yaraRate]
             };
             await context.Tutees.AddAsync(yaraGrant, token);
+            var johnRate = new Rate
+            {
+                PencePerHour = 1000,
+                ActiveFrom = DateTimeOffset.MinValue
+            };
             var johnGraham = new Tutee
             {
                 Client = xuexueXiang,
                 FirstName = "John",
                 LastName = "Graham",
-                EmailAddress = "jg@mail.com"
+                EmailAddress = "jg@mail.com",
+                Rates = [johnRate]
             };
             await context.Tutees.AddAsync(johnGraham, token);
             var yaraLesson1 = new Lesson
@@ -97,28 +127,7 @@ internal static class SeedExtensions
             };
             await context.Lessons.AddRangeAsync(yaraLesson1, yaraLesson2);
         }
+
         await context.SaveChangesAsync(token);
-    }
-
-    internal static async Task SeedAdminAsync(this IHost app, string username, string password)
-    {
-        await using var roleScope = app.Services.CreateAsyncScope();
-        var roleManager = roleScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-        if (!await roleManager.RoleExistsAsync("Admin"))
-            await roleManager.CreateAsync(new IdentityRole("Admin"));
-
-        await using var userScope = app.Services.CreateAsyncScope();
-        var userManager = roleScope.ServiceProvider.GetRequiredService<UserManager<User>>();
-        if (await userManager.FindByEmailAsync(username) is null)
-        {
-            var user = new User { Email = username, UserName = username };
-            await userManager.CreateAsync(user, password);
-            await userManager.AddToRoleAsync(user, "Admin");
-        }
-        if (await userManager.FindByEmailAsync("user@user.com") is null)
-        {
-            var user = new User { Email = "user@user.com", UserName = "user@user.com" };
-            await userManager.CreateAsync(user, "MyUs3rPa55word!£$%");
-        }
     }
 }

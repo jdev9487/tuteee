@@ -71,8 +71,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         _lesson = await Client.GetLessonAsync(LessonId);
-        _tutee = await Client.GetTuteeAsync(_lesson!.TuteeId);
-        _client = await Client.GetClientAsync(_tutee!.ClientId);
+        _tutee = _lesson.Tutee;
+        _client = _tutee.Client;
         _homeworkAttachments = await Client.GetHomeworkAttachments(LessonId);
         _navItems =
         [

@@ -1,13 +1,14 @@
 namespace JDev.Tuteee.Api.Endpoints;
 
-using ApiClient;
 using DB;
-using Mapping;
+using ApiClient;
+using AutoMapper;
 using ApiClient.DTOs;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-public class ClientEndpoints : IEndpoints
+public class ClientEndpoints(IMapper mapper) : IEndpoints
 {
     public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {
@@ -15,25 +16,23 @@ public class ClientEndpoints : IEndpoints
         groupBuilder.MapGet("/{id:int}",
             async Task<Results<Ok<ClientDto>, NotFound>> (int id, Context context, CancellationToken token) =>
             {
-                var account = await context.Clients
-                    .Include(t => t.Tutees)
+                var client = await context.Clients
                     .SingleOrDefaultAsync(g => g.ClientId == id, cancellationToken: token);
-                return account is null ? TypedResults.NotFound() : TypedResults.Ok(ClientMap.Map(account));
+                return client is null ? TypedResults.NotFound() : TypedResults.Ok(mapper.Map<ClientDto>(client));
             });
-
+        
         groupBuilder.MapGet("",
             async (Context context, CancellationToken token) =>
             {
                 var entities = await context.Clients
-                    .Include(g => g.Tutees)
                     .ToListAsync(cancellationToken: token);
-                return TypedResults.Ok(entities.Select(ClientMap.Map));
+                return TypedResults.Ok(entities.Select(mapper.Map<ClientDto>));
             });
-
+        
         groupBuilder.MapPost("",
             async (ClientDto dto, Context context, CancellationToken token) =>
             {
-                var entity = ClientMap.Map(dto);
+                var entity = mapper.Map<Client>(dto);
                 await context.Clients.AddAsync(entity, token);
                 await context.SaveChangesAsync(token);
                 return TypedResults.Created();

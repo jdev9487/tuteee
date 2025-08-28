@@ -7,4 +7,5 @@ public class InvoiceDto
     public int ClientId { get; set; }
     public ClientDto Client { get; set; } = default!;
     public IEnumerable<LessonDto> Lessons { get; set; } = [];
+    // public decimal Amount => Lessons.Sum(l => l.Rate);
 }

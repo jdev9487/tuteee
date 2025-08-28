@@ -20,6 +20,8 @@
         <TextInput @bind-Value="_newTuteeLastName"></TextInput>
         Email address
         <TextInput @bind-Value="_newTuteeEmailAddress"></TextInput>
+        Initial rate (pence per hour)
+        <NumberInput TValue="int" @bind-Value="_newTuteePencePerHour"></NumberInput>
     </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Primary" @onclick="OnHideAddTuteeModal">Add tutee</Button>
@@ -72,6 +74,7 @@ else
     private string _newTuteeFirstName = default!;
     private string _newTuteeLastName = default!;
     private string _newTuteeEmailAddress = default!;
+    private int _newTuteePencePerHour;
 
     private string ClientName => $"{_client?.HolderFirstName} {_client?.HolderLastName}";
 
@@ -95,7 +98,12 @@ else
             FirstName = _newTuteeFirstName,
             LastName = _newTuteeLastName,
             EmailAddress = _newTuteeEmailAddress,
-            ClientId = ClientId
+            ClientId = ClientId,
+            Rates = [new RateDto
+            {
+                PencePerHour = _newTuteePencePerHour,
+                ActiveFrom = DateTimeOffset.MinValue
+            }]
         };
         await ApiClient.AddTuteeAsync(dto);
 
@@ -111,6 +119,7 @@ else
         _newTuteeFirstName = "";
         _newTuteeLastName = "";
         _newTuteeEmailAddress = "";
+        _newTuteePencePerHour = 0;
     }
 
     private async Task<GridDataProviderResult<TuteeDto>> ClientsDataProvider(GridDataProviderRequest<TuteeDto> request)

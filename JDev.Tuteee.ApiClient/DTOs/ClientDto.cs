@@ -8,4 +8,5 @@ public class ClientDto
     public required string EmailAddress { get; set; } = default!;
     public required string PhoneNumber { get; set; } = default!;
     public IEnumerable<TuteeDto>? Tutees { get; set; } = [];
+    public IList<InvoiceDto> Invoices { get; set; } = [];
 }

@@ -7,6 +7,6 @@ public class Client
     public string HolderLastName { get; set; } = default!;
     public string EmailAddress { get; set; } = default!;
     public string PhoneNumber { get; set; } = default!;
-    public IList<Tutee> Tutees { get; set; } = [];
-    public IList<Invoice> Invoices { get; set; } = [];
+    public virtual IList<Tutee> Tutees { get; set; } = [];
+    public virtual IList<Invoice> Invoices { get; set; } = [];
 }

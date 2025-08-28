@@ -85,7 +85,7 @@ else
         _lessonStart = TimeOnly.FromDateTime(DateTime.Now);
         _lessonEnd = TimeOnly.FromDateTime(DateTime.Now);
         _tutee = await Client.GetTuteeAsync(TuteeId);
-        _client = await Client.GetClientAsync(_tutee!.ClientId);
+        _client = _tutee.Client;
         _navItems = new List<BreadcrumbItem>
         {
             new() { Text = $"{ClientName} 📂", Href = $"clients/{_client!.ClientId}" },

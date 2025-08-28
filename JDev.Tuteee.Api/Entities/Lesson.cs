@@ -6,8 +6,8 @@ public class Lesson
     public DateTimeOffset StartTime { get; set; }
     public DateTimeOffset EndTime { get; set; }
     public int TuteeId { get; set; }
-    public Tutee Tutee { get; set; } = default!;
+    public virtual Tutee Tutee { get; set; } = default!;
     public int? InvoiceId { get; set; }
-    public Invoice? Invoice { get; set; }
+    public virtual Invoice? Invoice { get; set; }
     public string? HomeworkInstructions { get; set; }
 }
