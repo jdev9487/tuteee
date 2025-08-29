@@ -1,9 +1,9 @@
 @attribute [Route(Routing.Client)]
 
-@using JDev.Tuteee.ApiClient
-@using JDev.Tuteee.ApiClient.DTOs
+@using JDev.Tuteee.Rest.ApiClient
+@using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
-@inject IApiClient ApiClient
+@inject IRestApiClient RestApiClient
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -80,7 +80,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _client = await ApiClient.GetClientAsync(ClientId);
+        _client = await RestApiClient.GetClientAsync(ClientId);
         _navItems = new List<BreadcrumbItem>
         {
             new() { Text = $"{ClientName} 📂", IsCurrentPage = true }
@@ -105,11 +105,11 @@ else
                 ActiveFrom = DateTimeOffset.MinValue
             }]
         };
-        await ApiClient.AddTuteeAsync(dto);
+        await RestApiClient.AddTuteeAsync(dto);
 
         ResetNewClientInfo();
 
-        _client = await ApiClient.GetClientAsync(ClientId);
+        _client = await RestApiClient.GetClientAsync(ClientId);
         await _tuteeGrid.RefreshDataAsync();
         
         await _modal.HideAsync();

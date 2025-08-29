@@ -1,9 +1,9 @@
 @attribute [Route($"/{Routing.Invoices}")]
 
-@using JDev.Tuteee.ApiClient
-@using JDev.Tuteee.ApiClient.DTOs
+@using JDev.Tuteee.Rest.ApiClient
+@using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
-@inject IApiClient ApiClient;
+@inject IRestApiClient RestApiClient;
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -49,7 +49,7 @@ else
                 @GetLessonIdsString(context.Lessons)
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Amount" PropertyName="Amount">
-                @ToCurrency(context.Lessons.Sum(l => l.Rate))
+                @ToCurrency(context.Amount)
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Paid" PropertyName="Paid">
                 @GetPaidString(context.Paid)
@@ -67,7 +67,7 @@ else
     
     protected override async Task OnInitializedAsync()
     {
-        _invoices = await ApiClient.GetInvoicesAsync();
+        _invoices = await RestApiClient.GetInvoicesAsync();
     }
     
     private async Task<GridDataProviderResult<InvoiceDto>> InvoicesDataProvider(GridDataProviderRequest<InvoiceDto> request)
@@ -76,7 +76,7 @@ else
     }
     private async Task<AutoCompleteDataProviderResult<ClientDto>> ClientDataProvider(AutoCompleteDataProviderRequest<ClientDto> request)
     {
-        var clients = await ApiClient.GetClientsAsync();
+        var clients = await RestApiClient.GetClientsAsync();
         return await Task.FromResult(new AutoCompleteDataProviderResult<ClientDto> { Data = clients, TotalCount = clients.Count });
     }
     private void OnInvoiceClientChosen(ClientDto client)
@@ -94,7 +94,7 @@ else
 
         ResetInvoiceClientInfo();
     
-        _invoices = await ApiClient.GetInvoicesAsync();
+        _invoices = await RestApiClient.GetInvoicesAsync();
         await _invoiceGrid.RefreshDataAsync();
 
         await _modal.HideAsync();

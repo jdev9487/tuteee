@@ -1,4 +1,4 @@
-using JDev.Tuteee.ApiClient;
+using JDev.Tuteee.Rest.ApiClient;
 using JDev.Tuteee.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

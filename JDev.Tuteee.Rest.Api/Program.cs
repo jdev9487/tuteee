@@ -1,13 +1,12 @@
 ﻿using System.Text.Json.Serialization;
-using JDev.Tuteee.Rest.Api.DB;
-using JDev.Tuteee.Rest.Api.Entities;
+using JDev.Tuteee.DAL;
+using JDev.Tuteee.DAL.Entities;
 using JDev.Tuteee.Rest.Api.Extensions;
-using JDev.Tuteee.ApiClient.DTOs;
-using Microsoft.EntityFrameworkCore;
+using JDev.Tuteee.Rest.ApiClient.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<Context>(ServiceLifetime.Transient);
+builder.Services.AddDataAccess();
 
 builder.Services.ConfigureHttpJsonOptions(opts =>
 {
@@ -15,7 +14,6 @@ builder.Services.ConfigureHttpJsonOptions(opts =>
 });
 
 builder.Services.AddEndpoints();
-// builder.Services.AddGrpc();
 builder.Services.AddAutoMapper(config =>
 {
     config.CreateMap<Client, ClientDto>().ReverseMap();
@@ -26,16 +24,9 @@ builder.Services.AddAutoMapper(config =>
 });
 
 var app = builder.Build();
-var context = app.Services.GetRequiredService<Context>();
-await context.Database.MigrateAsync();
 
-if (app.Environment.IsDevelopment())
-{
-    await context.SeedDevelopmentDataAsync(default);
-}
+await app.MigrateAsync();
 
 app.RegisterEndpoints();
-// app.UseGrpcWeb();
-// app.MapGrpcService<InvoiceService>();
 
 app.Run();
