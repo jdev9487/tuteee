@@ -1,8 +1,9 @@
-@page "/clients/{ClientId:int}"
-@using JDev.Tuteee.ApiClient
-@using JDev.Tuteee.ApiClient.DTOs
+@attribute [Route(Routing.Client)]
+
+@using JDev.Tuteee.Rest.ApiClient
+@using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
-@inject IApiClient ApiClient
+@inject IRestApiClient RestApiClient
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -19,6 +20,8 @@
         <TextInput @bind-Value="_newTuteeLastName"></TextInput>
         Email address
         <TextInput @bind-Value="_newTuteeEmailAddress"></TextInput>
+        Initial rate (pence per hour)
+        <NumberInput TValue="int" @bind-Value="_newTuteePencePerHour"></NumberInput>
     </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Primary" @onclick="OnHideAddTuteeModal">Add tutee</Button>
@@ -45,12 +48,12 @@ else
           Responsive="true">
         <GridColumns>
             <GridColumn TItem="TuteeDto" HeaderText="First name" PropertyName="FirstName">
-                <NavLink class="nav-link" href=@($"/tutees/{context.TuteeId}") Match="NavLinkMatch.All">
+                <NavLink class="nav-link" href=@($"tutees/{context.TuteeId}") Match="NavLinkMatch.All">
                     @context.FirstName
                 </NavLink>
             </GridColumn>
             <GridColumn TItem="TuteeDto" HeaderText="Last name" PropertyName="LastName">
-                <NavLink class="nav-link" href=@($"/tutees/{context.TuteeId}") Match="NavLinkMatch.All">
+                <NavLink class="nav-link" href=@($"tutees/{context.TuteeId}") Match="NavLinkMatch.All">
                     @context.LastName
                 </NavLink>
             </GridColumn>
@@ -71,12 +74,13 @@ else
     private string _newTuteeFirstName = default!;
     private string _newTuteeLastName = default!;
     private string _newTuteeEmailAddress = default!;
+    private int _newTuteePencePerHour;
 
     private string ClientName => $"{_client?.HolderFirstName} {_client?.HolderLastName}";
 
     protected override async Task OnInitializedAsync()
     {
-        _client = await ApiClient.GetClientAsync(ClientId);
+        _client = await RestApiClient.GetClientAsync(ClientId);
         _navItems = new List<BreadcrumbItem>
         {
             new() { Text = $"{ClientName} 📂", IsCurrentPage = true }
@@ -94,13 +98,18 @@ else
             FirstName = _newTuteeFirstName,
             LastName = _newTuteeLastName,
             EmailAddress = _newTuteeEmailAddress,
-            ClientId = ClientId
+            ClientId = ClientId,
+            Rates = [new RateDto
+            {
+                PencePerHour = _newTuteePencePerHour,
+                ActiveFrom = DateTimeOffset.MinValue
+            }]
         };
-        await ApiClient.AddTuteeAsync(dto);
+        await RestApiClient.AddTuteeAsync(dto);
 
         ResetNewClientInfo();
 
-        _client = await ApiClient.GetClientAsync(ClientId);
+        _client = await RestApiClient.GetClientAsync(ClientId);
         await _tuteeGrid.RefreshDataAsync();
         
         await _modal.HideAsync();
@@ -110,6 +119,7 @@ else
         _newTuteeFirstName = "";
         _newTuteeLastName = "";
         _newTuteeEmailAddress = "";
+        _newTuteePencePerHour = 0;
     }
 
     private async Task<GridDataProviderResult<TuteeDto>> ClientsDataProvider(GridDataProviderRequest<TuteeDto> request)

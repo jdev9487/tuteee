@@ -1,8 +1,9 @@
-@page "/tutees/{TuteeId:int}"
-@using JDev.Tuteee.ApiClient
-@using JDev.Tuteee.ApiClient.DTOs
+@attribute [Route($"/{Routing.Tutee}")]
+
+@using JDev.Tuteee.Rest.ApiClient
+@using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
-@inject IApiClient Client
+@inject IRestApiClient Client
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -46,7 +47,7 @@ else
           Responsive="true">
         <GridColumns>
             <GridColumn TItem="LessonDto" HeaderText="Date" SortKeySelector="item => item.StartTime">
-                <NavLink class="nav-link" href=@($"/lessons/{context.LessonId}") Match="NavLinkMatch.All">
+                <NavLink class="nav-link" href=@($"lessons/{context.LessonId}") Match="NavLinkMatch.All">
                     @context.StartTime.ToString("D")
                 </NavLink>
             </GridColumn>
@@ -57,7 +58,7 @@ else
                 @context.EndTime.ToString("h:mm:ss tt zz")
             </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="Homework" PropertyName="HomeworkInstructions">
-                @DisplayHomeworkInstructions(@context.HomeworkInstructions)
+                @DisplayHomeworkInstructions(context.HomeworkInstructions)
             </GridColumn>
         </GridColumns>
     </Grid>
@@ -84,10 +85,10 @@ else
         _lessonStart = TimeOnly.FromDateTime(DateTime.Now);
         _lessonEnd = TimeOnly.FromDateTime(DateTime.Now);
         _tutee = await Client.GetTuteeAsync(TuteeId);
-        _client = await Client.GetClientAsync(_tutee!.ClientId);
+        _client = _tutee.Client;
         _navItems = new List<BreadcrumbItem>
         {
-            new() { Text = $"{ClientName} 📂", Href = $"/clients/{_client!.ClientId}" },
+            new() { Text = $"{ClientName} 📂", Href = $"clients/{_client!.ClientId}" },
             new() { Text = $"{TuteeName} 🎓", IsCurrentPage = true }
         };
     }

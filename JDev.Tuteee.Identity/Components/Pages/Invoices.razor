@@ -1,26 +1,37 @@
-@page "/invoices"
+@attribute [Route($"/{Routing.Invoices}")]
 
-@using JDev.Tuteee.ApiClient
-@using JDev.Tuteee.ApiClient.DTOs
+@using System.Globalization
+@using System.Text
+@using JDev.Tuteee.Protos
+@using JDev.Tuteee.Rest.ApiClient
+@using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
-@inject IApiClient ApiClient;
+@inject IRestApiClient RestApiClient;
+@inject InvoiceCreator.InvoiceCreatorClient GrpcApiClient;
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Invoices</PageTitle>
 
-<Modal @ref="_modal" Title="Enter new client details">
+<Modal @ref="_modal" Title="Bill a client">
     <BodyTemplate>
+        Which client?
+        <AutoComplete @bind-Value="_invoiceClientName"
+                      TItem="ClientDto"
+                      DataProvider="ClientDataProvider"
+                      PropertyName="HolderName"
+                      Placeholder="Search billable client"
+                      OnChanged="(ClientDto client) => OnClientChosen(client)"></AutoComplete>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Primary" @onclick="OnHideAddInvoiceModal">Create Invoice</Button>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideBillClientModal">Create invoice</Button>
     </FooterTemplate>
 </Modal>
 
 <div class="d-flex flex-row justify-content-between mb-2">
     <h3>Invoices</h3>
-    <Button Color="ButtonColor.Primary" @onclick="OnShowAddInvoiceModal">Create Invoice</Button>
+    <Button Color="ButtonColor.Primary" @onclick="OnShowAddInvoiceModal">Bill client</Button>
 </div>
 
 @if (_invoices is null)
@@ -38,11 +49,11 @@ else
             <GridColumn TItem="InvoiceDto" HeaderText="Client" PropertyName="FirstName">
                 @context.Client.HolderFirstName @context.Client.HolderLastName
             </GridColumn>
-            <GridColumn TItem="InvoiceDto" HeaderText="Lessons" PropertyName="FirstName">
-                @GetLessonIdsString(context.Lessons)
+            <GridColumn TItem="InvoiceDto" HeaderText="Lessons" PropertyName="Lessons">
+                @GetLessonRender(context.Lessons)
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Amount" PropertyName="Amount">
-                @context.Lessons.First().
+                @ToCurrency(context.Amount)
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Paid" PropertyName="Paid">
                 @GetPaidString(context.Paid)
@@ -55,33 +66,69 @@ else
     private IReadOnlyList<InvoiceDto>? _invoices;
     private Grid<InvoiceDto> _invoiceGrid = default!;
     private Modal _modal = default!;
+    private string _invoiceClientName = default!;
+    private int _invoiceClientId;
     
     protected override async Task OnInitializedAsync()
     {
-        _invoices = await ApiClient.GetInvoicesAsync();
+        _invoices = await RestApiClient.GetInvoicesAsync();
     }
     
     private async Task<GridDataProviderResult<InvoiceDto>> InvoicesDataProvider(GridDataProviderRequest<InvoiceDto> request)
     {
         return await Task.FromResult(request.ApplyTo(_invoices ?? []));
     }
+    private async Task<AutoCompleteDataProviderResult<ClientDto>> ClientDataProvider(AutoCompleteDataProviderRequest<ClientDto> request)
+    {
+        var clients = await RestApiClient.GetClientsAsync();
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ClientDto> { Data = clients, TotalCount = clients.Count });
+    }
+    private void OnClientChosen(ClientDto client)
+    {
+        _invoiceClientId = client.ClientId.GetValueOrDefault();
+    }
 
     private async Task OnShowAddInvoiceModal()
     {
         await _modal.ShowAsync();
     }
-    private async Task OnHideAddInvoiceModal()
+    private async Task OnHideBillClientModal()
     {
-        _invoices = await ApiClient.GetInvoicesAsync();
+        await GrpcApiClient.BillClientAsync(new BillClientRequest { ClientId = _invoiceClientId });
+
+        ResetInvoiceClientInfo();
+    
+        _invoices = await RestApiClient.GetInvoicesAsync();
         await _invoiceGrid.RefreshDataAsync();
 
         await _modal.HideAsync();
     }
 
-    private static string GetLessonIdsString(IEnumerable<LessonDto> lessonDtos)
+    private static RenderFragment GetLessonRender(IEnumerable<LessonDto> lessons)
     {
-        return string.Join(',', lessonDtos.Select(l => l.LessonId.ToString()));
+        return builder =>
+        {
+            var i = 0;
+            foreach (var lesson in lessons.OrderBy(l => l.StartTime))
+            {
+                var sb = new StringBuilder($"{lesson.Tutee.FirstName} {lesson.Tutee.LastName} | ");
+                sb.Append(lesson.StartTime.ToString("D"));
+                var start = lesson.StartTime.ToString("t");
+                var end = lesson.EndTime.ToString("t");
+                sb.Append($": {start} - {end}");
+                builder.AddMarkupContent(i, sb.ToString() );
+                builder.AddMarkupContent(i + 1, "<br/>");
+                i += 2;
+            }
+        };
     }
 
     private static string GetPaidString(bool paid) => paid ? "✅" : "❌";
+    private static string ToCurrency(decimal dec) => dec.ToString("C", CultureInfo.CurrentCulture);
+    
+    private void ResetInvoiceClientInfo()
+    {
+        _invoiceClientId = default;
+        _invoiceClientName = string.Empty;
+    }
 }

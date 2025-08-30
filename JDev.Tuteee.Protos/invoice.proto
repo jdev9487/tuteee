@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "JDev.Tuteee.Protos";
+
+service InvoiceCreator {
+  rpc BillClient (BillClientRequest) returns (BillClientResponse);
+}
+
+message BillClientRequest {
+  int32 client_id = 1;
+}
+
+message BillClientResponse {
+  bool success = 1;
+}

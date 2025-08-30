@@ -1,10 +1,10 @@
-@page "/"
-@page "/clients"
+@attribute [Route("/")]
+@attribute [Route($"/{Routing.Clients}")]
 
-@using JDev.Tuteee.ApiClient
-@using JDev.Tuteee.ApiClient.DTOs
+@using JDev.Tuteee.Rest.ApiClient
+@using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
-@inject IApiClient ApiClient;
+@inject IRestApiClient RestApiClient;
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -45,12 +45,12 @@ else
           Responsive="true">
         <GridColumns>
             <GridColumn TItem="ClientDto" HeaderText="First name" PropertyName="HolderFirstName">
-                <NavLink class="nav-link" href=@($"/clients/{context.ClientId}") Match="NavLinkMatch.All">
+                <NavLink class="nav-link" href=@($"clients/{context.ClientId}") Match="NavLinkMatch.All">
                     @context.HolderFirstName
                 </NavLink>
             </GridColumn>
             <GridColumn TItem="ClientDto" HeaderText="Last name" PropertyName="HolderLastName">
-                <NavLink class="nav-link" href=@($"/clients/{context.ClientId}") Match="NavLinkMatch.All">
+                <NavLink class="nav-link" href=@($"clients/{context.ClientId}") Match="NavLinkMatch.All">
                     @context.HolderLastName
                 </NavLink>
             </GridColumn>
@@ -75,7 +75,7 @@ else
     
     protected override async Task OnInitializedAsync()
     {
-        _clients = await ApiClient.GetClientsAsync();
+        _clients = await RestApiClient.GetClientsAsync();
     }
     
     private async Task<GridDataProviderResult<ClientDto>> ClientsDataProvider(GridDataProviderRequest<ClientDto> request)
@@ -96,11 +96,11 @@ else
             EmailAddress = _newClientEmailAddress,
             PhoneNumber = _newClientPhoneNumber
         };
-        await ApiClient.AddClientAsync(dto);
+        await RestApiClient.AddClientAsync(dto);
 
         ResetNewClientInfo();
 
-        _clients = await ApiClient.GetClientsAsync();
+        _clients = await RestApiClient.GetClientsAsync();
         await _clientGrid.RefreshDataAsync();
 
         await _modal.HideAsync();

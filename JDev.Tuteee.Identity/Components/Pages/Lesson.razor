@@ -1,8 +1,9 @@
-@page "/lessons/{LessonId:int}"
-@using JDev.Tuteee.ApiClient
-@using JDev.Tuteee.ApiClient.DTOs
+@attribute [Route($"/{Routing.Lesson}")]
+
+@using JDev.Tuteee.Rest.ApiClient
+@using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
-@inject IApiClient Client
+@inject IRestApiClient Client
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -70,13 +71,13 @@ else
     protected override async Task OnInitializedAsync()
     {
         _lesson = await Client.GetLessonAsync(LessonId);
-        _tutee = await Client.GetTuteeAsync(_lesson!.TuteeId);
-        _client = await Client.GetClientAsync(_tutee!.ClientId);
+        _tutee = _lesson.Tutee;
+        _client = _tutee.Client;
         _homeworkAttachments = await Client.GetHomeworkAttachments(LessonId);
         _navItems =
         [
-            new BreadcrumbItem { Text = $"{ClientName} 📂", Href = $"/clients/{_client!.ClientId}" },
-            new BreadcrumbItem { Text = $"{TuteeName} 🎓", Href = $"/tutees/{_tutee.TuteeId}" },
+            new BreadcrumbItem { Text = $"{ClientName} 📂", Href = $"clients/{_client!.ClientId}" },
+            new BreadcrumbItem { Text = $"{TuteeName} 🎓", Href = $"tutees/{_tutee.TuteeId}" },
             new BreadcrumbItem { Text = $"{_lesson.StartTime:MM/dd/yyyy} 📚", IsCurrentPage = true }
         ];
     }

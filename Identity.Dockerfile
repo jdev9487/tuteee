@@ -2,10 +2,12 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
 RUN mkdir "JDev.Tuteee.Identity"
-RUN mkdir "JDev.Tuteee.ApiClient"
+RUN mkdir "JDev.Tuteee.Rest.ApiClient"
+RUN mkdir "JDev.Tuteee.Protos"
 
 COPY JDev.Tuteee.Identity ./JDev.Tuteee.Identity/
-COPY JDev.Tuteee.ApiClient ./JDev.Tuteee.ApiClient/
+COPY JDev.Tuteee.Rest.ApiClient ./JDev.Tuteee.Rest.ApiClient/
+COPY JDev.Tuteee.Protos ./JDev.Tuteee.Protos/
 
 RUN dotnet restore ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
 
