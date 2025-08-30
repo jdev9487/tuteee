@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-public class RestApiClient(HttpClient client) : IRestApiClient
+public class RestApiClient(HttpClient client, JsonSerializerOptions options) : IRestApiClient
 {
     public async Task<ClientDto?> GetClientAsync(int id) => await GetAsync<ClientDto?>($"{Endpoint.ClientBase}/{id}");
 
@@ -37,17 +37,12 @@ public class RestApiClient(HttpClient client) : IRestApiClient
     {
         var response = await client.GetAsync(uri);
         var json = await response.Content.ReadAsStringAsync();
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-            ReferenceHandler = ReferenceHandler.Preserve
-        };
         return JsonSerializer.Deserialize<TResponseObject>(json, options) ?? default;
     }
 
     private async Task PostAsync<TRequest>(string uri, TRequest request)
     {
-        using StringContent jsonContent = new(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+        using StringContent jsonContent = new(JsonSerializer.Serialize(request, options), Encoding.UTF8, "application/json");
         await client.PostAsync(uri, jsonContent);
     }
 }

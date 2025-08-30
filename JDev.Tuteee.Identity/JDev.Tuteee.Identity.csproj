@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="Blazor.Bootstrap" Version="3.4.0" />
+        <PackageReference Include="Grpc.Net.ClientFactory" Version="2.71.0" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.6"/>
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.6"/>
@@ -16,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\JDev.Tuteee.Protos\JDev.Tuteee.Protos.csproj" />
       <ProjectReference Include="..\JDev.Tuteee.Rest.ApiClient\JDev.Tuteee.Rest.ApiClient.csproj" />
     </ItemGroup>
 

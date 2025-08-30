@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "JDev.Tuteee.Grpc.Api";
+option csharp_namespace = "JDev.Tuteee.Protos";
 
 service InvoiceCreator {
   rpc BillClient (BillClientRequest) returns (BillClientResponse);

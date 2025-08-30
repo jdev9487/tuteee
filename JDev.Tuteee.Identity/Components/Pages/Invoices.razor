@@ -1,16 +1,20 @@
 @attribute [Route($"/{Routing.Invoices}")]
 
+@using System.Globalization
+@using System.Text
+@using JDev.Tuteee.Protos
 @using JDev.Tuteee.Rest.ApiClient
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
 @inject IRestApiClient RestApiClient;
+@inject InvoiceCreator.InvoiceCreatorClient GrpcApiClient;
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Invoices</PageTitle>
 
-<Modal @ref="_modal" Title="Invoice a client">
+<Modal @ref="_modal" Title="Bill a client">
     <BodyTemplate>
         Which client?
         <AutoComplete @bind-Value="_invoiceClientName"
@@ -18,16 +22,16 @@
                       DataProvider="ClientDataProvider"
                       PropertyName="HolderName"
                       Placeholder="Search billable client"
-                      OnChanged="(ClientDto client) => OnInvoiceClientChosen(client)"></AutoComplete>
+                      OnChanged="(ClientDto client) => OnClientChosen(client)"></AutoComplete>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Primary" @onclick="OnHideAddInvoiceModal">Create Invoice</Button>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideBillClientModal">Create invoice</Button>
     </FooterTemplate>
 </Modal>
 
 <div class="d-flex flex-row justify-content-between mb-2">
     <h3>Invoices</h3>
-    <Button Color="ButtonColor.Primary" @onclick="OnShowAddInvoiceModal">Create Invoice</Button>
+    <Button Color="ButtonColor.Primary" @onclick="OnShowAddInvoiceModal">Bill client</Button>
 </div>
 
 @if (_invoices is null)
@@ -46,7 +50,7 @@ else
                 @context.Client.HolderFirstName @context.Client.HolderLastName
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Lessons" PropertyName="Lessons">
-                @GetLessonIdsString(context.Lessons)
+                @GetLessonRender(context.Lessons)
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Amount" PropertyName="Amount">
                 @ToCurrency(context.Amount)
@@ -63,7 +67,7 @@ else
     private Grid<InvoiceDto> _invoiceGrid = default!;
     private Modal _modal = default!;
     private string _invoiceClientName = default!;
-    private ClientDto? _invoiceClient;
+    private int _invoiceClientId;
     
     protected override async Task OnInitializedAsync()
     {
@@ -79,18 +83,18 @@ else
         var clients = await RestApiClient.GetClientsAsync();
         return await Task.FromResult(new AutoCompleteDataProviderResult<ClientDto> { Data = clients, TotalCount = clients.Count });
     }
-    private void OnInvoiceClientChosen(ClientDto client)
+    private void OnClientChosen(ClientDto client)
     {
-        _invoiceClient = client;
+        _invoiceClientId = client.ClientId.GetValueOrDefault();
     }
 
     private async Task OnShowAddInvoiceModal()
     {
         await _modal.ShowAsync();
     }
-    private async Task OnHideAddInvoiceModal()
+    private async Task OnHideBillClientModal()
     {
-        // await grpc call here to create invoice for all client's lessons that have no invoice attached to them
+        await GrpcApiClient.BillClientAsync(new BillClientRequest { ClientId = _invoiceClientId });
 
         ResetInvoiceClientInfo();
     
@@ -100,17 +104,31 @@ else
         await _modal.HideAsync();
     }
 
-    private static string GetLessonIdsString(IEnumerable<LessonDto> lessonDtos)
+    private static RenderFragment GetLessonRender(IEnumerable<LessonDto> lessons)
     {
-        return string.Join(',', lessonDtos.Select(l => l.LessonId.ToString()));
+        return builder =>
+        {
+            var i = 0;
+            foreach (var lesson in lessons.OrderBy(l => l.StartTime))
+            {
+                var sb = new StringBuilder($"{lesson.Tutee.FirstName} {lesson.Tutee.LastName} | ");
+                sb.Append(lesson.StartTime.ToString("D"));
+                var start = lesson.StartTime.ToString("t");
+                var end = lesson.EndTime.ToString("t");
+                sb.Append($": {start} - {end}");
+                builder.AddMarkupContent(i, sb.ToString() );
+                builder.AddMarkupContent(i + 1, "<br/>");
+                i += 2;
+            }
+        };
     }
 
     private static string GetPaidString(bool paid) => paid ? "✅" : "❌";
-    private static string ToCurrency(decimal dec) => dec.ToString("C");
+    private static string ToCurrency(decimal dec) => dec.ToString("C", CultureInfo.CurrentCulture);
     
     private void ResetInvoiceClientInfo()
     {
-        _invoiceClient = null;
+        _invoiceClientId = default;
         _invoiceClientName = string.Empty;
     }
 }

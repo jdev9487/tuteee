@@ -10,7 +10,7 @@ public class Context(IConfiguration configuration) : DbContext
     {
         options
             .UseLazyLoadingProxies()
-            .UseSqlite(configuration.GetConnectionString("WebApiDatabase"), opts =>
+            .UseSqlite(configuration.GetConnectionString("tuteee"), opts =>
             {
                 opts.MigrationsAssembly("JDev.Tuteee.Rest.Api");
             });

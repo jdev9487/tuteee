@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using JDev.Tuteee.Identity.Components;
 using JDev.Tuteee.Identity.Components.Account;
 using JDev.Tuteee.Identity.Data;
+using JDev.Tuteee.Protos;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -39,6 +40,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    string[] supportedCultures = ["en-GB"];
+    options.SetDefaultCulture(supportedCultures[0])
+        .AddSupportedCultures(supportedCultures)
+        .AddSupportedUICultures(supportedCultures);
+});
+
 builder.Services.AddIdentityCore<ApplicationUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -47,9 +56,13 @@ builder.Services.AddIdentityCore<ApplicationUser>()
     .AddRoleStore<RoleStore<IdentityRole, ApplicationDbContext>>()
     .AddDefaultTokenProviders();
 
-var apiUrl = builder.Configuration.GetSection("ApiUrl").Value;
-if (apiUrl is null) throw new InvalidOperationException("API config missing");
-builder.Services.AddApiClient(apiUrl);
+var restApiUrl = builder.Configuration.GetSection("RestApiUrl").Value;
+if (restApiUrl is null) throw new InvalidOperationException("REST API config missing");
+builder.Services.AddRestApiClient(restApiUrl);
+var grpcApiUrl = builder.Configuration.GetSection("GrpcApiUrl").Value;
+if (grpcApiUrl is null) throw new InvalidOperationException("gRPC API config missing");
+builder.Services.AddGrpcApiClient(grpcApiUrl);
+
 builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();
