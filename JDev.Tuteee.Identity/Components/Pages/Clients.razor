@@ -1,10 +1,13 @@
 @attribute [Route("/")]
 @attribute [Route($"/{Routing.Clients}")]
 
-@using JDev.Tuteee.Rest.ApiClient
+@using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
-@inject IRestApiClient RestApiClient;
+
+@inherits CancellableComponentBase
+
+@inject IClientRestApiClient ClientRestApiClient;
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -75,7 +78,7 @@ else
     
     protected override async Task OnInitializedAsync()
     {
-        _clients = await RestApiClient.GetClientsAsync();
+        _clients = await ClientRestApiClient.GetListAsync(CancellationToken);
     }
     
     private async Task<GridDataProviderResult<ClientDto>> ClientsDataProvider(GridDataProviderRequest<ClientDto> request)
@@ -96,11 +99,11 @@ else
             EmailAddress = _newClientEmailAddress,
             PhoneNumber = _newClientPhoneNumber
         };
-        await RestApiClient.AddClientAsync(dto);
+        await ClientRestApiClient.AddAsync(dto, CancellationToken);
 
         ResetNewClientInfo();
 
-        _clients = await RestApiClient.GetClientsAsync();
+        _clients = await ClientRestApiClient.GetListAsync(CancellationToken);
         await _clientGrid.RefreshDataAsync();
 
         await _modal.HideAsync();

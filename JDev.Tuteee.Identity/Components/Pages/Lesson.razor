@@ -1,9 +1,15 @@
 @attribute [Route($"/{Routing.Lesson}")]
 
-@using JDev.Tuteee.Rest.ApiClient
+@using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
-@inject IRestApiClient Client
+
+@inherits CancellableComponentBase
+
+@inject ILessonRestApiClient LessonRestApiClient
+@inject IHomeworkAttachmentRestApiClient HomeworkAttachmentRestApiClient
+@inject IFileRestApiClient FileRestApiClient
+@inject IJSRuntime JsRuntime
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -46,11 +52,12 @@ else
     @foreach (var ha in _homeworkAttachments)
     {
         <div class="d-flex flex-row">
-            <a class="styled-pointer" @onclick="DownloadFile">@Path.GetFileName(ha.FileName)</a>
-            <p>🗑️</p>
+            <a class="styled-pointer" @onclick="() => DownloadFile(ha)">@Path.GetFileName(ha.FileName)</a>
+            <a class="styled-pointer" @onclick="() => DeleteFile(ha)">🗑️</a>
         </div>
     }
 }
+<script src="../Components/Pages/Lesson.razor.js"></script>
 
 
 @code {
@@ -70,10 +77,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _lesson = await Client.GetLessonAsync(LessonId);
+        _lesson = await LessonRestApiClient.GetAsync(LessonId, CancellationToken);
         _tutee = _lesson.Tutee;
         _client = _tutee.Client;
-        _homeworkAttachments = await Client.GetHomeworkAttachments(LessonId);
+        _homeworkAttachments = await HomeworkAttachmentRestApiClient.GetListAsync(LessonId, CancellationToken);
         _navItems =
         [
             new BreadcrumbItem { Text = $"{ClientName} 📂", Href = $"clients/{_client!.ClientId}" },
@@ -82,19 +89,30 @@ else
         ];
     }
 
-    private static void DownloadFile()
+    private async Task DownloadFile(HomeworkAttachmentDto dto)
     {
+        var response = await HomeworkAttachmentRestApiClient.GetAsync(dto.HomeworkAttachmentId, CancellationToken);
+        var fileName = Path.GetFileName(response.FileName);
+        var stream = new MemoryStream(response.Contents);
+        using var streamRef = new DotNetStreamReference(stream: stream);
+        await JsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+    
+    private async Task DeleteFile(HomeworkAttachmentDto dto)
+    {
+        await HomeworkAttachmentRestApiClient.DeleteAsync(dto.HomeworkAttachmentId, CancellationToken);
+        _homeworkAttachments = await HomeworkAttachmentRestApiClient.GetListAsync(_lesson.LessonId.Value, CancellationToken);
     }
 
     private async Task OnHideAddAttachmentModal()
     {
-        await Client.SaveHomeworkAttachment(new HomeworkAttachmentDto
+        await HomeworkAttachmentRestApiClient.SaveAsync(_lesson.LessonId.Value, new HomeworkAttachmentDto
         {
             FileName = _filename,
             TemporaryFileName = _temporaryFileName,
             LessonId = _lesson!.LessonId
-        });
-        _homeworkAttachments = await Client.GetHomeworkAttachments(LessonId);
+        }, CancellationToken);
+        _homeworkAttachments = await HomeworkAttachmentRestApiClient.GetListAsync(LessonId, CancellationToken);
         await _modal.HideAsync();
     }
 
@@ -110,12 +128,12 @@ else
         _temporaryFileName = tempName;
         _filename = file.Name;
         using var memoryStream = new MemoryStream();
-        await file.OpenReadStream().CopyToAsync(memoryStream);
+        await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(memoryStream);
         var byteArray = memoryStream.ToArray();
-        await Client.SaveTemporaryFile(new TemporaryFileDto
+        await FileRestApiClient.SaveTemporaryAsync(new FileDto
         {
             Contents = byteArray,
-            Filename = tempName
-        });
+            FileName = tempName
+        }, CancellationToken);
     }
 }
