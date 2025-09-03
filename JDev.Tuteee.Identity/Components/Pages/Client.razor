@@ -64,6 +64,9 @@ else
             <GridColumn TItem="TuteeDto" HeaderText="Email" PropertyName="EmailAddress">
                 @context.EmailAddress
             </GridColumn>
+            <GridColumn TItem="TuteeDto" HeaderText="Rate (£/hr)">
+                @context.ActiveRate
+            </GridColumn>
         </GridColumns>
     </Grid>
 }

@@ -31,6 +31,30 @@
     </FooterTemplate>
 </Modal>
 
+<h4>Overview</h4>
+@if (_lesson is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <p>Start: @_lesson.StartTime.ToString("t")</p>
+    <p>End: @_lesson.EndTime.ToString("t")</p>
+}
+<h4>Cost</h4>
+@if (_lesson is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <p>£@_lesson.CostString</p>
+}
+
 <div class="d-flex flex-row justify-content-between my-2">
     <h4>Homework</h4>
     <Button Color="ButtonColor.Primary">Edit</Button>

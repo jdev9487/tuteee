@@ -10,9 +10,10 @@ public class LessonDto
     public int? InvoiceId { get; set; }
     public InvoiceDto? Invoice { get; set; }
     public string? HomeworkInstructions { get; set; }
-    public decimal Rate => (decimal)RateAsDouble / 100;
+    public decimal Cost => (decimal)CostAsDouble / 100;
+    public string CostString => Cost.ToString("0.00");
     
-    private double RateAsDouble
+    private double CostAsDouble
     {
         get
         {

@@ -30,6 +30,15 @@
     </FooterTemplate>
 </Modal>
 
+<h4>Overview</h4>
+@if (_tutee == null)
+{
+    <p>Current rate: <em>Loading...</em></p>
+}
+else
+{
+    <p>Current rate: £@_tutee.ActiveRate/hr</p>
+}
 <div class="d-flex flex-row justify-content-between my-2">
     <h4>Lessons</h4>
     <Button Color="ButtonColor.Primary" @onclick="OnShowAddLessonModal">Schedule lesson</Button>
