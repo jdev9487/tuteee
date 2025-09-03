@@ -11,4 +11,7 @@ public class LessonRestApiClient(HttpClient client, JsonSerializerOptions option
 
     public async Task AddAsync(LessonDto lesson, CancellationToken token) =>
         await PostAsync(Endpoint.LessonBase, lesson, token);
+
+    public async Task EditAsync(LessonDto lesson, CancellationToken token) =>
+        await PatchAsync(Endpoint.LessonBase, lesson, token);
 }

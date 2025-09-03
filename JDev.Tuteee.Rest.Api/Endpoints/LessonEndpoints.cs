@@ -34,6 +34,15 @@ public class LessonEndpoints(IMapper mapper, IOptions<AppSettings> options) : IE
                 await context.SaveChangesAsync(token);
                 return TypedResults.Created();
             });
+        
+        groupBuilder.MapPatch("",
+            async (LessonDto dto, Context context, CancellationToken token) =>
+            {
+                var existing = await context.Lessons.FindAsync([dto.LessonId], cancellationToken: token);
+                existing.HomeworkInstructions = dto.HomeworkInstructions;
+                await context.SaveChangesAsync(token);
+                return TypedResults.Ok();
+            });
     }
 
     private void MapHomeworkAttachments(IEndpointRouteBuilder group)

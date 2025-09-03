@@ -19,5 +19,12 @@ public class BaseRestApiClient(HttpClient client, JsonSerializerOptions options)
         await client.PostAsync(uri, jsonContent, token);
     }
 
+    protected async Task PatchAsync<TRequest>(string uri, TRequest request, CancellationToken token = default)
+    {
+        using StringContent jsonContent =
+            new(JsonSerializer.Serialize(request, options), Encoding.UTF8, "application/json");
+        await client.PatchAsync(uri, jsonContent, token);
+    }
+
     protected async Task DeleteAsync(string uri, CancellationToken token = default) => await client.DeleteAsync(uri, token);
 }
