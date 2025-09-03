@@ -59,7 +59,7 @@ public class LessonEndpoints(IMapper mapper, IOptions<AppSettings> options) : IE
             {
                 Directory.CreateDirectory(Path.Join(_appSettings.AttachmentDirectory, lessonId.ToString()));
                 var newFileName = Path.Join(_appSettings.AttachmentDirectory, lessonId.ToString(), dto.FileName);
-                File.Move(Path.Join(_appSettings.TempDirectory, dto.TemporaryFileName), newFileName);
+                File.Move(Path.Join(Path.GetTempPath(), dto.TemporaryFileName), newFileName);
                 var homeworkAttachment = new HomeworkAttachment
                 {
                     LessonId = lessonId,
