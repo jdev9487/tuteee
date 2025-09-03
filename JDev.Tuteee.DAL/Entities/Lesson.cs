@@ -10,4 +10,5 @@ public class Lesson
     public int? InvoiceId { get; set; }
     public virtual Invoice? Invoice { get; set; }
     public string? HomeworkInstructions { get; set; }
+    public virtual IList<HomeworkAttachment> HomeworkAttachments { get; set; } = [];
 }

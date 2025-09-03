@@ -1,12 +1,16 @@
 ﻿using System.Text.Json.Serialization;
 using JDev.Tuteee.DAL;
 using JDev.Tuteee.DAL.Entities;
+using JDev.Tuteee.Rest.Api;
 using JDev.Tuteee.Rest.Api.Extensions;
 using JDev.Tuteee.Rest.ApiClient.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDataAccess();
+
+builder.Services.AddOptions<AppSettings>()
+    .BindConfiguration("AppSettings");
 
 builder.Services.ConfigureHttpJsonOptions(opts =>
 {

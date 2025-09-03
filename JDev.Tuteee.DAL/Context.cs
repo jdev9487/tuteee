@@ -29,6 +29,9 @@ public class Context(IConfiguration configuration) : DbContext
             .WithOne(i => i.Client)
             .HasForeignKey("ClientId");
 
+        modelBuilder.Entity<HomeworkAttachment>()
+            .ToTable("HomeworkAttachment");
+
         modelBuilder.Entity<Tutee>()
             .ToTable("Tutee");
         modelBuilder.Entity<Tutee>()
@@ -49,6 +52,10 @@ public class Context(IConfiguration configuration) : DbContext
         
         modelBuilder.Entity<Lesson>()
             .ToTable("Lesson");
+        modelBuilder.Entity<Lesson>()
+            .HasMany(l => l.HomeworkAttachments)
+            .WithOne(ha => ha.Lesson)
+            .HasForeignKey("LessonId");
         modelBuilder.Entity<Lesson>()
             .Property(l => l.StartTime)
             .HasConversion(
@@ -73,4 +80,5 @@ public class Context(IConfiguration configuration) : DbContext
     public DbSet<Tutee> Tutees { get; set; } = default!;
     public DbSet<Lesson> Lessons { get; set; } = default!;
     public DbSet<Invoice> Invoices { get; set; } = default!;
+    public DbSet<HomeworkAttachment> HomeworkAttachments { get; set; } = default!;
 }

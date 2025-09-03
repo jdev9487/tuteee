@@ -1,9 +1,13 @@
 @attribute [Route($"/{Routing.Tutee}")]
 
-@using JDev.Tuteee.Rest.ApiClient
+@using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
-@inject IRestApiClient Client
+
+@inherits CancellableComponentBase
+
+@inject ITuteeRestApiClient TuteeRestApiClient
+@inject ILessonRestApiClient LessonRestApiClient
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -84,7 +88,7 @@ else
         _lessonDate = DateOnly.FromDateTime(DateTime.Now);
         _lessonStart = TimeOnly.FromDateTime(DateTime.Now);
         _lessonEnd = TimeOnly.FromDateTime(DateTime.Now);
-        _tutee = await Client.GetTuteeAsync(TuteeId);
+        _tutee = await TuteeRestApiClient.GetAsync(TuteeId, CancellationToken);
         _client = _tutee.Client;
         _navItems = new List<BreadcrumbItem>
         {
@@ -95,7 +99,7 @@ else
 
     private async Task OnHideAddLessonModal()
     {
-        await Client.AddLessonAsync(new LessonDto
+        await LessonRestApiClient.AddAsync(new LessonDto
         {
             TuteeId = TuteeId,
             StartTime = new DateTimeOffset(
@@ -112,8 +116,8 @@ else
                 _lessonEnd.Hour,
                 _lessonEnd.Minute,
                 0, TimeSpan.Zero)
-        });
-        _tutee = await Client.GetTuteeAsync(TuteeId);
+        }, CancellationToken);
+        _tutee = await TuteeRestApiClient.GetAsync(TuteeId, CancellationToken);
         await _lessonGrid.RefreshDataAsync();
         await _modal.HideAsync();
     }
