@@ -2,14 +2,15 @@ namespace JDev.Tuteee.Rest.Api.Endpoints;
 
 using ApiClient;
 using AutoMapper;
+using DAL.Entities;
 using ApiClient.DTOs;
 using DAL;
-using DAL.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http.HttpResults;
 
-public class LessonEndpoints(IMapper mapper, IOptions<AppSettings> options) : IEndpoints
+public class LessonEndpoints(
+    IMapper mapper,
+    IOptions<AppSettings> options) : IEndpoints
 {
     private readonly AppSettings _appSettings = options.Value;
     
@@ -21,8 +22,7 @@ public class LessonEndpoints(IMapper mapper, IOptions<AppSettings> options) : IE
         groupBuilder.MapGet("/{id:int}",
             async Task<Results<Ok<LessonDto>, NotFound>> (int id, Context context, CancellationToken token) =>
             {
-                var lesson = await context.Lessons
-                    .SingleOrDefaultAsync(l => l.LessonId == id, cancellationToken: token);
+                var lesson = await context.Lessons.FindAsync([id], token);
                 return lesson is null ? TypedResults.NotFound() : TypedResults.Ok(mapper.Map<LessonDto>(lesson));
             });
         
@@ -36,9 +36,11 @@ public class LessonEndpoints(IMapper mapper, IOptions<AppSettings> options) : IE
             });
         
         groupBuilder.MapPatch("",
-            async (LessonDto dto, Context context, CancellationToken token) =>
+            async Task<Results<Ok, NotFound>>(LessonDto dto, Context context, CancellationToken token) =>
             {
-                var existing = await context.Lessons.FindAsync([dto.LessonId], cancellationToken: token);
+                if (dto.LessonId is null) return TypedResults.NotFound();
+                var existing = await context.Lessons.FindAsync([dto.LessonId.Value], token);
+                if (existing is null) return TypedResults.NotFound();
                 existing.HomeworkInstructions = dto.HomeworkInstructions;
                 await context.SaveChangesAsync(token);
                 return TypedResults.Ok();
@@ -50,7 +52,7 @@ public class LessonEndpoints(IMapper mapper, IOptions<AppSettings> options) : IE
         group.MapGet("",
             async Task<Results<Ok<IEnumerable<HomeworkAttachmentDto>>, NotFound>> (int lessonId, Context context, CancellationToken token) =>
             {
-                var lesson = await context.Lessons.FindAsync([lessonId], cancellationToken: token);
+                var lesson = await context.Lessons.FindAsync([lessonId], token);
                 if (lesson is not null)
                 {
                     return TypedResults.Ok(lesson.HomeworkAttachments.Select(ha => new HomeworkAttachmentDto

@@ -13,8 +13,7 @@ public class HomeworkAttachmentEndpoints : IEndpoints
         group.MapGet("/{homeworkAttachmentId:int}",
             async Task<Results<Ok<FileDto>, NotFound>>(int homeworkAttachmentId, Context context, CancellationToken token) =>
             {
-                var homeworkAttachment =
-                    await context.HomeworkAttachments.FindAsync([homeworkAttachmentId], cancellationToken: token);
+                var homeworkAttachment = await context.HomeworkAttachments.FindAsync([homeworkAttachmentId], token);
                 if (homeworkAttachment is null) return TypedResults.NotFound();
                 if (File.Exists(homeworkAttachment.Path))
                     return TypedResults.Ok(new FileDto
@@ -28,11 +27,10 @@ public class HomeworkAttachmentEndpoints : IEndpoints
         group.MapDelete("/{homeworkAttachmentId:int}",
             async Task<Results<NoContent, NotFound>>(int homeworkAttachmentId, Context context, CancellationToken token) =>
             {
-                var homeworkAttachment =
-                    await context.HomeworkAttachments.FindAsync([homeworkAttachmentId], cancellationToken: token);
-                if (homeworkAttachment is null) return TypedResults.NotFound();
-                context.HomeworkAttachments.Remove(homeworkAttachment);
-                File.Delete(homeworkAttachment.Path);
+                var entity = await context.HomeworkAttachments.FindAsync([homeworkAttachmentId], token);
+                if (entity is null) return TypedResults.NotFound();
+                context.HomeworkAttachments.Remove(entity);
+                File.Delete(entity.Path);
                 await context.SaveChangesAsync(token);
                 return TypedResults.NoContent();
             });

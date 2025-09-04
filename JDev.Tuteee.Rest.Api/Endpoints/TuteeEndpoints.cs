@@ -5,8 +5,8 @@ using AutoMapper;
 using ApiClient.DTOs;
 using DAL;
 using DAL.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 
 public class TuteeEndpoints(IMapper mapper) : IEndpoints
 {
@@ -17,16 +17,14 @@ public class TuteeEndpoints(IMapper mapper) : IEndpoints
         groupBuilder.MapGet("/{id:int}",
             async Task<Results<Ok<TuteeDto>, NotFound>> (int id, Context context, CancellationToken token) =>
             {
-                var entity = await context.Tutees
-                    .SingleOrDefaultAsync(t => t.TuteeId == id, cancellationToken: token);
+                var entity = await context.Tutees.FindAsync([id], token);
                 return entity is null ? TypedResults.NotFound() : TypedResults.Ok(mapper.Map<TuteeDto>(entity));
             });
         
         groupBuilder.MapGet("",
             async (Context context, CancellationToken token) =>
             {
-                var entities = await context.Tutees
-                    .ToListAsync(cancellationToken: token);
+                var entities = await context.Tutees.ToListAsync(token);
                 return TypedResults.Ok(entities.Select(mapper.Map<TuteeDto>));
             });
         

@@ -1,6 +1,6 @@
 namespace JDev.Tuteee.DAL.Entities;
 
-public class Invoice
+public class Invoice : BaseEntity
 {
     public int InvoiceId { get; set; }
     public bool Paid { get; set; }

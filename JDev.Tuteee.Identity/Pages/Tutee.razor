@@ -7,9 +7,7 @@
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
-@inject ITuteeRestApiClient TuteeRestApiClient
-@inject ILessonRestApiClient LessonRestApiClient
-@inject IRateRestApiClient RateRestApiClient
+@inject IRestApiClient RestApiClient
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -111,7 +109,7 @@ else
         _lessonDate = DateOnly.FromDateTime(DateTime.Now);
         _lessonStart = TimeOnly.FromDateTime(DateTime.Now);
         _lessonEnd = TimeOnly.FromDateTime(DateTime.Now);
-        _tutee = await TuteeRestApiClient.GetAsync(TuteeId, CancellationToken);
+        _tutee = await RestApiClient.GetTuteeAsync(TuteeId, CancellationToken);
         _client = _tutee.Client;
         _editablePencePerHour = _tutee.ActiveRate;
         _navItems = new List<BreadcrumbItem>
@@ -123,7 +121,7 @@ else
 
     private async Task OnHideAddLessonModal()
     {
-        await LessonRestApiClient.AddAsync(new LessonDto
+        await RestApiClient.AddLessonAsync(new LessonDto
         {
             TuteeId = TuteeId,
             StartTime = new DateTimeOffset(
@@ -141,7 +139,7 @@ else
                 _lessonEnd.Minute,
                 0, TimeSpan.Zero)
         }, CancellationToken);
-        _tutee = await TuteeRestApiClient.GetAsync(TuteeId, CancellationToken);
+        _tutee = await RestApiClient.GetTuteeAsync(TuteeId, CancellationToken);
         await _lessonGrid.RefreshDataAsync();
         await _scheduleLessonModal.HideAsync();
     }
@@ -163,8 +161,8 @@ else
             ActiveFrom = DateTimeOffset.Now,
             PencePerHour = _editablePencePerHour
         };
-        await RateRestApiClient.AddAsync(TuteeId, rateDto, CancellationToken);
-        _tutee = await TuteeRestApiClient.GetAsync(TuteeId, CancellationToken);
+        await RestApiClient.AddRateAsync(TuteeId, rateDto, CancellationToken);
+        _tutee = await RestApiClient.GetTuteeAsync(TuteeId, CancellationToken);
         _editablePencePerHour = _tutee.ActiveRate;
         await _updateRateModal.HideAsync();
     }

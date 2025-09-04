@@ -1,6 +1,6 @@
 namespace JDev.Tuteee.DAL.Entities;
 
-public class Lesson
+public class Lesson : BaseEntity
 {
     public int LessonId { get; set; }
     public DateTimeOffset StartTime { get; set; }

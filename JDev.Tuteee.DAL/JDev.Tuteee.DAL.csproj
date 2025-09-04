@@ -18,5 +18,14 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.7" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Remove="Repository\IGenericRepository.cs" />
+      <Compile Remove="Repository\GenericRepository.cs" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Repository\" />
+    </ItemGroup>
 
 </Project>

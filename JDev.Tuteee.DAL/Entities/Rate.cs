@@ -1,6 +1,6 @@
 namespace JDev.Tuteee.DAL.Entities;
 
-public class Rate
+public class Rate : BaseEntity
 {
     public int RateId { get; set; }
     public int PencePerHour { get; set; }

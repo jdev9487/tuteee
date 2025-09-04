@@ -1,16 +1,18 @@
 namespace JDev.Tuteee.DAL;
 
 using Entities;
+using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 public static class Extensions
 {
     public static IServiceCollection AddDataAccess(this IServiceCollection services)
     {
-        return services.AddDbContext<Context>(ServiceLifetime.Transient);
+        services.AddDbContext<Context>(ServiceLifetime.Transient);
+        // services.AddTransient<IGenericRepository, GenericRepository>();
+        return services;
     }
 
     public static async Task<WebApplication> MigrateAsync(this WebApplication app)

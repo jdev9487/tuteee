@@ -1,6 +1,6 @@
 namespace JDev.Tuteee.DAL.Entities;
 
-public class Tutee
+public class Tutee : BaseEntity
 {
     public int TuteeId { get; set; }
     public string FirstName { get; set; } = default!;

@@ -1,10 +1,10 @@
 namespace JDev.Tuteee.Rest.Api.Endpoints;
 
+using DAL;
 using ApiClient;
 using AutoMapper;
-using ApiClient.DTOs;
-using DAL;
 using DAL.Entities;
+using ApiClient.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -16,16 +16,14 @@ public class ClientEndpoints(IMapper mapper) : IEndpoints
         groupBuilder.MapGet("/{id:int}",
             async Task<Results<Ok<ClientDto>, NotFound>> (int id, Context context, CancellationToken token) =>
             {
-                var client = await context.Clients
-                    .SingleOrDefaultAsync(g => g.ClientId == id, cancellationToken: token);
+                var client = await context.FindAsync<Client>([id], token);
                 return client is null ? TypedResults.NotFound() : TypedResults.Ok(mapper.Map<ClientDto>(client));
             });
         
         groupBuilder.MapGet("",
             async (Context context, CancellationToken token) =>
             {
-                var entities = await context.Clients
-                    .ToListAsync(cancellationToken: token);
+                var entities = await context.Clients.ToListAsync(token);
                 return TypedResults.Ok(entities.Select(mapper.Map<ClientDto>));
             });
         
