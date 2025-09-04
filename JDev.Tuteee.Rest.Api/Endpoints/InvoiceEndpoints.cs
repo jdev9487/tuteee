@@ -1,10 +1,10 @@
 namespace JDev.Tuteee.Rest.Api.Endpoints;
 
-using DAL;
 using ApiClient;
 using AutoMapper;
 using ApiClient.DTOs;
-using Microsoft.EntityFrameworkCore;
+using DAL.Entities;
+using DAL.Repository;
 
 public class InvoiceEndpoints(IMapper mapper) : IEndpoints
 {
@@ -12,9 +12,9 @@ public class InvoiceEndpoints(IMapper mapper) : IEndpoints
     {
         var groupBuilder = routeBuilder.MapGroup($"/{Endpoint.InvoiceBase}");
         groupBuilder.MapGet("",
-            async (Context context, CancellationToken token) =>
+            async (IGenericRepository repo, CancellationToken token) =>
             {
-                var entities = await context.Invoices.ToListAsync(token);
+                var entities = await repo.GetListAsync<Invoice>(token);
                 return TypedResults.Ok(entities.Select(mapper.Map<InvoiceDto>));
             });
     }
