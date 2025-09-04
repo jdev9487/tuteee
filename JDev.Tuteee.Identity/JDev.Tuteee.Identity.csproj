@@ -21,4 +21,32 @@
       <ProjectReference Include="..\JDev.Tuteee.Rest.ApiClient\JDev.Tuteee.Rest.ApiClient.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="Account\Pages\Login.razor" />
+      <AdditionalFiles Include="Account\Pages\_Imports.razor" />
+      <AdditionalFiles Include="Account\Shared\AccountLayout.razor" />
+      <AdditionalFiles Include="Account\Shared\StatusMessage.razor" />
+      <AdditionalFiles Include="Layout\MainLayout.razor" />
+      <AdditionalFiles Include="Layout\NavMenu.razor" />
+      <AdditionalFiles Include="Layout\TopRow.razor" />
+      <AdditionalFiles Include="Pages\Client.razor" />
+      <AdditionalFiles Include="Pages\Clients.razor" />
+      <AdditionalFiles Include="Pages\Error.razor" />
+      <AdditionalFiles Include="Pages\Invoices.razor" />
+      <AdditionalFiles Include="Pages\Lesson.razor" />
+      <AdditionalFiles Include="Pages\Tutee.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Components\Layout\MainLayout.razor" />
+      <_ContentIncludedByDefault Remove="Components\Layout\NavMenu.razor" />
+      <_ContentIncludedByDefault Remove="Components\Layout\TopRow.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Client.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Clients.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Error.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Invoices.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Lesson.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Tutee.razor" />
+    </ItemGroup>
+
 </Project>

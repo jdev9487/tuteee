@@ -2,12 +2,13 @@
 
 @using System.Globalization
 @using System.Text
+@using BlazorBootstrap
 @using JDev.Tuteee.Protos
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
 
-@inherits CancellableComponentBase
+@inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
 @inject IInvoiceRestApiClient InvoiceRestApiClient;
 @inject IClientRestApiClient ClientRestApiClient;

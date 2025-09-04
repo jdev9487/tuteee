@@ -1,10 +1,11 @@
 @attribute [Route(Routing.Client)]
 
+@using BlazorBootstrap
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
 
-@inherits CancellableComponentBase
+@inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
 @inject IClientRestApiClient ClientRestApiClient
 @inject ITuteeRestApiClient TuteeRestApiClient
@@ -65,7 +66,7 @@ else
                 @context.EmailAddress
             </GridColumn>
             <GridColumn TItem="TuteeDto" HeaderText="Rate (£/hr)">
-                @context.ActiveRate
+                @context.ActiveRate.ToCurrency()
             </GridColumn>
         </GridColumns>
     </Grid>

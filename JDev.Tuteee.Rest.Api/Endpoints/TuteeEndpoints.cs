@@ -13,6 +13,7 @@ public class TuteeEndpoints(IMapper mapper) : IEndpoints
     public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {
         var groupBuilder = routeBuilder.MapGroup($"/{Endpoint.TuteeBase}");
+        MapRates(groupBuilder.MapGroup("/{tuteeId:int}/rates"));
         groupBuilder.MapGet("/{id:int}",
             async Task<Results<Ok<TuteeDto>, NotFound>> (int id, Context context, CancellationToken token) =>
             {
@@ -34,6 +35,20 @@ public class TuteeEndpoints(IMapper mapper) : IEndpoints
             {
                 var entity = mapper.Map<Tutee>(dto);
                 await context.Tutees.AddAsync(entity, token);
+                await context.SaveChangesAsync(token);
+                return TypedResults.Created();
+            });
+    }
+
+    private void MapRates(IEndpointRouteBuilder group)
+    {
+        group.MapPost("",
+            async Task<Results<Created, NotFound>>(int tuteeId, RateDto dto, Context context, CancellationToken token) =>
+            {
+                var tutee = await context.Tutees.FindAsync([tuteeId], token);
+                if (tutee is null) return TypedResults.NotFound();
+                var rateEntity = mapper.Map<Rate>(dto);
+                tutee.Rates.Add(rateEntity);
                 await context.SaveChangesAsync(token);
                 return TypedResults.Created();
             });

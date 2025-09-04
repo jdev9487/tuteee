@@ -1,11 +1,12 @@
 @attribute [Route("/")]
 @attribute [Route($"/{Routing.Clients}")]
 
+@using BlazorBootstrap
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
 
-@inherits CancellableComponentBase
+@inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
 @inject IClientRestApiClient ClientRestApiClient;
 @attribute [StreamRendering]

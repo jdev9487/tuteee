@@ -1,10 +1,13 @@
 @attribute [Route($"/{Routing.Lesson}")]
 
+@using BlazorBootstrap
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.JSInterop
 
-@inherits CancellableComponentBase
+@inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
 @inject ILessonRestApiClient LessonRestApiClient
 @inject IHomeworkAttachmentRestApiClient HomeworkAttachmentRestApiClient
@@ -88,11 +91,14 @@ else
     @foreach (var ha in _homeworkAttachments)
     {
         <div class="d-flex flex-row">
-            <a class="styled-pointer" @onclick="() => DownloadFile(ha)">@Path.GetFileName(ha.FileName)</a>
-            <a class="styled-pointer" @onclick="() => DeleteFile(ha)">🗑️</a>
+            <DeadLink OnClick="() => DownloadFile(ha)">@Path.GetFileName(ha.FileName)</DeadLink>
+            <div class="mx-2">
+                <DeadClick OnClick="() => DeleteFile(ha)">🗑️</DeadClick>
+            </div>
         </div>
     }
 }
+
 <script>
     window.downloadFileFromStream = async (fileName, contentStreamReference) => {
         const arrayBuffer = await contentStreamReference.arrayBuffer();
@@ -106,7 +112,6 @@ else
         URL.revokeObjectURL(url);
     }
 </script>
-
 
 @code {
     [Parameter]

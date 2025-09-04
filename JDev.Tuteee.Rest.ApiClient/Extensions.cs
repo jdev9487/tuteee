@@ -21,6 +21,7 @@ public static class Extensions
         services.AddHttpClient<IInvoiceRestApiClient, InvoiceRestApiClient>(ConfigureClient);
         services.AddHttpClient<ILessonRestApiClient, LessonRestApiClient>(ConfigureClient);
         services.AddHttpClient<ITuteeRestApiClient, TuteeRestApiClient>(ConfigureClient);
+        services.AddHttpClient<IRateRestApiClient, RateRestApiClient>(ConfigureClient);
         
         return services;
 

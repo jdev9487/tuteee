@@ -1,0 +1,13 @@
+<a class="styled-pointer" style="cursor: pointer" @onclick="HandleOnClick">
+    @ChildContent
+</a>
+
+@code {
+    [Parameter] public EventCallback OnClick { get; init; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    private async Task HandleOnClick()
+    {
+        await OnClick.InvokeAsync();
+    }
+}
