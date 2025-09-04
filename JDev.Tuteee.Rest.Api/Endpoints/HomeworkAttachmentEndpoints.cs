@@ -2,7 +2,6 @@ namespace JDev.Tuteee.Rest.Api.Endpoints;
 
 using ApiClient;
 using ApiClient.DTOs;
-using DAL;
 using DAL.Entities;
 using DAL.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;

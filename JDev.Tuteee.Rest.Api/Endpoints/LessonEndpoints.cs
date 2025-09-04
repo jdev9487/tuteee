@@ -4,7 +4,6 @@ using ApiClient;
 using AutoMapper;
 using DAL.Entities;
 using ApiClient.DTOs;
-using DAL;
 using DAL.Repository;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http.HttpResults;

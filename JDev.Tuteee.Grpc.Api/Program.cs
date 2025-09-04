@@ -8,7 +8,6 @@ builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
 
 builder.Services.AddDataAccess();
-builder.Services.AddTransient<IRepository, Repository>();
 
 var app = builder.Build();
 

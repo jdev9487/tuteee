@@ -6,7 +6,6 @@ using DAL.Entities;
 using ApiClient.DTOs;
 using DAL.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 public class TuteeEndpoints(IMapper mapper) : IEndpoints
 {

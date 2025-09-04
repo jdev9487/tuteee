@@ -1,14 +1,11 @@
 namespace JDev.Tuteee.Rest.Api.Endpoints;
 
-using DAL;
 using ApiClient;
 using AutoMapper;
 using DAL.Entities;
 using ApiClient.DTOs;
 using DAL.Repository;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 public class ClientEndpoints(IMapper mapper) : IEndpoints
 {
