@@ -1,4 +1,4 @@
-dev-services:
+services:
   rabbit-mq:
     image: rabbitmq:4-management
     environment:
