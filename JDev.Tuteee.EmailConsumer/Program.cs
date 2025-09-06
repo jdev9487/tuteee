@@ -10,7 +10,10 @@ builder.Services.AddRabbitMqConsumer<EmailHomeworkHandler>();
 builder.Services.AddOptions<Email>()
     .BindConfiguration("Email");
 
-builder.Services.AddTransient<IEmailClient, EmailClient>();
+if (builder.Environment.IsDevelopment())
+    builder.Services.AddTransient<IEmailClient, FakeClient>();
+else
+    builder.Services.AddTransient<IEmailClient, EmailClient>();
 
 var app = builder.Build();
 

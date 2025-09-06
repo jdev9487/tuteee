@@ -4,15 +4,14 @@ using Clients;
 using MassTransit;
 using Grpc.Api.Messages;
 
-public class EmailHomeworkHandler(IEmailClient emailClient) : IConsumer<EmailHomeworkEvent>
+public class EmailHomeworkHandler(
+    IEmailClient emailClient) : IConsumer<EmailHomeworkEvent>
 {
-    public async Task Consume(ConsumeContext<EmailHomeworkEvent> context)
-    {
-        await emailClient.SendAsync(new SendEmailRequest
+    public Task Consume(ConsumeContext<EmailHomeworkEvent> context) =>
+        emailClient.SendAsync(new SendEmailRequest
         {
             ToAddress = context.Message.To,
-            Body = "Hello",
-            Subject = "testing"
+            Body = context.Message.Body,
+            Subject = $"Homework for {context.Message.Date}"
         }, context.CancellationToken);
-    }
 }

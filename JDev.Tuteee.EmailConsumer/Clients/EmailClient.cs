@@ -1,36 +1,9 @@
 namespace JDev.Tuteee.EmailConsumer.Clients;
 
-using MimeKit;
-using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 
-public class EmailClient(IOptions<Auth.Email> options) : IEmailClient
+public class EmailClient(IOptions<Auth.Email> options) : BaseClient(options)
 {
-    private readonly Auth.Email _settings = options.Value;
-    
-    public async Task<bool> SendAsync(SendEmailRequest request, CancellationToken token)
-    {
-        var email = new MimeMessage
-        {
-            Subject = request.Subject
-        };
-        email.From.Add(MailboxAddress.Parse(_settings.Username));
-        email.To.Add(MailboxAddress.Parse(request.ToAddress));
-        var bodyBuilder = new BodyBuilder { HtmlBody = request.Body };
-        foreach (var attachment in request.Attachments)
-        {
-            await bodyBuilder.Attachments.AddAsync(attachment.FileName, attachment.Stream, token);
-        }
-
-        email.Body = bodyBuilder.ToMessageBody();
-
-        using var smtp = new SmtpClient { CheckCertificateRevocation = false };
-        await smtp.ConnectAsync(_settings.Server, _settings.Port, SecureSocketOptions.StartTls, token);
-        await smtp.AuthenticateAsync(_settings.Username, _settings.Password, token);
-        await smtp.SendAsync(email, token);
-        await smtp.DisconnectAsync(true, token);
-
-        return true;
-    }
+    protected override SecureSocketOptions SecureSocketOptions => SecureSocketOptions.StartTls;
 }

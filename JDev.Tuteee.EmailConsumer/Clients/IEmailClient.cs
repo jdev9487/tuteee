@@ -2,7 +2,7 @@ namespace JDev.Tuteee.EmailConsumer.Clients;
 
 public interface IEmailClient
 {
-    Task<bool> SendAsync(SendEmailRequest request, CancellationToken token);
+    Task SendAsync(SendEmailRequest request, CancellationToken token);
 }
 
 public class SendEmailRequest

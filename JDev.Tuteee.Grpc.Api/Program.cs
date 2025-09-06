@@ -11,6 +11,8 @@ builder.Services.AddRabbitMqPublisher();
 
 builder.Services.AddDataAccess();
 
+builder.Services.AddRazorTemplating();
+
 var app = builder.Build();
 
 app.MapGrpcService<InvoiceService>();

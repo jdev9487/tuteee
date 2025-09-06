@@ -16,4 +16,8 @@
       <ProjectReference Include="..\JDev.Tuteee.Grpc.Api.Messages\JDev.Tuteee.Grpc.Api.Messages.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Templates\Homework.cshtml" />
+    </ItemGroup>
+
 </Project>

@@ -9,6 +9,7 @@
     
     <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
+        <PackageReference Include="Razor.Templating.Core" Version="2.1.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -16,6 +17,10 @@
       <ProjectReference Include="..\JDev.Tuteee.DAL\JDev.Tuteee.DAL.csproj" />
       <ProjectReference Include="..\JDev.Tuteee.Grpc.Api.Messages\JDev.Tuteee.Grpc.Api.Messages.csproj" />
       <ProjectReference Include="..\JDev.Tuteee.Protos\JDev.Tuteee.Protos.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="EmailTemplates\Homework.cshtml" />
     </ItemGroup>
 
 </Project>
