@@ -28,7 +28,6 @@ public class HomeworkService(
             FirstName = lesson.Tutee.FirstName,
             Instructions = lesson.HomeworkInstructions
         });
-        
         _ = bus.Publish(new EmailHomeworkEvent
         {
             To = lesson.Tutee.EmailAddress,
