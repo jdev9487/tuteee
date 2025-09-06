@@ -4,8 +4,9 @@ using Protos;
 using DAL.Entities;
 using DAL.Repository;
 using global::Grpc.Core;
+using Invoice = DAL.Entities.Invoice;
 
-public class InvoiceCreatorService(IGenericRepository repository) :  InvoiceCreator.InvoiceCreatorBase
+public class InvoiceService(IGenericRepository repository) : Protos.Invoice.InvoiceBase
 {
     public override async Task<BillClientResponse> BillClient(BillClientRequest request, ServerCallContext serverCallContext)
     {

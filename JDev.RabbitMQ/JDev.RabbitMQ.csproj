@@ -5,14 +5,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-
+    
     <ItemGroup>
-        <Protobuf Include="invoice.proto" GrpcServices="Both"/>
-        <Protobuf Include="homework.proto" GrpcServices="Both" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.57.0"/>
+        <PackageReference Include="MassTransit" Version="8.5.2" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.2" />
     </ItemGroup>
 
 </Project>

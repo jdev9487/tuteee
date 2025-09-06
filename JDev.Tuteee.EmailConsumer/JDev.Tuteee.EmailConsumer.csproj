@@ -4,18 +4,16 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-      <UserSecretsId>b4c8d414-df53-4eba-b3e1-a91879d9cf1f</UserSecretsId>
+      <UserSecretsId>4d42bbbe-4bb2-4434-94d9-a040ad94e021</UserSecretsId>
   </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.71.0" />
+        <PackageReference Include="MailKit" Version="4.13.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\JDev.RabbitMQ\JDev.RabbitMQ.csproj" />
-      <ProjectReference Include="..\JDev.Tuteee.DAL\JDev.Tuteee.DAL.csproj" />
       <ProjectReference Include="..\JDev.Tuteee.Grpc.Api.Messages\JDev.Tuteee.Grpc.Api.Messages.csproj" />
-      <ProjectReference Include="..\JDev.Tuteee.Protos\JDev.Tuteee.Protos.csproj" />
     </ItemGroup>
 
 </Project>

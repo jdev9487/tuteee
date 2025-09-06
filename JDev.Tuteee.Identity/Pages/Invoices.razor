@@ -11,7 +11,7 @@
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
 @inject IRestApiClient RestApiClient;
-@inject InvoiceCreator.InvoiceCreatorClient GrpcApiClient;
+@inject Invoice.InvoiceClient GrpcApiClient;
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
