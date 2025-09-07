@@ -5,7 +5,10 @@ using JDev.Tuteee.EmailConsumer.Clients;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRabbitMqConsumer<EmailHomeworkHandler>();
+var auth = new Auth();
+builder.Configuration.GetSection("RabbitMQ").Bind(auth);
+
+builder.Services.AddRabbitMqConsumer<EmailHomeworkHandler>(auth);
 
 builder.Services.AddOptions<Email>()
     .BindConfiguration("Email");

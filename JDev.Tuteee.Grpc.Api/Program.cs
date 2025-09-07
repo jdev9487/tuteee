@@ -7,7 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
 
-builder.Services.AddRabbitMqPublisher();
+var auth = new Auth();
+builder.Configuration.GetSection("RabbitMQ").Bind(auth);
+
+builder.Services.AddRabbitMqPublisher(auth);
 
 builder.Services.AddDataAccess();
 
