@@ -1,18 +1,18 @@
 namespace JDev.Tuteee.DAL;
 
+using Core.EfCore.Repository;
 using Entities;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Repository;
 
 public static class Extensions
 {
     public static IServiceCollection AddDataAccess(this IServiceCollection services)
     {
         services.AddDbContext<Context>(ServiceLifetime.Transient);
-        services.AddTransient<IGenericRepository, GenericRepository>();
+        services.AddTransient<IGenericRepository, GenericRepository<Context>>();
         return services;
     }
 

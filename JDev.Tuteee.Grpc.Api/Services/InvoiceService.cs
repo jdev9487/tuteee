@@ -2,8 +2,8 @@ namespace JDev.Tuteee.Grpc.Api.Services;
 
 using Protos;
 using DAL.Entities;
-using DAL.Repository;
 using global::Grpc.Core;
+using Core.EfCore.Repository;
 using Invoice = DAL.Entities.Invoice;
 
 public class InvoiceService(IGenericRepository repository) : Protos.Invoice.InvoiceBase

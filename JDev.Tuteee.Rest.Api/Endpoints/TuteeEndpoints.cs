@@ -4,7 +4,7 @@ using ApiClient;
 using AutoMapper;
 using DAL.Entities;
 using ApiClient.DTOs;
-using DAL.Repository;
+using Core.EfCore.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 public class TuteeEndpoints(IMapper mapper) : IEndpoints

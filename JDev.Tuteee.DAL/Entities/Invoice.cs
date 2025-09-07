@@ -1,5 +1,7 @@
 namespace JDev.Tuteee.DAL.Entities;
 
+using Core.EfCore;
+
 public class Invoice : BaseEntity
 {
     public int InvoiceId { get; set; }

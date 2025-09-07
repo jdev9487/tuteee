@@ -44,7 +44,7 @@ public class RestApiClient(HttpClient client, JsonSerializerOptions options)
         await PatchAsync(Endpoint.LessonBase, lesson, token);
     
     public async Task AddRateAsync(int tuteeId, RateDto rateDto, CancellationToken token) =>
-        await PostAsync($"{Endpoint.TuteeBase}/{tuteeId}/rates", rateDto, token);
+        await PostAsync($"{Endpoint.TuteeBase}/{tuteeId}/{Endpoint.RateBase}", rateDto, token);
     
     public async Task<TuteeDto?> GetTuteeAsync(int id, CancellationToken token) =>
         await GetAsync<TuteeDto?>($"{Endpoint.TuteeBase}/{id}", token);

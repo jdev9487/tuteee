@@ -1,4 +1,4 @@
-using JDev.RabbitMQ;
+using JDev.Core.RabbitMQ;
 using JDev.Tuteee.DAL;
 using JDev.Tuteee.Grpc.Api.Services;
 

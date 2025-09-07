@@ -1,4 +1,4 @@
-using JDev.RabbitMQ;
+using JDev.Core.RabbitMQ;
 using JDev.Tuteee.EmailConsumer;
 using JDev.Tuteee.EmailConsumer.Auth;
 using JDev.Tuteee.EmailConsumer.Clients;

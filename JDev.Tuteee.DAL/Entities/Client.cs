@@ -1,5 +1,7 @@
 namespace JDev.Tuteee.DAL.Entities;
 
+using Core.EfCore;
+
 public class Client : BaseEntity
 {
     public int ClientId { get; set; }

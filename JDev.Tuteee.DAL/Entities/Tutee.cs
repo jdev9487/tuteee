@@ -1,5 +1,7 @@
 namespace JDev.Tuteee.DAL.Entities;
 
+using Core.EfCore;
+
 public class Tutee : BaseEntity
 {
     public int TuteeId { get; set; }

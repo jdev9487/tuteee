@@ -3,8 +3,8 @@ namespace JDev.Tuteee.Rest.Api.Endpoints;
 using ApiClient;
 using AutoMapper;
 using ApiClient.DTOs;
+using Core.EfCore.Repository;
 using DAL.Entities;
-using DAL.Repository;
 
 public class InvoiceEndpoints(IMapper mapper) : IEndpoints
 {

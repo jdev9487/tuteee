@@ -1,10 +1,10 @@
 namespace JDev.Tuteee.Grpc.Api.Services;
 
+using Core.EfCore.Repository;
 using Protos;
 using Messages;
 using MassTransit;
 using DAL.Entities;
-using DAL.Repository;
 using global::Grpc.Core;
 using Razor.Templating.Core;
 

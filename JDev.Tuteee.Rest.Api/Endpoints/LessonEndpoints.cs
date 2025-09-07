@@ -4,7 +4,7 @@ using ApiClient;
 using AutoMapper;
 using DAL.Entities;
 using ApiClient.DTOs;
-using DAL.Repository;
+using Core.EfCore.Repository;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http.HttpResults;
 

@@ -2,8 +2,8 @@ namespace JDev.Tuteee.Rest.Api.Endpoints;
 
 using ApiClient;
 using ApiClient.DTOs;
+using Core.EfCore.Repository;
 using DAL.Entities;
-using DAL.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 public class HomeworkAttachmentEndpoints : IEndpoints
@@ -28,8 +28,6 @@ public class HomeworkAttachmentEndpoints : IEndpoints
         group.MapDelete("/{homeworkAttachmentId:int}",
             async Task<Results<NoContent, NotFound>>(int homeworkAttachmentId, IGenericRepository repo, CancellationToken token) =>
             {
-                // var entity = await repo.FindAsync<HomeworkAttachment>(homeworkAttachmentId, token);
-                // if (entity is null) return TypedResults.NotFound();
                 var deleted = await repo.DeleteAsync<HomeworkAttachment>(homeworkAttachmentId, token);
                 if (deleted is null) return TypedResults.NotFound();
                 File.Delete(deleted.Path);

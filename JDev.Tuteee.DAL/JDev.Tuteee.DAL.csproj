@@ -19,4 +19,8 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.7" />
     </ItemGroup>
     
+    <ItemGroup>
+      <ProjectReference Include="..\..\core\JDev.Core.EfCore\JDev.Core.EfCore.csproj" />
+    </ItemGroup>
+    
 </Project>
