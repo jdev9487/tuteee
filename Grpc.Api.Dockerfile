@@ -13,7 +13,9 @@ COPY nuget.config .
 
 RUN dotnet restore --configfile nuget.config ./JDev.Tuteee.Grpc.Api/JDev.Tuteee.Grpc.Api.csproj
 
-RUN dotnet publish --no-restore -o out ./JDev.Tuteee.Grpc.Api/JDev.Tuteee.Grpc.Api.csproj
+RUN dotnet build --no-restore --configuration Release ./JDev.Tuteee.Grpc.Api/JDev.Tuteee.Grpc.Api.csproj
+
+RUN dotnet publish --no-build -o out ./JDev.Tuteee.Grpc.Api/JDev.Tuteee.Grpc.Api.csproj
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
