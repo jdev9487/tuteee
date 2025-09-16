@@ -2,10 +2,12 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
 RUN mkdir "JDev.Tuteee.Grpc.Api"
+RUN mkdir "JDev.Tuteee.Grpc.Api.Messages"
 RUN mkdir "JDev.Tuteee.DAL"
 RUN mkdir "JDev.Tuteee.Protos"
 
 COPY JDev.Tuteee.Grpc.Api ./JDev.Tuteee.Grpc.Api/
+COPY JDev.Tuteee.Grpc.Api.Messages ./JDev.Tuteee.Grpc.Api.Messages/
 COPY JDev.Tuteee.DAL ./JDev.Tuteee.DAL/
 COPY JDev.Tuteee.Protos ./JDev.Tuteee.Protos/
 
