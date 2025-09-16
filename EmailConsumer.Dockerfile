@@ -11,7 +11,7 @@ COPY nuget.config .
 
 RUN dotnet restore --configfile nuget.config ./JDev.Tuteee.EmailConsumer/JDev.Tuteee.EmailConsumer.csproj
 
-RUN dotnet build --no-restore --configuration Release ./JDev.Tuteee.EmailConsumer/JDev.Tuteee.Consumer.csproj
+RUN dotnet build --no-restore --configuration Release ./JDev.Tuteee.EmailConsumer/JDev.Tuteee.EmailConsumer.csproj
 
 RUN dotnet publish --no-build -o out ./JDev.Tuteee.EmailConsumer/JDev.Tuteee.EmailConsumer.csproj
 
