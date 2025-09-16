@@ -11,11 +11,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - image: JDev.Tuteee.Rest.Api
+          - image: jdev-tuteee-rest-api
             dockerfile: Rest.Api.Dockerfile
-          - image: JDev.Tuteee.Grpc.Api
+          - image: jdev-tuteee-grpc-api
             dockerfile: Grpc.Api.Dockerfile
-          - image: JDev.Tuteee.Identity
+          - image: jdev-tuteee-identity
             dockerfile: Identity.Dockerfile
     permissions:
       contents: write
