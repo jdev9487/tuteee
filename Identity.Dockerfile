@@ -13,7 +13,7 @@ COPY nuget.config .
 
 RUN dotnet restore --configfile nuget.config ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
 
-RUN dotnet publish -o out ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
+RUN dotnet publish --no-restore -o out ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
