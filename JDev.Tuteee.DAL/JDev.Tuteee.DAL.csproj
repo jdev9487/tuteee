@@ -17,10 +17,7 @@
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.7" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <ProjectReference Include="..\..\core\JDev.Core.EfCore\JDev.Core.EfCore.csproj" />
+        <PackageReference Include="JDev.Core.EfCore" Version="0.1.0" />
     </ItemGroup>
     
 </Project>
