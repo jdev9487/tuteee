@@ -11,7 +11,7 @@ COPY JDev.Tuteee.Protos ./JDev.Tuteee.Protos/
 
 COPY nuget.config .
 
-RUN dotnet restore --config-file nuget.config ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
+RUN dotnet restore --configfile nuget.config ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
 
 RUN dotnet publish -o out ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
 

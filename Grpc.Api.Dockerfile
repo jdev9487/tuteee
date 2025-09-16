@@ -11,7 +11,7 @@ COPY JDev.Tuteee.Protos ./JDev.Tuteee.Protos/
 
 COPY nuget.config .
 
-RUN dotnet restore --config-file nuget.config ./JDev.Tuteee.Grpc.Api/JDev.Tuteee.Grpc.Api.csproj
+RUN dotnet restore --configfile nuget.config ./JDev.Tuteee.Grpc.Api/JDev.Tuteee.Grpc.Api.csproj
 
 RUN dotnet publish -o out ./JDev.Tuteee.Grpc.Api/JDev.Tuteee.Grpc.Api.csproj
 
