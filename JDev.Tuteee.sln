@@ -15,6 +15,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDev.Tuteee.DAL", "JDev.Tut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDev.Tuteee.Protos", "JDev.Tuteee.Protos\JDev.Tuteee.Protos.csproj", "{544A4BAC-E7D0-46A3-98EC-2DD1651621CD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4255E8E7-0079-411C-A7BE-AB8E577AD44D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDev.Tuteee.Rest.Api.Tests", "JDev.Tuteee.Rest.Api.Tests\JDev.Tuteee.Rest.Api.Tests.csproj", "{D06C5BFD-0B27-4DC5-A2A4-D7BE62D42E3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDev.Tuteee.EmailConsumer", "JDev.Tuteee.EmailConsumer\JDev.Tuteee.EmailConsumer.csproj", "{66507906-B1DF-4C02-998D-A5D1A683AA98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDev.Tuteee.Grpc.Api.Messages", "JDev.Tuteee.Grpc.Api.Messages\JDev.Tuteee.Grpc.Api.Messages.csproj", "{F8464415-6BAF-4D19-8712-4B782FDDECFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +56,20 @@ Global
 		{544A4BAC-E7D0-46A3-98EC-2DD1651621CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{544A4BAC-E7D0-46A3-98EC-2DD1651621CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{544A4BAC-E7D0-46A3-98EC-2DD1651621CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D06C5BFD-0B27-4DC5-A2A4-D7BE62D42E3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D06C5BFD-0B27-4DC5-A2A4-D7BE62D42E3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D06C5BFD-0B27-4DC5-A2A4-D7BE62D42E3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D06C5BFD-0B27-4DC5-A2A4-D7BE62D42E3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66507906-B1DF-4C02-998D-A5D1A683AA98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66507906-B1DF-4C02-998D-A5D1A683AA98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66507906-B1DF-4C02-998D-A5D1A683AA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66507906-B1DF-4C02-998D-A5D1A683AA98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8464415-6BAF-4D19-8712-4B782FDDECFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8464415-6BAF-4D19-8712-4B782FDDECFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8464415-6BAF-4D19-8712-4B782FDDECFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8464415-6BAF-4D19-8712-4B782FDDECFE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D06C5BFD-0B27-4DC5-A2A4-D7BE62D42E3F} = {4255E8E7-0079-411C-A7BE-AB8E577AD44D}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+      <UserSecretsId>4d42bbbe-4bb2-4434-94d9-a040ad94e021</UserSecretsId>
+  </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="MailKit" Version="4.13.0" />
+        <PackageReference Include="JDev.Core.RabbitMQ" Version="0.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\JDev.Tuteee.Grpc.Api.Messages\JDev.Tuteee.Grpc.Api.Messages.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Templates\Homework.cshtml" />
+    </ItemGroup>
+
+</Project>

@@ -10,9 +10,8 @@
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
-@inject IInvoiceRestApiClient InvoiceRestApiClient;
-@inject IClientRestApiClient ClientRestApiClient;
-@inject InvoiceCreator.InvoiceCreatorClient GrpcApiClient;
+@inject IRestApiClient RestApiClient;
+@inject Invoice.InvoiceClient GrpcApiClient;
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -76,7 +75,7 @@ else
     
     protected override async Task OnInitializedAsync()
     {
-        _invoices = await InvoiceRestApiClient.GetListAsync(CancellationToken);
+        _invoices = await RestApiClient.GetInvoicesAsync(CancellationToken);
     }
     
     private async Task<GridDataProviderResult<InvoiceDto>> InvoicesDataProvider(GridDataProviderRequest<InvoiceDto> request)
@@ -85,7 +84,7 @@ else
     }
     private async Task<AutoCompleteDataProviderResult<ClientDto>> ClientDataProvider(AutoCompleteDataProviderRequest<ClientDto> request)
     {
-        var clients = await ClientRestApiClient.GetListAsync(CancellationToken);
+        var clients = await RestApiClient.GetClientsAsync(CancellationToken);
         return await Task.FromResult(new AutoCompleteDataProviderResult<ClientDto> { Data = clients, TotalCount = clients.Count });
     }
     private void OnClientChosen(ClientDto client)
@@ -103,7 +102,7 @@ else
 
         ResetInvoiceClientInfo();
     
-        _invoices = await InvoiceRestApiClient.GetListAsync(CancellationToken);
+        _invoices = await RestApiClient.GetInvoicesAsync(CancellationToken);
         await _invoiceGrid.RefreshDataAsync();
 
         await _modal.HideAsync();

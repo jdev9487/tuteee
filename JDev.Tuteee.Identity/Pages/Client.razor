@@ -1,14 +1,12 @@
 @attribute [Route(Routing.Client)]
 
-@using BlazorBootstrap
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
-@inject IClientRestApiClient ClientRestApiClient
-@inject ITuteeRestApiClient TuteeRestApiClient
+@inject IRestApiClient RestApiClient
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -88,7 +86,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _client = await ClientRestApiClient.GetAsync(ClientId, CancellationToken);
+        _client = await RestApiClient.GetClientAsync(ClientId, CancellationToken);
         _navItems = new List<BreadcrumbItem>
         {
             new() { Text = $"{ClientName} 📂", IsCurrentPage = true }
@@ -113,11 +111,11 @@ else
                 ActiveFrom = DateTimeOffset.MinValue
             }]
         };
-        await TuteeRestApiClient.AddAsync(dto, CancellationToken);
+        await RestApiClient.AddTuteeAsync(dto, CancellationToken);
 
         ResetNewClientInfo();
 
-        _client = await ClientRestApiClient.GetAsync(ClientId, CancellationToken);
+        _client = await RestApiClient.GetClientAsync(ClientId, CancellationToken);
         await _tuteeGrid.RefreshDataAsync();
         
         await _modal.HideAsync();

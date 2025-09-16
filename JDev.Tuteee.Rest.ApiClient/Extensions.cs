@@ -14,15 +14,7 @@ public static class Extensions
             PropertyNameCaseInsensitive = true,
             ReferenceHandler = ReferenceHandler.Preserve
         });
-
-        services.AddHttpClient<IClientRestApiClient, ClientRestApiClient>(ConfigureClient);
-        services.AddHttpClient<IFileRestApiClient, FileRestApiClient>(ConfigureClient);
-        services.AddHttpClient<IHomeworkAttachmentRestApiClient, HomeworkAttachmentRestApiClient>(ConfigureClient);
-        services.AddHttpClient<IInvoiceRestApiClient, InvoiceRestApiClient>(ConfigureClient);
-        services.AddHttpClient<ILessonRestApiClient, LessonRestApiClient>(ConfigureClient);
-        services.AddHttpClient<ITuteeRestApiClient, TuteeRestApiClient>(ConfigureClient);
-        services.AddHttpClient<IRateRestApiClient, RateRestApiClient>(ConfigureClient);
-        
+        services.AddHttpClient<IRestApiClient, RestApiClient>(ConfigureClient);
         return services;
 
         void ConfigureClient(HttpClient client) => client.BaseAddress = new Uri(uri);

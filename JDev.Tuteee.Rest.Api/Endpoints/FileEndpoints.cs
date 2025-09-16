@@ -1,7 +1,6 @@
 namespace JDev.Tuteee.Rest.Api.Endpoints;
 
 using ApiClient.DTOs;
-using Microsoft.Extensions.Options;
 
 public class FileEndpoints : IEndpoints
 {

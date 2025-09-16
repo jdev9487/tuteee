@@ -2,10 +2,9 @@ namespace JDev.Tuteee.Rest.Api.Endpoints;
 
 using ApiClient;
 using AutoMapper;
-using ApiClient.DTOs;
-using DAL;
 using DAL.Entities;
-using Microsoft.EntityFrameworkCore;
+using ApiClient.DTOs;
+using Core.EfCore.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 public class ClientEndpoints(IMapper mapper) : IEndpoints
@@ -14,27 +13,25 @@ public class ClientEndpoints(IMapper mapper) : IEndpoints
     {
         var groupBuilder = routeBuilder.MapGroup($"/{Endpoint.ClientBase}");
         groupBuilder.MapGet("/{id:int}",
-            async Task<Results<Ok<ClientDto>, NotFound>> (int id, Context context, CancellationToken token) =>
+            async Task<Results<Ok<ClientDto>, NotFound>> (int id, IGenericRepository repo, CancellationToken token) =>
             {
-                var client = await context.Clients
-                    .SingleOrDefaultAsync(g => g.ClientId == id, cancellationToken: token);
+                var client = await repo.FindAsync<Client>(id, token);
                 return client is null ? TypedResults.NotFound() : TypedResults.Ok(mapper.Map<ClientDto>(client));
             });
         
         groupBuilder.MapGet("",
-            async (Context context, CancellationToken token) =>
+            async (IGenericRepository repo, CancellationToken token) =>
             {
-                var entities = await context.Clients
-                    .ToListAsync(cancellationToken: token);
+                var entities = await repo.GetListAsync<Client>(token);
                 return TypedResults.Ok(entities.Select(mapper.Map<ClientDto>));
             });
         
         groupBuilder.MapPost("",
-            async (ClientDto dto, Context context, CancellationToken token) =>
+            async (ClientDto dto, IGenericRepository repo, CancellationToken token) =>
             {
                 var entity = mapper.Map<Client>(dto);
-                await context.Clients.AddAsync(entity, token);
-                await context.SaveChangesAsync(token);
+                await repo.AddAsync(entity, token);
+                await repo.SaveChangesAsync(token);
                 return TypedResults.Created();
             });
     }

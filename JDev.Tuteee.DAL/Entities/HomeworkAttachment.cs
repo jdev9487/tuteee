@@ -1,6 +1,8 @@
 namespace JDev.Tuteee.DAL.Entities;
 
-public class HomeworkAttachment
+using Core.EfCore;
+
+public class HomeworkAttachment : BaseEntity
 {
     public int HomeworkAttachmentId { get; set; }
     public string Path { get; set; }

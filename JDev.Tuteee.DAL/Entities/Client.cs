@@ -1,6 +1,8 @@
 namespace JDev.Tuteee.DAL.Entities;
 
-public class Client
+using Core.EfCore;
+
+public class Client : BaseEntity
 {
     public int ClientId { get; set; }
     public string HolderFirstName { get; set; } = default!;

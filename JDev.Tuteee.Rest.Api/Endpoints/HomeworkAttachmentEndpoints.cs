@@ -2,7 +2,8 @@ namespace JDev.Tuteee.Rest.Api.Endpoints;
 
 using ApiClient;
 using ApiClient.DTOs;
-using DAL;
+using Core.EfCore.Repository;
+using DAL.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 public class HomeworkAttachmentEndpoints : IEndpoints
@@ -11,10 +12,9 @@ public class HomeworkAttachmentEndpoints : IEndpoints
     {
         var group = routeBuilder.MapGroup($"/{Endpoint.HomeworkAttachmentsBase}");
         group.MapGet("/{homeworkAttachmentId:int}",
-            async Task<Results<Ok<FileDto>, NotFound>>(int homeworkAttachmentId, Context context, CancellationToken token) =>
+            async Task<Results<Ok<FileDto>, NotFound>>(int homeworkAttachmentId, IGenericRepository repo, CancellationToken token) =>
             {
-                var homeworkAttachment =
-                    await context.HomeworkAttachments.FindAsync([homeworkAttachmentId], cancellationToken: token);
+                var homeworkAttachment = await repo.FindAsync<HomeworkAttachment>(homeworkAttachmentId, token);
                 if (homeworkAttachment is null) return TypedResults.NotFound();
                 if (File.Exists(homeworkAttachment.Path))
                     return TypedResults.Ok(new FileDto
@@ -26,14 +26,12 @@ public class HomeworkAttachmentEndpoints : IEndpoints
             });
         
         group.MapDelete("/{homeworkAttachmentId:int}",
-            async Task<Results<NoContent, NotFound>>(int homeworkAttachmentId, Context context, CancellationToken token) =>
+            async Task<Results<NoContent, NotFound>>(int homeworkAttachmentId, IGenericRepository repo, CancellationToken token) =>
             {
-                var homeworkAttachment =
-                    await context.HomeworkAttachments.FindAsync([homeworkAttachmentId], cancellationToken: token);
-                if (homeworkAttachment is null) return TypedResults.NotFound();
-                context.HomeworkAttachments.Remove(homeworkAttachment);
-                File.Delete(homeworkAttachment.Path);
-                await context.SaveChangesAsync(token);
+                var deleted = await repo.DeleteAsync<HomeworkAttachment>(homeworkAttachmentId, token);
+                if (deleted is null) return TypedResults.NotFound();
+                File.Delete(deleted.Path);
+                await repo.SaveChangesAsync(token);
                 return TypedResults.NoContent();
             });
         

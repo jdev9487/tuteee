@@ -9,9 +9,7 @@
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
-@inject ILessonRestApiClient LessonRestApiClient
-@inject IHomeworkAttachmentRestApiClient HomeworkAttachmentRestApiClient
-@inject IFileRestApiClient FileRestApiClient
+@inject IRestApiClient RestApiClient
 @inject IJSRuntime JsRuntime
 @attribute [StreamRendering]
 @rendermode InteractiveServer
@@ -132,11 +130,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _lesson = await LessonRestApiClient.GetAsync(LessonId, CancellationToken);
+        _lesson = await RestApiClient.GetLessonAsync(LessonId, CancellationToken);
         _homeworkInstructions = _lesson.HomeworkInstructions;
         _tutee = _lesson.Tutee;
         _client = _tutee.Client;
-        _homeworkAttachments = await HomeworkAttachmentRestApiClient.GetListAsync(LessonId, CancellationToken);
+        _homeworkAttachments = await RestApiClient.GetHomeworkAttachmentsAsync(LessonId, CancellationToken);
         _navItems =
         [
             new BreadcrumbItem { Text = $"{ClientName} 📂", Href = $"clients/{_client!.ClientId}" },
@@ -147,7 +145,7 @@ else
 
     private async Task DownloadFile(HomeworkAttachmentDto dto)
     {
-        var response = await HomeworkAttachmentRestApiClient.GetAsync(dto.HomeworkAttachmentId, CancellationToken);
+        var response = await RestApiClient.GetHomeworkAttachmentAsync(dto.HomeworkAttachmentId, CancellationToken);
         var fileName = Path.GetFileName(response.FileName);
         var stream = new MemoryStream(response.Contents);
         using var streamRef = new DotNetStreamReference(stream: stream);
@@ -156,8 +154,8 @@ else
     
     private async Task DeleteFile(HomeworkAttachmentDto dto)
     {
-        await HomeworkAttachmentRestApiClient.DeleteAsync(dto.HomeworkAttachmentId, CancellationToken);
-        _homeworkAttachments = await HomeworkAttachmentRestApiClient.GetListAsync(_lesson.LessonId.Value, CancellationToken);
+        await RestApiClient.DeleteHomeworkAttachmentAsync(dto.HomeworkAttachmentId, CancellationToken);
+        _homeworkAttachments = await RestApiClient.GetHomeworkAttachmentsAsync(_lesson.LessonId.Value, CancellationToken);
     }
 
 
@@ -167,13 +165,13 @@ else
     }
     private async Task OnHideAddAttachmentModal()
     {
-        await HomeworkAttachmentRestApiClient.SaveAsync(_lesson.LessonId.Value, new HomeworkAttachmentDto
+        await RestApiClient.SaveHomeworkAttachmentAsync(_lesson.LessonId.Value, new HomeworkAttachmentDto
         {
             FileName = _filename,
             TemporaryFileName = _temporaryFileName,
             LessonId = _lesson!.LessonId
         }, CancellationToken);
-        _homeworkAttachments = await HomeworkAttachmentRestApiClient.GetListAsync(LessonId, CancellationToken);
+        _homeworkAttachments = await RestApiClient.GetHomeworkAttachmentsAsync(LessonId, CancellationToken);
         await _fileUploadModal.HideAsync();
     }
 
@@ -185,8 +183,8 @@ else
     private async Task OnHideEditHomeworkInstructionsModal()
     {
         _lesson.HomeworkInstructions = _homeworkInstructions;
-        await LessonRestApiClient.EditAsync(_lesson, CancellationToken);
-        _lesson = await LessonRestApiClient.GetAsync(LessonId, CancellationToken);
+        await RestApiClient.UpdateLessonAsync(_lesson, CancellationToken);
+        _lesson = await RestApiClient.GetLessonAsync(LessonId, CancellationToken);
         await _homeworkEditModal.HideAsync();
     }
 
@@ -199,7 +197,7 @@ else
         using var memoryStream = new MemoryStream();
         await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(memoryStream);
         var byteArray = memoryStream.ToArray();
-        await FileRestApiClient.SaveTemporaryAsync(new FileDto
+        await RestApiClient.SaveTemporaryFileAsync(new FileDto
         {
             Contents = byteArray,
             FileName = tempName

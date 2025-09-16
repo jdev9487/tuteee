@@ -1,6 +1,8 @@
 namespace JDev.Tuteee.DAL.Entities;
 
-public class Rate
+using Core.EfCore;
+
+public class Rate : BaseEntity
 {
     public int RateId { get; set; }
     public int PencePerHour { get; set; }
