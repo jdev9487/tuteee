@@ -9,7 +9,9 @@ COPY JDev.Tuteee.Rest.Api ./JDev.Tuteee.Rest.Api/
 COPY JDev.Tuteee.DAL ./JDev.Tuteee.DAL/
 COPY JDev.Tuteee.Rest.ApiClient ./JDev.Tuteee.Rest.ApiClient/
 
-RUN dotnet restore ./JDev.Tuteee.Rest.Api/JDev.Tuteee.Rest.Api.csproj
+COPY nuget.config .
+
+RUN dotnet restore --config-file nuget.config ./JDev.Tuteee.Rest.Api/JDev.Tuteee.Rest.Api.csproj
 
 RUN dotnet publish -o out ./JDev.Tuteee.Rest.Api/JDev.Tuteee.Rest.Api.csproj
 

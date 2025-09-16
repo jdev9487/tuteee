@@ -9,7 +9,9 @@ COPY JDev.Tuteee.Identity ./JDev.Tuteee.Identity/
 COPY JDev.Tuteee.Rest.ApiClient ./JDev.Tuteee.Rest.ApiClient/
 COPY JDev.Tuteee.Protos ./JDev.Tuteee.Protos/
 
-RUN dotnet restore ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
+COPY nuget.config .
+
+RUN dotnet restore --config-file nuget.config ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
 
 RUN dotnet publish -o out ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
 
