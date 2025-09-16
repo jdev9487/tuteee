@@ -17,6 +17,8 @@ jobs:
             dockerfile: Grpc.Api.Dockerfile
           - image: jdev-tuteee-identity
             dockerfile: Identity.Dockerfile
+          - image: jdev-tuteee-emailconsumer
+            dockerfile: EmailConsumer.Dockerfile
     permissions:
       contents: write
     steps:
