@@ -10,8 +10,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-const string basePath = "tutoring";
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<AdminAuth>(builder.Configuration.GetSection("AdminAuth"));
@@ -31,7 +29,7 @@ builder.Services.AddAuthentication(options =>
     {
         config.ApplicationCookie =
             new OptionsBuilder<CookieAuthenticationOptions>(builder.Services, IdentityConstants.ApplicationScheme);
-        config.ApplicationCookie.Configure(opt => opt.LoginPath = $"/{basePath}/{Routing.Login}");
+        config.ApplicationCookie.Configure(opt => opt.LoginPath = $"/{Routing.Login}");
     });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
@@ -67,7 +65,6 @@ builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();
 
-app.UsePathBase($"/{basePath}");
 app.UseAuthorization();
 app.UseAntiforgery();
 
