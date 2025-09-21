@@ -2,9 +2,10 @@ namespace JDev.Tuteee.Rest.ApiClient.ApiClients;
 
 using DTOs;
 using System.Text.Json;
+using Core.BaseHttpClient;
 
 public class RestApiClient(HttpClient client, JsonSerializerOptions options)
-    : BaseRestApiClient(client, options), IRestApiClient
+    : BaseHttpClient(client, options), IRestApiClient
 {
     public async Task<ClientDto?> GetClientAsync(int id, CancellationToken token) =>
         await GetAsync<ClientDto?>($"{Endpoint.ClientBase}/{id}", token);
