@@ -2,7 +2,6 @@ using JDev.Tuteee.Rest.ApiClient;
 using JDev.Tuteee.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using JDev.Tuteee.Identity.Components;
 using JDev.Tuteee.Identity.Components.Account;
 using JDev.Tuteee.Identity.Data;
 using JDev.Tuteee.Protos;
@@ -12,7 +11,11 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<AdminAuth>(builder.Configuration.GetSection("AdminAuth"));
+builder.Services.Configure<AdminAuth>(x =>
+{
+    x.Username = Environment.GetEnvironmentVariable("TUTEEE_USERNAME") ?? "";
+    x.Password = Environment.GetEnvironmentVariable("TUTEEE_PASSWORD") ?? "";
+});
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();

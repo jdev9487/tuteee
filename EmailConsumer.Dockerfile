@@ -17,6 +17,6 @@ RUN dotnet publish --no-build -o out ./JDev.Tuteee.EmailConsumer/JDev.Tuteee.Ema
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
+COPY --from=openbao/openbao:2.4.1 /bin/bao /bin
 COPY --from=build /app/out .
-
-ENTRYPOINT ["dotnet", "JDev.Tuteee.EmailConsumer.dll"]
+COPY JDev.Tuteee.EmailConsumer/initialise-bao.sh /app/initialise-bao.sh
