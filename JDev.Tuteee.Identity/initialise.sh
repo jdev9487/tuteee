@@ -1,8 +1,8 @@
 export BAO_ADDR='http://openbao:8200'
 
 token=$(bao write auth/approle/login \
-  role_id="$(cat /app/roles/role)" \
-  secret_id="$(cat /app/roles/secret)" | grep -E '\btoken\b' | sed 's/^.* //')
+  role_id="$(cat /app/bao/roles/role)" \
+  secret_id="$(cat /app/bao/roles/secret)" | grep -E '\btoken\b' | sed 's/^.* //')
   
 bao login "$token"
 
