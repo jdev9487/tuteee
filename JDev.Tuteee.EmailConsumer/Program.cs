@@ -2,6 +2,7 @@ using JDev.Core.RabbitMQ;
 using JDev.Tuteee.EmailConsumer;
 using JDev.Tuteee.EmailConsumer.Auth;
 using JDev.Tuteee.EmailConsumer.Clients;
+using MailKit.Security;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,13 +24,8 @@ builder.Services.AddOptions<Email>()
     })
     .BindConfiguration("Email");
 
-if (builder.Environment.IsDevelopment())
-    builder.Services.AddTransient<IEmailClient, FakeClient>();
-else
-    builder.Services.AddTransient<IEmailClient, EmailClient>();
+builder.Services.AddTransient<IEmailClient, EmailClient>();
 
 var app = builder.Build();
-
-var options = app.Services.GetRequiredService<IOptions<Email>>();
 
 app.Run();

@@ -19,4 +19,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 COPY --from=openbao/openbao:2.4.1 /bin/bao /bin
 COPY --from=build /app/out .
-COPY JDev.Tuteee.EmailConsumer/initialise-bao.sh /app/initialise-bao.sh
+COPY JDev.Tuteee.EmailConsumer/initialise.sh /app/initialise.sh
