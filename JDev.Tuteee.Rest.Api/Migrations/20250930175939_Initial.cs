@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -14,12 +16,12 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 name: "Client",
                 columns: table => new
                 {
-                    ClientId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    HolderFirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    HolderLastName = table.Column<string>(type: "TEXT", nullable: false),
-                    EmailAddress = table.Column<string>(type: "TEXT", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: false)
+                    ClientId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    HolderFirstName = table.Column<string>(type: "text", nullable: false),
+                    HolderLastName = table.Column<string>(type: "text", nullable: false),
+                    EmailAddress = table.Column<string>(type: "text", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,10 +32,10 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 name: "Invoice",
                 columns: table => new
                 {
-                    InvoiceId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Paid = table.Column<bool>(type: "INTEGER", nullable: false),
-                    ClientId = table.Column<int>(type: "INTEGER", nullable: false)
+                    InvoiceId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Paid = table.Column<bool>(type: "boolean", nullable: false),
+                    ClientId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -50,12 +52,12 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 name: "Tutee",
                 columns: table => new
                 {
-                    TuteeId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    EmailAddress = table.Column<string>(type: "TEXT", nullable: false),
-                    ClientId = table.Column<int>(type: "INTEGER", nullable: false)
+                    TuteeId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    EmailAddress = table.Column<string>(type: "text", nullable: false),
+                    ClientId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,13 +74,13 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 name: "Lesson",
                 columns: table => new
                 {
-                    LessonId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    StartTime = table.Column<string>(type: "TEXT", nullable: false),
-                    EndTime = table.Column<string>(type: "TEXT", nullable: false),
-                    TuteeId = table.Column<int>(type: "INTEGER", nullable: false),
-                    InvoiceId = table.Column<int>(type: "INTEGER", nullable: true),
-                    HomeworkInstructions = table.Column<string>(type: "TEXT", nullable: true)
+                    LessonId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    StartTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    EndTime = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    TuteeId = table.Column<int>(type: "integer", nullable: false),
+                    InvoiceId = table.Column<int>(type: "integer", nullable: true),
+                    HomeworkInstructions = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -100,11 +102,11 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 name: "Rate",
                 columns: table => new
                 {
-                    RateId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    PencePerHour = table.Column<int>(type: "INTEGER", nullable: false),
-                    ActiveFrom = table.Column<string>(type: "TEXT", nullable: false),
-                    TuteeId = table.Column<int>(type: "INTEGER", nullable: false)
+                    RateId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PencePerHour = table.Column<int>(type: "integer", nullable: false),
+                    ActiveFrom = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    TuteeId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -116,6 +118,31 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                         principalColumn: "TuteeId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "HomeworkAttachment",
+                columns: table => new
+                {
+                    HomeworkAttachmentId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Path = table.Column<string>(type: "text", nullable: false),
+                    LessonId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HomeworkAttachment", x => x.HomeworkAttachmentId);
+                    table.ForeignKey(
+                        name: "FK_HomeworkAttachment_Lesson_LessonId",
+                        column: x => x.LessonId,
+                        principalTable: "Lesson",
+                        principalColumn: "LessonId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HomeworkAttachment_LessonId",
+                table: "HomeworkAttachment",
+                column: "LessonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoice_ClientId",
@@ -147,10 +174,13 @@ namespace JDev.Tuteee.Rest.Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Lesson");
+                name: "HomeworkAttachment");
 
             migrationBuilder.DropTable(
                 name: "Rate");
+
+            migrationBuilder.DropTable(
+                name: "Lesson");
 
             migrationBuilder.DropTable(
                 name: "Invoice");
