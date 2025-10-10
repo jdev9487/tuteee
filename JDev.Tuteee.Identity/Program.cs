@@ -35,10 +35,10 @@ builder.Services.AddAuthentication(options =>
         config.ApplicationCookie.Configure(opt => opt.LoginPath = $"/{Routing.Login}");
     });
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
+var connectionString = builder.Configuration.GetConnectionString("Identity") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
