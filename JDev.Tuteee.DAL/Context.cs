@@ -13,6 +13,7 @@ public class Context(IConfiguration configuration) : DbContext
             .UseNpgsql(configuration.GetConnectionString("tuteee"), opts =>
             {
                 opts.MigrationsAssembly("JDev.Tuteee.Rest.Api");
+                opts.UseAdminDatabase("defaultdb");
             });
     }
 
