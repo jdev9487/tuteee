@@ -12,7 +12,7 @@ postgresPassword=$(cat creds | grep -E '\bpassword\b' | sed 's/^.* //')
 
 rm creds
 
-identityLogin=$(bao kv get -mount=secret identity-login)
+identityLogin=$(bao kv get -format=json -mount=secret identity-login)
 identityUsername=$(echo "$identityLogin" | jq '.data.username' )
 identityPassword=$(echo "$identityLogin" | jq '.data.password' )
 
