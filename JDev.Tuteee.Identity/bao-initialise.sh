@@ -16,6 +16,6 @@ identityLogin=$(bao kv get -format=json -mount=secret identity-login)
 identityUsername=$(echo "$identityLogin" | jq '.data.username' )
 identityPassword=$(echo "$identityLogin" | jq '.data.password' )
 
-echo "{ \"AdminAuth\": { \"Username\": \"$identityUsername\", \"Password\": \"$identityPassword\" }, \"ConnectionStrings\": { \"Identity\": \"Host=a369850-akamai-prod-6636035-default.g2a.akamaidb.net;Port=23590;Username=$postgresUsername;Password=$postgresPassword;Database=JDev.Tuteee.Identity;Sslmode=require\" }}" | jq "." >> appsettings.Secret.json
+echo "{ \"AdminAuth\": { \"Username\": $identityUsername, \"Password\": $identityPassword }, \"ConnectionStrings\": { \"Identity\": \"Host=a369850-akamai-prod-6636035-default.g2a.akamaidb.net;Port=23590;Username=$postgresUsername;Password=$postgresPassword;Database=JDev.Tuteee.Identity;Sslmode=require\" }}" | jq "." >> appsettings.Secret.json
 
 dotnet JDev.Tuteee.Identity.dll
