@@ -6,8 +6,7 @@
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5078",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ConnectionStrings:Tuteee": "Host=localhost;Port=5431;Username=postgres;Password=password;Database=JDev.Tuteee.Rest"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }

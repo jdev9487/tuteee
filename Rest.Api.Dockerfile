@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
@@ -17,10 +19,11 @@ RUN dotnet build --no-restore --configuration Release ./JDev.Tuteee.Rest.Api/JDe
 
 RUN dotnet publish --no-build -o out ./JDev.Tuteee.Rest.Api/JDev.Tuteee.Rest.Api.csproj
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+FROM infra.registry.johngould.net/bao-dotnet:0.1.3
+
 WORKDIR /app
+
 COPY --from=build /app/out .
+COPY JDev.Tuteee.Rest.Api/bao-initialise.sh .
 
-ENV ConnectionStrings__Tuteee my-connection-string
-
-ENTRYPOINT ["dotnet", "JDev.Tuteee.Rest.Api.dll"]
+ENTRYPOINT ["sh", "bao-initialise.sh"]
