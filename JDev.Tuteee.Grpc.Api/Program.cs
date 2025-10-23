@@ -17,6 +17,8 @@ builder.Configuration.GetSection("RabbitMQ").Bind(auth);
 
 builder.Services.AddRabbitMqPublisher(auth);
 
+builder.Configuration.AddJsonFile("appsettings.Secret.json", optional: true);
+
 builder.Services.AddDataAccess();
 
 builder.Services.AddRazorTemplating();

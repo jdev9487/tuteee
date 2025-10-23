@@ -8,9 +8,7 @@
         "applicationUrl": "http://localhost:5136",
         "launchUrl": "http://localhost:5136",
         "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "Development",
-          "TUTEEE_USERNAME": "admin@admin.com",
-          "TUTEEE_PASSWORD": "SuperSafe1!"
+          "ASPNETCORE_ENVIRONMENT": "Development"
         }
       }
     }

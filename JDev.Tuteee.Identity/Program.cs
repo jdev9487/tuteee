@@ -11,11 +11,8 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<AdminAuth>(x =>
-{
-    x.Username = Environment.GetEnvironmentVariable("TUTEEE_USERNAME") ?? "";
-    x.Password = Environment.GetEnvironmentVariable("TUTEEE_PASSWORD") ?? "";
-});
+builder.Services.AddOptions<AdminAuth>()
+    .BindConfiguration("AdminAuth");
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -36,9 +33,11 @@ builder.Services.AddAuthentication(options =>
     });
 
 var connectionString = builder.Configuration.GetConnectionString("Identity") ??
-                       throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+                       throw new InvalidOperationException("Connection string 'Identity' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+{
+    options.UseNpgsql(connectionString, opts => opts.UseAdminDatabase("defaultdb"));
+});
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
