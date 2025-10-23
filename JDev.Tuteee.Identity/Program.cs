@@ -11,6 +11,8 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("appsettings.Secret.json", optional: true);
+
 builder.Services.AddOptions<AdminAuth>()
     .BindConfiguration("AdminAuth");
 

@@ -1,8 +1,8 @@
 export BAO_ADDR=https://infra.bao.johngould.net:3001
 
 postgresToken=$(bao write auth/approle/login \
-    role_id="$(cat /run/secrets/postgres_rest_role_id)" \
-    secret_id="$(cat /run/secrets/postgres_rest_secret_id)" | grep -E '\btoken\b' | sed 's/^.* //')
+    role_id="$(cat /run/secrets/rest_role_id)" \
+    secret_id="$(cat /run/secrets/rest_secret_id)" | grep -E '\btoken\b' | sed 's/^.* //')
 
 bao login -no-print "$postgresToken"
 
