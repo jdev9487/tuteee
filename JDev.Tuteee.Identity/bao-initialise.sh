@@ -10,6 +10,8 @@ bao read database/creds/jdev-tuteee-identity > creds
 postgresUsername=$(cat creds | grep -E '\busername\b' | sed 's/^.* //')
 postgresPassword=$(cat creds | grep -E '\bpassword\b' | sed 's/^.* //')
 
+rm creds
+
 identityLogin=$(bao kv get -mount=secret identity-login)
 identityUsername=$(echo "$identityLogin" | jq '.data.username' )
 identityPassword=$(echo "$identityLogin" | jq '.data.password' )

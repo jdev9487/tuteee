@@ -17,20 +17,11 @@ RUN dotnet build --no-restore --configuration Release ./JDev.Tuteee.Identity/JDe
 
 RUN dotnet publish --no-build -o out ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
 
-#FROM mcr.microsoft.com/dotnet/aspnet:9.0
-#WORKDIR /app
-#COPY --from=build /app/out .
-#
-#FROM mcr.microsoft.com/dotnet/aspnet:9.0
-#WORKDIR /app
-#COPY --from=openbao/openbao:2.4.1 /bin/bao /bin
-#COPY --from=build /app/out .
-#COPY JDev.Tuteee.Identity/initialise.sh /app/initialise.sh
 FROM infra.registry.johngould.net/bao-dotnet:0.1.3
 
 WORKDIR /app
 
 COPY --from=build /app/out .
-COPY JDev.Tuteee.Rest.Api/bao-initialise.sh .
+COPY JDev.Tuteee.Identity/bao-initialise.sh .
 
 ENTRYPOINT ["sh", "bao-initialise.sh"]
