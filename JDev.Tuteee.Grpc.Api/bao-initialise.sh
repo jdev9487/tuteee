@@ -2,7 +2,7 @@ export BAO_ADDR=https://infra.bao.johngould.net:3001
 
 postgresToken=$(bao write auth/approle/login -format=json \
     role_id="$(cat /run/secrets/grpc_role_id)" \
-    secret_id="$(cat /run/secrets/grpc_secret_id)" | jq '.auth.client_token')
+    secret_id="$(cat /run/secrets/grpc_secret_id)" | jq -r '.auth.client_token')
 
 bao login -no-print $postgresToken
 
