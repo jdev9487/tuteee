@@ -7,8 +7,8 @@ postgresToken=$(bao write auth/approle/login -format=json \
 bao login -no-print $postgresToken
 
 postgresLogin=$(bao read database/creds/jdev-tuteee-grpc -format=json)
-postgresUsername=$(echo $postgresLogin | jq '.data.username' )
-postgresPassword=$(echo $postgresLogin | jq '.data.password' )
+postgresUsername=$(echo $postgresLogin | jq -r '.data.username' )
+postgresPassword=$(echo $postgresLogin | jq -r '.data.password' )
 
 echo "{ \"ConnectionStrings\": { \"Tuteee\": \"Host=a369850-akamai-prod-6636035-default.g2a.akamaidb.net;Port=23590;Username=$postgresUsername;Password=$postgresPassword;Database=JDev.Tuteee.Rest;Sslmode=require\" } }" | jq "." >> appsettings.Secret.json
 
