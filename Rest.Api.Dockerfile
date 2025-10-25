@@ -24,6 +24,3 @@ FROM infra.registry.johngould.net/bao-dotnet:0.1.3
 WORKDIR /app
 
 COPY --from=build /app/out .
-COPY JDev.Tuteee.Rest.Api/bao-initialise.sh .
-
-ENTRYPOINT ["sh", "bao-initialise.sh"]
