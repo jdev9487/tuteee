@@ -7,17 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
 
-// var auth = new Auth
-// {
-//     Username = Environment.GetEnvironmentVariable("RABBIT_MQ_USERNAME") ?? "",
-//     Password = Environment.GetEnvironmentVariable("RABBIT_MQ_PASSWORD") ?? ""
-// };
-//
-// builder.Configuration.GetSection("RabbitMQ").Bind(auth);
-//
-// builder.Services.AddRabbitMqPublisher(auth);
-
 builder.Configuration.AddJsonFile("appsettings.Secret.json", optional: true);
+
+var auth = new Auth();
+builder.Configuration.GetSection("RabbitMQ").Bind(auth);
+builder.Services.AddRabbitMqPublisher(auth);
 
 builder.Services.AddDataAccess();
 
