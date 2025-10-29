@@ -7,9 +7,7 @@
       "launchBrowser": false,
       "applicationUrl": "http://localhost:5031",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "RABBIT_MQ_USERNAME": "guest",
-        "RABBIT_MQ_PASSWORD": "password"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }
