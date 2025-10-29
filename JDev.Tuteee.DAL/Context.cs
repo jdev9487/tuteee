@@ -3,8 +3,9 @@ namespace JDev.Tuteee.DAL;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
-public class Context(IConfiguration configuration) : DbContext
+public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
@@ -13,7 +14,7 @@ public class Context(IConfiguration configuration) : DbContext
             .UseNpgsql(configuration.GetConnectionString("tuteee"), opts =>
             {
                 opts.MigrationsAssembly("JDev.Tuteee.Rest.Api");
-                opts.UseAdminDatabase("defaultdb");
+                opts.UseAdminDatabase(dbConfig.Value.AdminDatabase);
             });
     }
 

@@ -12,6 +12,7 @@ public static class Extensions
     public static IServiceCollection AddDataAccess(this IServiceCollection services)
     {
         services.AddDbContext<Context>(ServiceLifetime.Transient);
+        services.AddOptions<DbConfig>().BindConfiguration("DbConfig");
         services.AddTransient<IGenericRepository, GenericRepository<Context>>();
         return services;
     }
