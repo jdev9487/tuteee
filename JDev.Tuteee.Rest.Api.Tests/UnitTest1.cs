@@ -1,5 +1,7 @@
 namespace JDev.Tuteee.Rest.Api.Tests;
 
+using CustomTypes;
+
 public class ClientTests
 {
     [SetUp]
@@ -10,6 +12,7 @@ public class ClientTests
     [Test]
     public void Test1()
     {
-        Assert.Pass();
+        var x = new PhoneNumber { Raw = "07786 548 235" };
+        var y = x.ToDisplay();
     }
 }

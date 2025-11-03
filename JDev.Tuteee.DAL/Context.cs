@@ -1,5 +1,6 @@
 namespace JDev.Tuteee.DAL;
 
+using CustomTypes;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +31,9 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
             .HasMany(c => c.Invoices)
             .WithOne(i => i.Client)
             .HasForeignKey("ClientId");
+        modelBuilder.Entity<Client>()
+            .Property(c => c.PhoneNumber)
+            .HasConversion(pn => pn.Raw, digits => new PhoneNumber { Raw = digits });
 
         modelBuilder.Entity<HomeworkAttachment>()
             .ToTable("HomeworkAttachment");

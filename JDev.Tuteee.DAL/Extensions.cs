@@ -1,6 +1,7 @@
 namespace JDev.Tuteee.DAL;
 
 using Core.EfCore.Repository;
+using CustomTypes;
 using Entities;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
@@ -42,7 +43,7 @@ public static class Extensions
                 HolderFirstName = "Tom",
                 HolderLastName = "Rogers",
                 EmailAddress = "tr@mail.com",
-                PhoneNumber = "07123456789"
+                PhoneNumber = new PhoneNumber { Raw = "07123456789" }
             };
             await context.Clients.AddAsync(tomRogers, token);
             var lucyRate = new Rate
@@ -106,7 +107,7 @@ public static class Extensions
                 HolderFirstName = "Xuexue",
                 HolderLastName = "Xiang",
                 EmailAddress = "xx@mail.com",
-                PhoneNumber = "07999999999"
+                PhoneNumber = new PhoneNumber { Raw = "07999999999" }
             };
             await context.Clients.AddAsync(xuexueXiang, token);
             var yaraRate = new Rate
