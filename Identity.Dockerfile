@@ -11,8 +11,8 @@ COPY JDev.Tuteee.CustomTypes ./JDev.Tuteee.CustomTypes/
 COPY nuget.config .
 
 RUN dotnet restore --configfile nuget.config ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj \
-    && build --no-restore --configuration Release ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj \
-    && publish --no-build -o out ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
+    && dotnet build --no-restore --configuration Release ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj \
+    && dotnet publish --no-build -o out ./JDev.Tuteee.Identity/JDev.Tuteee.Identity.csproj
 
 FROM infra.registry.johngould.net/bao-dotnet:0.1.3
 
