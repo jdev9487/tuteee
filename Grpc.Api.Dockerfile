@@ -12,7 +12,7 @@ COPY JDev.Tuteee.CustomTypes ./JDev.Tuteee.CustomTypes/
 COPY nuget.config .
 
 RUN dotnet restore --configfile nuget.config ./JDev.Tuteee.Grpc.Api/JDev.Tuteee.Grpc.Api.csproj \
-    && build --no-restore --configuration Release ./JDev.Tuteee.Grpc.Api/JDev.Tuteee.Grpc.Api.csproj \
+    && dotnet build --no-restore --configuration Release ./JDev.Tuteee.Grpc.Api/JDev.Tuteee.Grpc.Api.csproj \
     && dotnet publish --no-build -o out ./JDev.Tuteee.Grpc.Api/JDev.Tuteee.Grpc.Api.csproj
 
 FROM infra.registry.johngould.net/bao-dotnet:0.1.3
