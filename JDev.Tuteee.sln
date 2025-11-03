@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDev.Tuteee.EmailConsumer",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDev.Tuteee.Grpc.Api.Messages", "JDev.Tuteee.Grpc.Api.Messages\JDev.Tuteee.Grpc.Api.Messages.csproj", "{F8464415-6BAF-4D19-8712-4B782FDDECFE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDev.Tuteee.CustomTypes", "JDev.Tuteee.CustomTypes\JDev.Tuteee.CustomTypes.csproj", "{8CCAC957-2881-4005-8124-242365462CA5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{F8464415-6BAF-4D19-8712-4B782FDDECFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8464415-6BAF-4D19-8712-4B782FDDECFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8464415-6BAF-4D19-8712-4B782FDDECFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CCAC957-2881-4005-8124-242365462CA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CCAC957-2881-4005-8124-242365462CA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CCAC957-2881-4005-8124-242365462CA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CCAC957-2881-4005-8124-242365462CA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D06C5BFD-0B27-4DC5-A2A4-D7BE62D42E3F} = {4255E8E7-0079-411C-A7BE-AB8E577AD44D}

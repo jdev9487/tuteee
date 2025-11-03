@@ -1,6 +1,7 @@
 @attribute [Route("/")]
 @attribute [Route($"/{Routing.Clients}")]
 
+@using JDev.Tuteee.CustomTypes
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
@@ -60,8 +61,8 @@ else
             <GridColumn TItem="ClientDto" HeaderText="Email" PropertyName="EmailAddress">
                 @context.EmailAddress
             </GridColumn>
-            <GridColumn TItem="ClientDto" HeaderText="Contact" PropertyName="PhoneNumer">
-                @context.PhoneNumber
+            <GridColumn TItem="ClientDto" HeaderText="Phone" PropertyName="PhoneNumber">
+                @context.PhoneNumber.ToDisplay()
             </GridColumn>
         </GridColumns>
     </Grid>
@@ -97,7 +98,7 @@ else
             HolderFirstName = _newClientFirstName,
             HolderLastName = _newClientLastName,
             EmailAddress = _newClientEmailAddress,
-            PhoneNumber = _newClientPhoneNumber
+            PhoneNumber = new PhoneNumber{ Raw = _newClientPhoneNumber }
         };
         await RestApiClient.AddClientAsync(dto, CancellationToken);
 

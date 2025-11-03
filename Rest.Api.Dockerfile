@@ -3,11 +3,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
-RUN mkdir "JDev.Tuteee.Rest.Api" "JDev.Tuteee.DAL" "JDev.Tuteee.Rest.ApiClient"
+RUN mkdir "JDev.Tuteee.Rest.Api" "JDev.Tuteee.DAL" "JDev.Tuteee.Rest.ApiClient" "JDev.Tuteee.CustomTypes"
 
 COPY JDev.Tuteee.Rest.Api ./JDev.Tuteee.Rest.Api/
 COPY JDev.Tuteee.DAL ./JDev.Tuteee.DAL/
 COPY JDev.Tuteee.Rest.ApiClient ./JDev.Tuteee.Rest.ApiClient/
+COPY JDev.Tuteee.CustomTypes ./JDev.Tuteee.CustomTypes/
 
 COPY nuget.config .
 
