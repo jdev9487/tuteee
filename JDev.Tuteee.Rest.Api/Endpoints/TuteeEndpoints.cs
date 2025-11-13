@@ -27,11 +27,30 @@ public class TuteeEndpoints(IMapper mapper) : IEndpoints
                 return TypedResults.Ok(entities.Select(mapper.Map<TuteeDto>));
             });
         
-        groupBuilder.MapPost("",
-            async (TuteeDto dto, IGenericRepository repo, CancellationToken token) =>
+        groupBuilder.MapPost("", // create new stakeholder and assign it with new tutee role
+            async Task<Results<Created, NotFound>>(TuteeDto dto, IGenericRepository repo, CancellationToken token) =>
             {
-                var entity = mapper.Map<TuteeRole>(dto);
-                await repo.AddAsync(entity, token);
+                var clientRole = await repo.FindAsync<ClientRole>(dto.ClientId, token);
+                if (clientRole is null) return TypedResults.NotFound();
+                var stakeholder = mapper.Map<TuitionStakeholder>(dto);
+                var tuteeRole = mapper.Map<TuteeRole>(dto);
+                tuteeRole.TuitionStakeholder = stakeholder;
+                tuteeRole.ClientRole = clientRole;
+                await repo.AddAsync(tuteeRole, token);
+                await repo.AddAsync(stakeholder, token);
+                await repo.SaveChangesAsync(token);
+                return TypedResults.Created();
+            });
+        
+        groupBuilder.MapPost("/role", // assign new role to existing stakeholder
+            async Task<Results<Created, NotFound>>(TuteeDto dto, IGenericRepository repo, CancellationToken token) =>
+            {
+                var clientRole = await repo.FindAsync<ClientRole>(dto.ClientId, token); // existing stakeholder
+                if (clientRole is null) return TypedResults.NotFound();
+                var tuteeRole = mapper.Map<TuteeRole>(dto);
+                tuteeRole.ClientRole = clientRole;
+                tuteeRole.TuitionStakeholder = clientRole.TuitionStakeholder;
+                await repo.AddAsync(tuteeRole, token);
                 await repo.SaveChangesAsync(token);
                 return TypedResults.Created();
             });

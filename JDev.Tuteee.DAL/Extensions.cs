@@ -41,7 +41,7 @@ public static class Extensions
                 FirstName = "Tom",
                 LastName = "Rogers",
                 EmailAddress = "tr@mail.com",
-                PhoneNumber = new PhoneNumber { Raw = "7123456789" },
+                PhoneNumber = new PhoneNumber { Raw = "7123456789" }
             };
             var tomClient = new ClientRole { TuitionStakeholder = tomStakeholder };
             var lisaStakeholder = new TuitionStakeholder
@@ -82,6 +82,28 @@ public static class Extensions
             await context.TuitionStakeholders.AddRangeAsync(tomStakeholder, lisaStakeholder);
             await context.ClientRoles.AddAsync(tomClient, token);
             await context.TuteeRoles.AddAsync(lisaTutee, token);
+
+            var benStakeholder = new TuitionStakeholder
+            {
+                FirstName = "Ben",
+                LastName = "Bennyson",
+                EmailAddress = "bb@gun.com",
+                PhoneNumber = new PhoneNumber { Raw = "7894677222" }
+            };
+            var benClient = new ClientRole { TuitionStakeholder = benStakeholder };
+            var benRate = new Rate { PencePerHour = 4500, ActiveFrom = DateTimeOffset.MinValue };
+            var benUpdatedRate = new Rate { PencePerHour = 5000, ActiveFrom = referenceDateTime.AddDays(4)};
+            var benUpdatedAgainRate = new Rate { PencePerHour = 6000, ActiveFrom = referenceDateTime.AddDays(10)};
+            var benTutee = new TuteeRole
+            {
+                TuitionStakeholder = benStakeholder,
+                Rates = [benRate, benUpdatedRate, benUpdatedAgainRate],
+                ClientRole = benClient
+            };
+            await context.TuitionStakeholders.AddAsync(benStakeholder, token);
+            await context.ClientRoles.AddAsync(benClient, token);
+            await context.TuteeRoles.AddAsync(benTutee, token);
+            
             await context.SaveChangesAsync(token);
         }
     }
