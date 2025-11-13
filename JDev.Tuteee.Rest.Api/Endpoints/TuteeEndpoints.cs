@@ -16,21 +16,21 @@ public class TuteeEndpoints(IMapper mapper) : IEndpoints
         groupBuilder.MapGet("/{id:int}",
             async Task<Results<Ok<TuteeDto>, NotFound>> (int id, IGenericRepository repo, CancellationToken token) =>
             {
-                var entity = await repo.FindAsync<Tutee>(id, token);
+                var entity = await repo.FindAsync<TuteeRole>(id, token);
                 return entity is null ? TypedResults.NotFound() : TypedResults.Ok(mapper.Map<TuteeDto>(entity));
             });
         
         groupBuilder.MapGet("",
             async (IGenericRepository repo, CancellationToken token) =>
             {
-                var entities = await repo.GetListAsync<Tutee>(token);
+                var entities = await repo.GetListAsync<TuteeRole>(token);
                 return TypedResults.Ok(entities.Select(mapper.Map<TuteeDto>));
             });
         
         groupBuilder.MapPost("",
             async (TuteeDto dto, IGenericRepository repo, CancellationToken token) =>
             {
-                var entity = mapper.Map<Tutee>(dto);
+                var entity = mapper.Map<TuteeRole>(dto);
                 await repo.AddAsync(entity, token);
                 await repo.SaveChangesAsync(token);
                 return TypedResults.Created();
@@ -42,7 +42,7 @@ public class TuteeEndpoints(IMapper mapper) : IEndpoints
         group.MapPost("",
             async Task<Results<Created, NotFound>>(int tuteeId, RateDto dto, IGenericRepository repo, CancellationToken token) =>
             {
-                var tutee = await repo.FindAsync<Tutee>(tuteeId, token);
+                var tutee = await repo.FindAsync<TuteeRole>(tuteeId, token);
                 if (tutee is null) return TypedResults.NotFound();
                 var rateEntity = mapper.Map<Rate>(dto);
                 tutee.Rates.Add(rateEntity);

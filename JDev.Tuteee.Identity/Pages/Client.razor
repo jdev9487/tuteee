@@ -1,5 +1,6 @@
 @attribute [Route(Routing.Client)]
 
+@using JDev.Tuteee.CustomTypes
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
@@ -23,6 +24,8 @@
         <TextInput @bind-Value="_newTuteeLastName"></TextInput>
         Email address
         <TextInput @bind-Value="_newTuteeEmailAddress"></TextInput>
+        Phone number
+        <TextInput @bind-Value="_newTuteePhoneNumber"></TextInput>
         Initial rate (pence per hour)
         <NumberInput TValue="int" @bind-Value="_newTuteePencePerHour"></NumberInput>
     </BodyTemplate>
@@ -80,9 +83,10 @@ else
     private string _newTuteeFirstName = default!;
     private string _newTuteeLastName = default!;
     private string _newTuteeEmailAddress = default!;
+    private string _newTuteePhoneNumber = default!;
     private int _newTuteePencePerHour;
 
-    private string ClientName => $"{_client?.HolderFirstName} {_client?.HolderLastName}";
+    private string ClientName => $"{_client?.FirstName} {_client?.LastName}";
 
     protected override async Task OnInitializedAsync()
     {
@@ -104,12 +108,16 @@ else
             FirstName = _newTuteeFirstName,
             LastName = _newTuteeLastName,
             EmailAddress = _newTuteeEmailAddress,
+            PhoneNumber = new PhoneNumber { Raw = _newTuteePhoneNumber },
             ClientId = ClientId,
-            Rates = [new RateDto
-            {
-                PencePerHour = _newTuteePencePerHour,
-                ActiveFrom = DateTimeOffset.MinValue
-            }]
+            Rates =
+            [
+                new RateDto
+                {
+                    PencePerHour = _newTuteePencePerHour,
+                    ActiveFrom = DateTimeOffset.MinValue
+                }
+            ]
         };
         await RestApiClient.AddTuteeAsync(dto, CancellationToken);
 

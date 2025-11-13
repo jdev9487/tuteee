@@ -21,33 +21,41 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Client>()
-            .ToTable("Client");
-        modelBuilder.Entity<Client>()
-            .HasMany(c => c.Tutees)
-            .WithOne(t => t.Client)
-            .HasForeignKey("ClientId");
-        modelBuilder.Entity<Client>()
-            .HasMany(c => c.Invoices)
-            .WithOne(i => i.Client)
-            .HasForeignKey("ClientId");
-        modelBuilder.Entity<Client>()
+        modelBuilder.Entity<TuitionStakeholder>()
+            .ToTable("TuitionStakeholder");
+        modelBuilder.Entity<TuitionStakeholder>()
+            .HasOne(ts => ts.ClientRole)
+            .WithOne(cr => cr.TuitionStakeholder)
+            .HasForeignKey<ClientRole>(cr => cr.TuitionStakeholderId);
+        modelBuilder.Entity<TuitionStakeholder>()
+            .HasOne(ts => ts.TuteeRole)
+            .WithOne(cr => cr.TuitionStakeholder)
+            .HasForeignKey<TuteeRole>(tr => tr.TuitionStakeholderId);
+        modelBuilder.Entity<TuitionStakeholder>()
             .Property(c => c.PhoneNumber)
             .HasConversion(pn => pn.Raw, digits => new PhoneNumber { Raw = digits });
+        
+        modelBuilder.Entity<ClientRole>()
+            .ToTable("ClientRole");
+        modelBuilder.Entity<ClientRole>()
+            .HasMany(c => c.TuteeRoles)
+            .WithOne(t => t.ClientRole)
+            .HasForeignKey("ClientRoleId");
+        modelBuilder.Entity<ClientRole>()
+            .HasMany(c => c.Invoices)
+            .WithOne(i => i.ClientRole)
+            .HasForeignKey("ClientRoleId");
 
-        modelBuilder.Entity<HomeworkAttachment>()
-            .ToTable("HomeworkAttachment");
-
-        modelBuilder.Entity<Tutee>()
-            .ToTable("Tutee");
-        modelBuilder.Entity<Tutee>()
+        modelBuilder.Entity<TuteeRole>()
+            .ToTable("TuteeRole");
+        modelBuilder.Entity<TuteeRole>()
             .HasMany(t => t.Lessons)
-            .WithOne(l => l.Tutee)
-            .HasForeignKey("TuteeId");
-        modelBuilder.Entity<Tutee>()
+            .WithOne(l => l.TuteeRole)
+            .HasForeignKey("TuteeRoleId");
+        modelBuilder.Entity<TuteeRole>()
             .HasMany(t => t.Rates)
-            .WithOne(l => l.Tutee)
-            .HasForeignKey("TuteeId");
+            .WithOne(l => l.TuteeRole)
+            .HasForeignKey("TuteeRoleId");
 
         modelBuilder.Entity<Invoice>()
             .ToTable("Invoice");
@@ -65,10 +73,14 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
         
         modelBuilder.Entity<Rate>()
             .ToTable("Rate");
+        
+        modelBuilder.Entity<HomeworkAttachment>()
+            .ToTable("HomeworkAttachment");
     }
 
-    public DbSet<Client> Clients { get; set; } = default!;
-    public DbSet<Tutee> Tutees { get; set; } = default!;
+    public DbSet<TuitionStakeholder> TuitionStakeholders { get; set; } = default!;
+    public DbSet<ClientRole> ClientRoles { get; set; } = default!;
+    public DbSet<TuteeRole> TuteeRoles { get; set; } = default!;
     public DbSet<Lesson> Lessons { get; set; } = default!;
     public DbSet<Invoice> Invoices { get; set; } = default!;
     public DbSet<HomeworkAttachment> HomeworkAttachments { get; set; } = default!;

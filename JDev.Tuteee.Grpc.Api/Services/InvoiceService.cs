@@ -10,13 +10,13 @@ public class InvoiceService(IGenericRepository repository) : Protos.Invoice.Invo
 {
     public override async Task<BillClientResponse> BillClient(BillClientRequest request, ServerCallContext serverCallContext)
     {
-        var client = await repository.FindAsync<Client>(request.ClientId, serverCallContext.CancellationToken);
+        var client = await repository.FindAsync<ClientRole>(request.ClientId, serverCallContext.CancellationToken);
         if (client is null) return new BillClientResponse { Success = false };
         var invoice = new Invoice
         {
-            Client = client,
+            ClientRole = client,
             Paid = false,
-            Lessons = client.Tutees.SelectMany(t => t.Lessons.Where(l => l.Invoice is null)).ToList()
+            Lessons = client.TuteeRoles.SelectMany(t => t.Lessons.Where(l => l.Invoice is null)).ToList()
         };
         await repository.AddAsync(invoice, serverCallContext.CancellationToken);
         await repository.SaveChangesAsync(serverCallContext.CancellationToken);

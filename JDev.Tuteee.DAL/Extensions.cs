@@ -33,126 +33,56 @@ public static class Extensions
 
     private static async Task SeedDevelopmentDataAsync(this Context context, CancellationToken token)
     {
-        var tomRogers =
-            await context.Clients.FirstOrDefaultAsync(g => g.HolderFirstName == "Tom" && g.HolderLastName == "Rogers",
-                cancellationToken: token);
-        if (tomRogers is null)
+        var referenceDateTime = DateTimeOffset.Now.AddMonths(-1);
+        if (!context.TuitionStakeholders.Where(tsh => tsh.FirstName == "Tom").Any(tsh => tsh.LastName == "Rogers"))
         {
-            tomRogers = new Client
+            var tomStakeholder = new TuitionStakeholder
             {
-                HolderFirstName = "Tom",
-                HolderLastName = "Rogers",
+                FirstName = "Tom",
+                LastName = "Rogers",
                 EmailAddress = "tr@mail.com",
-                PhoneNumber = new PhoneNumber { Raw = "07123456789" }
+                PhoneNumber = new PhoneNumber { Raw = "7123456789" },
             };
-            await context.Clients.AddAsync(tomRogers, token);
-            var lucyRate = new Rate
+            var tomClient = new ClientRole { TuitionStakeholder = tomStakeholder };
+            var lisaStakeholder = new TuitionStakeholder
             {
-                PencePerHour = 4500,
-                ActiveFrom = DateTimeOffset.MinValue
+                FirstName = "Lisa",
+                LastName = "Simpson",
+                EmailAddress = "ls@mail.com",
+                PhoneNumber = new PhoneNumber { Raw = "7273899045" }
             };
-            var lucyBassett = new Tutee
+            var lisaRate = new Rate { PencePerHour = 4500, ActiveFrom = DateTimeOffset.MinValue };
+            var lisaUpdatedRate = new Rate { PencePerHour = 5000, ActiveFrom = referenceDateTime.AddDays(4)};
+            var lisaTutee = new TuteeRole
             {
-                Client = tomRogers,
-                FirstName = "Lucy",
-                LastName = "Bassett",
-                EmailAddress = "lb@mail.com",
-                Rates = [lucyRate]
+                TuitionStakeholder = lisaStakeholder,
+                Rates = [lisaRate, lisaUpdatedRate],
+                ClientRole = tomClient
             };
-            await context.Tutees.AddAsync(lucyBassett, token);
-            var zaraRate = new Rate
+            var lisaFirstLesson = new Lesson
             {
-                PencePerHour = 5500,
-                ActiveFrom = DateTimeOffset.MinValue
+                StartTime = referenceDateTime,
+                EndTime = referenceDateTime.AddHours(1),
+                TuteeRole = lisaTutee
             };
-            var zaraAhmed = new Tutee
+            var lisaSecondLesson = new Lesson
             {
-                Client = tomRogers,
-                FirstName = "Zara",
-                LastName = "Ahmed",
-                EmailAddress = "za@mail.com",
-                Rates = [zaraRate]
+                StartTime = referenceDateTime.AddDays(7),
+                EndTime = referenceDateTime.AddDays(7).AddHours(1),
+                TuteeRole = lisaTutee
             };
-            await context.Tutees.AddAsync(zaraAhmed, token);
-            var lucyLesson1 = new Lesson
-            {
-                Tutee = lucyBassett,
-                StartTime = new DateTimeOffset(2025, 1, 1, 9, 0, 0, TimeSpan.Zero),
-                EndTime = new DateTimeOffset(2025, 1, 1, 10, 0, 0, TimeSpan.Zero),
-                HomeworkInstructions = "Do questions in book!"
-            };
-            var lucyLesson2 = new Lesson
-            {
-                Tutee = lucyBassett,
-                StartTime = new DateTimeOffset(2025, 1, 8, 9, 0, 0, TimeSpan.Zero),
-                EndTime = new DateTimeOffset(2025, 1, 8, 10, 0, 0, TimeSpan.Zero),
-                HomeworkInstructions = "Do questions from paper!"
-            };
-            await context.Lessons.AddRangeAsync(lucyLesson1, lucyLesson2);
             var tomInvoice = new Invoice
             {
-                Client = tomRogers,
-                Paid = false,
-                Lessons = [lucyLesson1, lucyLesson2]
+                ClientRole = tomClient,
+                Lessons = [lisaFirstLesson, lisaSecondLesson],
+                Paid = false
             };
             await context.Invoices.AddAsync(tomInvoice, token);
+            await context.Lessons.AddRangeAsync(lisaFirstLesson, lisaSecondLesson);
+            await context.TuitionStakeholders.AddRangeAsync(tomStakeholder, lisaStakeholder);
+            await context.ClientRoles.AddAsync(tomClient, token);
+            await context.TuteeRoles.AddAsync(lisaTutee, token);
+            await context.SaveChangesAsync(token);
         }
-        var xuexueXiang =
-            await context.Clients.FirstOrDefaultAsync(g => g.HolderFirstName == "Xuexue" && g.HolderLastName == "Xiang",
-                cancellationToken: token);
-        if (xuexueXiang is null)
-        {
-            xuexueXiang = new Client
-            {
-                HolderFirstName = "Xuexue",
-                HolderLastName = "Xiang",
-                EmailAddress = "xx@mail.com",
-                PhoneNumber = new PhoneNumber { Raw = "07999999999" }
-            };
-            await context.Clients.AddAsync(xuexueXiang, token);
-            var yaraRate = new Rate
-            {
-                PencePerHour = 5000,
-                ActiveFrom = DateTimeOffset.MinValue
-            };
-            var yaraGrant = new Tutee
-            {
-                Client = xuexueXiang,
-                FirstName = "Yara",
-                LastName = "Grant",
-                EmailAddress = "yg@mail.com",
-                Rates = [yaraRate]
-            };
-            await context.Tutees.AddAsync(yaraGrant, token);
-            var johnRate = new Rate
-            {
-                PencePerHour = 1000,
-                ActiveFrom = DateTimeOffset.MinValue
-            };
-            var johnGraham = new Tutee
-            {
-                Client = xuexueXiang,
-                FirstName = "John",
-                LastName = "Graham",
-                EmailAddress = "jg@mail.com",
-                Rates = [johnRate]
-            };
-            await context.Tutees.AddAsync(johnGraham, token);
-            var yaraLesson1 = new Lesson
-            {
-                Tutee = yaraGrant,
-                StartTime = new DateTimeOffset(2025, 1, 12, 17, 0, 0, TimeSpan.Zero),
-                EndTime = new DateTimeOffset(2025, 1, 12, 18, 0, 0, TimeSpan.Zero)
-            };
-            var yaraLesson2 = new Lesson
-            {
-                Tutee = yaraGrant,
-                StartTime = new DateTimeOffset(2025, 1, 19, 17, 0, 0, TimeSpan.Zero),
-                EndTime = new DateTimeOffset(2025, 1, 19, 18, 0, 0, TimeSpan.Zero)
-            };
-            await context.Lessons.AddRangeAsync(yaraLesson1, yaraLesson2);
-        }
-
-        await context.SaveChangesAsync(token);
     }
 }
