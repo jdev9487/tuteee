@@ -29,10 +29,6 @@ namespace JDev.Tuteee.Rest.Api.Migrations
             migrationBuilder.DropTable(
                 name: "Client");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Lesson_TuteeId",
-                table: "Lesson");
-
             migrationBuilder.RenameColumn(
                 name: "TuteeId",
                 table: "Rate",
@@ -44,6 +40,16 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 newName: "IX_Rate_TuteeRoleId");
 
             migrationBuilder.RenameColumn(
+                name: "TuteeId",
+                table: "Lesson",
+                newName: "TuteeRoleId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Lesson_TuteeId",
+                table: "Lesson",
+                newName: "IX_Lesson_TuteeRoleId");
+
+            migrationBuilder.RenameColumn(
                 name: "ClientId",
                 table: "Invoice",
                 newName: "ClientRoleId");
@@ -53,18 +59,11 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 table: "Invoice",
                 newName: "IX_Invoice_ClientRoleId");
 
-            migrationBuilder.AddColumn<int>(
-                name: "TuteeRoleId",
-                table: "Lesson",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0);
-
             migrationBuilder.CreateTable(
-                name: "TuitionStakeholder",
+                name: "Stakeholder",
                 columns: table => new
                 {
-                    TuitionStakeholderId = table.Column<int>(type: "integer", nullable: false)
+                    StakeholderId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
@@ -73,7 +72,7 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TuitionStakeholder", x => x.TuitionStakeholderId);
+                    table.PrimaryKey("PK_Stakeholder", x => x.StakeholderId);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,16 +81,16 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 {
                     ClientRoleId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TuitionStakeholderId = table.Column<int>(type: "integer", nullable: false)
+                    StakeholderId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ClientRole", x => x.ClientRoleId);
                     table.ForeignKey(
-                        name: "FK_ClientRole_TuitionStakeholder_TuitionStakeholderId",
-                        column: x => x.TuitionStakeholderId,
-                        principalTable: "TuitionStakeholder",
-                        principalColumn: "TuitionStakeholderId",
+                        name: "FK_ClientRole_Stakeholder_StakeholderId",
+                        column: x => x.StakeholderId,
+                        principalTable: "Stakeholder",
+                        principalColumn: "StakeholderId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -102,7 +101,7 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                     TuteeRoleId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ClientRoleId = table.Column<int>(type: "integer", nullable: false),
-                    TuitionStakeholderId = table.Column<int>(type: "integer", nullable: false)
+                    StakeholderId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -114,22 +113,17 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                         principalColumn: "ClientRoleId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TuteeRole_TuitionStakeholder_TuitionStakeholderId",
-                        column: x => x.TuitionStakeholderId,
-                        principalTable: "TuitionStakeholder",
-                        principalColumn: "TuitionStakeholderId",
+                        name: "FK_TuteeRole_Stakeholder_StakeholderId",
+                        column: x => x.StakeholderId,
+                        principalTable: "Stakeholder",
+                        principalColumn: "StakeholderId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lesson_TuteeRoleId",
-                table: "Lesson",
-                column: "TuteeRoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ClientRole_TuitionStakeholderId",
+                name: "IX_ClientRole_StakeholderId",
                 table: "ClientRole",
-                column: "TuitionStakeholderId",
+                column: "StakeholderId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -138,9 +132,9 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 column: "ClientRoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TuteeRole_TuitionStakeholderId",
+                name: "IX_TuteeRole_StakeholderId",
                 table: "TuteeRole",
-                column: "TuitionStakeholderId",
+                column: "StakeholderId",
                 unique: true);
 
             migrationBuilder.AddForeignKey(
@@ -190,15 +184,7 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 name: "ClientRole");
 
             migrationBuilder.DropTable(
-                name: "TuitionStakeholder");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Lesson_TuteeRoleId",
-                table: "Lesson");
-
-            migrationBuilder.DropColumn(
-                name: "TuteeRoleId",
-                table: "Lesson");
+                name: "Stakeholder");
 
             migrationBuilder.RenameColumn(
                 name: "TuteeRoleId",
@@ -209,6 +195,16 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 name: "IX_Rate_TuteeRoleId",
                 table: "Rate",
                 newName: "IX_Rate_TuteeId");
+
+            migrationBuilder.RenameColumn(
+                name: "TuteeRoleId",
+                table: "Lesson",
+                newName: "TuteeId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Lesson_TuteeRoleId",
+                table: "Lesson",
+                newName: "IX_Lesson_TuteeId");
 
             migrationBuilder.RenameColumn(
                 name: "ClientRoleId",
@@ -257,11 +253,6 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                         principalColumn: "ClientId",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Lesson_TuteeId",
-                table: "Lesson",
-                column: "TuteeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tutee_ClientId",

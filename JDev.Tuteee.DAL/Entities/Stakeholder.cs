@@ -3,9 +3,9 @@ namespace JDev.Tuteee.DAL.Entities;
 using Core.EfCore;
 using CustomTypes;
 
-public class TuitionStakeholder : BaseEntity
+public class Stakeholder : BaseEntity
 {
-    public int TuitionStakeholderId { get; set; }
+    public int StakeholderId { get; set; }
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public string EmailAddress { get; set; } = default!;

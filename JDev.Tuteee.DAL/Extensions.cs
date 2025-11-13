@@ -34,17 +34,17 @@ public static class Extensions
     private static async Task SeedDevelopmentDataAsync(this Context context, CancellationToken token)
     {
         var referenceDateTime = DateTimeOffset.Now.AddMonths(-1);
-        if (!context.TuitionStakeholders.Where(tsh => tsh.FirstName == "Tom").Any(tsh => tsh.LastName == "Rogers"))
+        if (!context.Stakeholders.Where(tsh => tsh.FirstName == "Tom").Any(tsh => tsh.LastName == "Rogers"))
         {
-            var tomStakeholder = new TuitionStakeholder
+            var tomStakeholder = new Stakeholder
             {
                 FirstName = "Tom",
                 LastName = "Rogers",
                 EmailAddress = "tr@mail.com",
                 PhoneNumber = new PhoneNumber { Raw = "7123456789" }
             };
-            var tomClient = new ClientRole { TuitionStakeholder = tomStakeholder };
-            var lisaStakeholder = new TuitionStakeholder
+            var tomClient = new ClientRole { Stakeholder = tomStakeholder };
+            var lisaStakeholder = new Stakeholder
             {
                 FirstName = "Lisa",
                 LastName = "Simpson",
@@ -55,7 +55,7 @@ public static class Extensions
             var lisaUpdatedRate = new Rate { PencePerHour = 5000, ActiveFrom = referenceDateTime.AddDays(4)};
             var lisaTutee = new TuteeRole
             {
-                TuitionStakeholder = lisaStakeholder,
+                Stakeholder = lisaStakeholder,
                 Rates = [lisaRate, lisaUpdatedRate],
                 ClientRole = tomClient
             };
@@ -79,28 +79,28 @@ public static class Extensions
             };
             await context.Invoices.AddAsync(tomInvoice, token);
             await context.Lessons.AddRangeAsync(lisaFirstLesson, lisaSecondLesson);
-            await context.TuitionStakeholders.AddRangeAsync(tomStakeholder, lisaStakeholder);
+            await context.Stakeholders.AddRangeAsync(tomStakeholder, lisaStakeholder);
             await context.ClientRoles.AddAsync(tomClient, token);
             await context.TuteeRoles.AddAsync(lisaTutee, token);
 
-            var benStakeholder = new TuitionStakeholder
+            var benStakeholder = new Stakeholder
             {
                 FirstName = "Ben",
                 LastName = "Bennyson",
                 EmailAddress = "bb@gun.com",
                 PhoneNumber = new PhoneNumber { Raw = "7894677222" }
             };
-            var benClient = new ClientRole { TuitionStakeholder = benStakeholder };
+            var benClient = new ClientRole { Stakeholder = benStakeholder };
             var benRate = new Rate { PencePerHour = 4500, ActiveFrom = DateTimeOffset.MinValue };
             var benUpdatedRate = new Rate { PencePerHour = 5000, ActiveFrom = referenceDateTime.AddDays(4)};
             var benUpdatedAgainRate = new Rate { PencePerHour = 6000, ActiveFrom = referenceDateTime.AddDays(10)};
             var benTutee = new TuteeRole
             {
-                TuitionStakeholder = benStakeholder,
+                Stakeholder = benStakeholder,
                 Rates = [benRate, benUpdatedRate, benUpdatedAgainRate],
                 ClientRole = benClient
             };
-            await context.TuitionStakeholders.AddAsync(benStakeholder, token);
+            await context.Stakeholders.AddAsync(benStakeholder, token);
             await context.ClientRoles.AddAsync(benClient, token);
             await context.TuteeRoles.AddAsync(benTutee, token);
             

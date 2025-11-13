@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JDev.Tuteee.Rest.Api.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20251108101922_TuteeRoleAndClientRole")]
+    [Migration("20251113163315_TuteeRoleAndClientRole")]
     partial class TuteeRoleAndClientRole
     {
         /// <inheritdoc />
@@ -36,12 +36,12 @@ namespace JDev.Tuteee.Rest.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ClientRoleId"));
 
-                    b.Property<int>("TuitionStakeholderId")
+                    b.Property<int>("StakeholderId")
                         .HasColumnType("integer");
 
                     b.HasKey("ClientRoleId");
 
-                    b.HasIndex("TuitionStakeholderId")
+                    b.HasIndex("StakeholderId")
                         .IsUnique();
 
                     b.ToTable("ClientRole", (string)null);
@@ -110,9 +110,6 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                     b.Property<DateTimeOffset>("StartTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("TuteeId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("TuteeRoleId")
                         .HasColumnType("integer");
 
@@ -149,13 +146,13 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                     b.ToTable("Rate", (string)null);
                 });
 
-            modelBuilder.Entity("JDev.Tuteee.DAL.Entities.TuitionStakeholder", b =>
+            modelBuilder.Entity("JDev.Tuteee.DAL.Entities.Stakeholder", b =>
                 {
-                    b.Property<int>("TuitionStakeholderId")
+                    b.Property<int>("StakeholderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TuitionStakeholderId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StakeholderId"));
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
@@ -173,9 +170,9 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("TuitionStakeholderId");
+                    b.HasKey("StakeholderId");
 
-                    b.ToTable("TuitionStakeholder", (string)null);
+                    b.ToTable("Stakeholder", (string)null);
                 });
 
             modelBuilder.Entity("JDev.Tuteee.DAL.Entities.TuteeRole", b =>
@@ -189,14 +186,14 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                     b.Property<int>("ClientRoleId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TuitionStakeholderId")
+                    b.Property<int>("StakeholderId")
                         .HasColumnType("integer");
 
                     b.HasKey("TuteeRoleId");
 
                     b.HasIndex("ClientRoleId");
 
-                    b.HasIndex("TuitionStakeholderId")
+                    b.HasIndex("StakeholderId")
                         .IsUnique();
 
                     b.ToTable("TuteeRole", (string)null);
@@ -204,13 +201,13 @@ namespace JDev.Tuteee.Rest.Api.Migrations
 
             modelBuilder.Entity("JDev.Tuteee.DAL.Entities.ClientRole", b =>
                 {
-                    b.HasOne("JDev.Tuteee.DAL.Entities.TuitionStakeholder", "TuitionStakeholder")
+                    b.HasOne("JDev.Tuteee.DAL.Entities.Stakeholder", "Stakeholder")
                         .WithOne("ClientRole")
-                        .HasForeignKey("JDev.Tuteee.DAL.Entities.ClientRole", "TuitionStakeholderId")
+                        .HasForeignKey("JDev.Tuteee.DAL.Entities.ClientRole", "StakeholderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TuitionStakeholder");
+                    b.Navigation("Stakeholder");
                 });
 
             modelBuilder.Entity("JDev.Tuteee.DAL.Entities.HomeworkAttachment", b =>
@@ -271,15 +268,15 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("JDev.Tuteee.DAL.Entities.TuitionStakeholder", "TuitionStakeholder")
+                    b.HasOne("JDev.Tuteee.DAL.Entities.Stakeholder", "Stakeholder")
                         .WithOne("TuteeRole")
-                        .HasForeignKey("JDev.Tuteee.DAL.Entities.TuteeRole", "TuitionStakeholderId")
+                        .HasForeignKey("JDev.Tuteee.DAL.Entities.TuteeRole", "StakeholderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ClientRole");
 
-                    b.Navigation("TuitionStakeholder");
+                    b.Navigation("Stakeholder");
                 });
 
             modelBuilder.Entity("JDev.Tuteee.DAL.Entities.ClientRole", b =>
@@ -299,7 +296,7 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                     b.Navigation("HomeworkAttachments");
                 });
 
-            modelBuilder.Entity("JDev.Tuteee.DAL.Entities.TuitionStakeholder", b =>
+            modelBuilder.Entity("JDev.Tuteee.DAL.Entities.Stakeholder", b =>
                 {
                     b.Navigation("ClientRole");
 

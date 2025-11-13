@@ -21,17 +21,17 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TuitionStakeholder>()
-            .ToTable("TuitionStakeholder");
-        modelBuilder.Entity<TuitionStakeholder>()
+        modelBuilder.Entity<Stakeholder>()
+            .ToTable("Stakeholder");
+        modelBuilder.Entity<Stakeholder>()
             .HasOne(ts => ts.ClientRole)
-            .WithOne(cr => cr.TuitionStakeholder)
-            .HasForeignKey<ClientRole>(cr => cr.TuitionStakeholderId);
-        modelBuilder.Entity<TuitionStakeholder>()
+            .WithOne(cr => cr.Stakeholder)
+            .HasForeignKey<ClientRole>(cr => cr.StakeholderId);
+        modelBuilder.Entity<Stakeholder>()
             .HasOne(ts => ts.TuteeRole)
-            .WithOne(cr => cr.TuitionStakeholder)
-            .HasForeignKey<TuteeRole>(tr => tr.TuitionStakeholderId);
-        modelBuilder.Entity<TuitionStakeholder>()
+            .WithOne(cr => cr.Stakeholder)
+            .HasForeignKey<TuteeRole>(tr => tr.StakeholderId);
+        modelBuilder.Entity<Stakeholder>()
             .Property(c => c.PhoneNumber)
             .HasConversion(pn => pn.Raw, digits => new PhoneNumber { Raw = digits });
         
@@ -78,7 +78,7 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
             .ToTable("HomeworkAttachment");
     }
 
-    public DbSet<TuitionStakeholder> TuitionStakeholders { get; set; } = default!;
+    public DbSet<Stakeholder> Stakeholders { get; set; } = default!;
     public DbSet<ClientRole> ClientRoles { get; set; } = default!;
     public DbSet<TuteeRole> TuteeRoles { get; set; } = default!;
     public DbSet<Lesson> Lessons { get; set; } = default!;

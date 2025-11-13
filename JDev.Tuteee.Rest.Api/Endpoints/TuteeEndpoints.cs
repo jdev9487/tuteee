@@ -32,9 +32,9 @@ public class TuteeEndpoints(IMapper mapper) : IEndpoints
             {
                 var clientRole = await repo.FindAsync<ClientRole>(dto.ClientId, token);
                 if (clientRole is null) return TypedResults.NotFound();
-                var stakeholder = mapper.Map<TuitionStakeholder>(dto);
+                var stakeholder = mapper.Map<Stakeholder>(dto);
                 var tuteeRole = mapper.Map<TuteeRole>(dto);
-                tuteeRole.TuitionStakeholder = stakeholder;
+                tuteeRole.Stakeholder = stakeholder;
                 tuteeRole.ClientRole = clientRole;
                 await repo.AddAsync(tuteeRole, token);
                 await repo.AddAsync(stakeholder, token);
@@ -49,7 +49,7 @@ public class TuteeEndpoints(IMapper mapper) : IEndpoints
                 if (clientRole is null) return TypedResults.NotFound();
                 var tuteeRole = mapper.Map<TuteeRole>(dto);
                 tuteeRole.ClientRole = clientRole;
-                tuteeRole.TuitionStakeholder = clientRole.TuitionStakeholder;
+                tuteeRole.Stakeholder = clientRole.Stakeholder;
                 await repo.AddAsync(tuteeRole, token);
                 await repo.SaveChangesAsync(token);
                 return TypedResults.Created();
