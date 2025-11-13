@@ -55,12 +55,12 @@ else
         <GridColumns>
             <GridColumn TItem="TuteeDto" HeaderText="First name" PropertyName="FirstName">
                 <NavLink class="nav-link" href=@($"tutees/{context.TuteeId}") Match="NavLinkMatch.All">
-                    @context.FirstName
+                    @context.GetFirstName()
                 </NavLink>
             </GridColumn>
             <GridColumn TItem="TuteeDto" HeaderText="Last name" PropertyName="LastName">
                 <NavLink class="nav-link" href=@($"tutees/{context.TuteeId}") Match="NavLinkMatch.All">
-                    @context.LastName
+                    @context.GetLastName()
                 </NavLink>
             </GridColumn>
             <GridColumn TItem="TuteeDto" HeaderText="Email" PropertyName="EmailAddress">

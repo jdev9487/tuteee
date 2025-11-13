@@ -52,4 +52,7 @@ public class RestApiClient(HttpClient client, JsonSerializerOptions options)
 
     public async Task AddTuteeAsync(TuteeDto tutee, CancellationToken token) =>
         await PostAsync(Endpoint.TuteeBase, tutee, token);
+    
+    public async Task AddTuteeRoleAsync(TuteeDto tutee, CancellationToken token) =>
+        await PostAsync($"{Endpoint.TuteeBase}/role", tutee, token);
 }

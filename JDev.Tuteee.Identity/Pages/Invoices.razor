@@ -24,7 +24,7 @@
         <AutoComplete @bind-Value="_invoiceClientName"
                       TItem="ClientDto"
                       DataProvider="ClientDataProvider"
-                      PropertyName="HolderName"
+                      PropertyName="Name"
                       Placeholder="Search billable client"
                       OnChanged="(ClientDto client) => OnClientChosen(client)"></AutoComplete>
     </BodyTemplate>

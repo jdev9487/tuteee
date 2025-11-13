@@ -14,6 +14,7 @@ public class ClientProfile : Profile
             .ForMember(dto => dto.LastName, cfg => cfg.MapFrom(cr => cr.TuitionStakeholder.LastName))
             .ForMember(dto => dto.EmailAddress, cfg => cfg.MapFrom(cr => cr.TuitionStakeholder.EmailAddress))
             .ForMember(dto => dto.PhoneNumber, cfg => cfg.MapFrom(cr => cr.TuitionStakeholder.PhoneNumber))
+            .ForMember(dto => dto.StakeholderId, cfg => cfg.MapFrom(cr => cr.TuitionStakeholderId))
             .ForMember(dto => dto.Tutees, cfg => cfg.MapFrom(cr => cr.TuteeRoles))
             .ForMember(dto => dto.Invoices, cfg => cfg.MapFrom(cr => cr.Invoices))
             .ForMember(dto => dto.ClientId, cfg => cfg.MapFrom(cr => cr.ClientRoleId));
@@ -68,6 +69,7 @@ public class TuteeProfile : Profile
             .ForMember(dto => dto.LastName, cfg => cfg.MapFrom(tr => tr.TuitionStakeholder.LastName))
             .ForMember(dto => dto.EmailAddress, cfg => cfg.MapFrom(tr => tr.TuitionStakeholder.EmailAddress))
             .ForMember(dto => dto.PhoneNumber, cfg => cfg.MapFrom(tr => tr.TuitionStakeholder.PhoneNumber))
+            .ForMember(dto => dto.StakeholderId, cfg => cfg.MapFrom(tr => tr.TuitionStakeholderId))
             .ForMember(dto => dto.Lessons, cfg => cfg.MapFrom(tr => tr.Lessons))
             .ForMember(dto => dto.Rates, cfg => cfg.MapFrom(tr => tr.Rates))
             .ForMember(dto => dto.TuteeId, cfg => cfg.MapFrom(tr => tr.TuteeRoleId))

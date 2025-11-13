@@ -5,6 +5,7 @@ using CustomTypes;
 public class ClientDto
 {
     public int? ClientId { get; set; }
+    public int StakeholderId { get; set; }
     public required string FirstName { get; set; } = default!;
     public required string LastName { get; set; } = default!;
     public string Name => $"{FirstName} {LastName}";
