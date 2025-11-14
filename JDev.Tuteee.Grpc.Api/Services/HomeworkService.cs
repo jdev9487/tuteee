@@ -22,6 +22,12 @@ public class HomeworkService(
                 Success = false,
                 Message = $"Could not find lesson with id {request.LessonId}"
             };
+        if (lesson.EmailSent)
+            return new ReleaseResponse
+            {
+                Success = false,
+                Message = $"Email already sent for lesson with id {request.LessonId}"
+            };
 
         var htmlTask = razorTemplateEngine.RenderAsync("EmailTemplates/Homework.cshtml", new EmailTemplates.Homework
         {
@@ -34,6 +40,9 @@ public class HomeworkService(
             Body = await htmlTask,
             Date = lesson.StartTime.ToString("D")
         }, context.CancellationToken);
+
+        lesson.EmailSent = true;
+        await repository.SaveChangesAsync(context.CancellationToken);
 
         return new ReleaseResponse { Success = true };
     }

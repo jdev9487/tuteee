@@ -1,15 +1,14 @@
 @attribute [Route($"/{Routing.Lesson}")]
 
-@using BlazorBootstrap
+@using JDev.Tuteee.Protos
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.Forms
-@using Microsoft.JSInterop
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
 @inject IRestApiClient RestApiClient
+@inject Homework.HomeworkClient HomeworkClient
 @inject IJSRuntime JsRuntime
 @attribute [StreamRendering]
 @rendermode InteractiveServer
@@ -68,10 +67,6 @@ else
     <p>£@_lesson.CostString</p>
 }
 
-<div class="d-flex flex-row justify-content-between my-2">
-    <h4>Homework instructions</h4>
-    <Button Color="ButtonColor.Primary" @onclick="OnShowEditHomeworkInstructionsModal">Edit</Button>
-</div>
 
 @if (_lesson is null)
 {
@@ -81,11 +76,15 @@ else
 }
 else
 {
-    <p>@_lesson.HomeworkInstructions</p>
     <div class="d-flex flex-row justify-content-between my-2">
-        <h4>Homework attachments</h4>
-        <Button Color="ButtonColor.Primary" @onclick="OnShowAddAttachmentModal">Add attachments</Button>
+        <h4>Homework</h4>
+        <div class="d-flex flex-row">
+            <Button style="margin-right: 2px" Color="ButtonColor.Primary" @onclick="OnShowEditHomeworkInstructionsModal">Edit</Button>
+            <Button Disabled="@_lesson.EmailSent" Color="ButtonColor.Danger" @onclick="OnReleaseHomework">Release</Button>
+        </div>
     </div>
+    <p>@_lesson.HomeworkInstructions</p>
+    <Button Color="ButtonColor.Primary" @onclick="OnShowAddAttachmentModal">Add attachments</Button>
     @foreach (var ha in _homeworkAttachments)
     {
         <div class="d-flex flex-row">
@@ -178,6 +177,14 @@ else
     private async Task OnShowEditHomeworkInstructionsModal()
     {
         await _homeworkEditModal.ShowAsync();
+    }
+    private async Task OnReleaseHomework()
+    {
+        await HomeworkClient.ReleaseAsync(new ReleaseRequest
+        {
+            LessonId = LessonId
+        });
+        _lesson = await RestApiClient.GetLessonAsync(LessonId, CancellationToken);
     }
     
     private async Task OnHideEditHomeworkInstructionsModal()
