@@ -5,7 +5,7 @@ services:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
     ports:
-      - 5671:5672
+      - 5673:5672
       - 15671:15672
   smtp:
     image: rnwood/smtp4dev:v3

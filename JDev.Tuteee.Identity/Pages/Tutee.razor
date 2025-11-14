@@ -101,8 +101,8 @@ else
     private TimeOnly _lessonEnd;
     private int _editablePencePerHour;
 
-    private string TuteeName => $"{_tutee?.FirstName} {_tutee?.LastName}";
-    private string ClientName => $"{_client?.HolderFirstName} {_client?.HolderLastName}";
+    private string TuteeName => $"{_tutee?.GetFirstName()} {_tutee?.GetLastName()}".Trim();
+    private string ClientName => $"{_client?.FirstName} {_client?.LastName}";
 
     protected override async Task OnInitializedAsync()
     {

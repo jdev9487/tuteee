@@ -25,12 +25,12 @@ public class HomeworkService(
 
         var htmlTask = razorTemplateEngine.RenderAsync("EmailTemplates/Homework.cshtml", new EmailTemplates.Homework
         {
-            FirstName = lesson.Tutee.FirstName,
+            FirstName = lesson.TuteeRole.Stakeholder.FirstName,
             Instructions = lesson.HomeworkInstructions
         });
         _ = bus.Publish(new EmailHomeworkEvent
         {
-            To = lesson.Tutee.EmailAddress,
+            To = lesson.TuteeRole.Stakeholder.EmailAddress,
             Body = await htmlTask,
             Date = lesson.StartTime.ToString("D")
         }, context.CancellationToken);

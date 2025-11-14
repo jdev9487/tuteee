@@ -15,21 +15,21 @@ public class ClientEndpoints(IMapper mapper) : IEndpoints
         groupBuilder.MapGet("/{id:int}",
             async Task<Results<Ok<ClientDto>, NotFound>> (int id, IGenericRepository repo, CancellationToken token) =>
             {
-                var client = await repo.FindAsync<Client>(id, token);
+                var client = await repo.FindAsync<ClientRole>(id, token);
                 return client is null ? TypedResults.NotFound() : TypedResults.Ok(mapper.Map<ClientDto>(client));
             });
         
         groupBuilder.MapGet("",
             async (IGenericRepository repo, CancellationToken token) =>
             {
-                var entities = await repo.GetListAsync<Client>(token);
+                var entities = await repo.GetListAsync<ClientRole>(token);
                 return TypedResults.Ok(entities.Select(mapper.Map<ClientDto>));
             });
         
         groupBuilder.MapPost("",
             async (ClientDto dto, IGenericRepository repo, CancellationToken token) =>
             {
-                var entity = mapper.Map<Client>(dto);
+                var entity = mapper.Map<ClientRole>(dto);
                 await repo.AddAsync(entity, token);
                 await repo.SaveChangesAsync(token);
                 return TypedResults.Created();

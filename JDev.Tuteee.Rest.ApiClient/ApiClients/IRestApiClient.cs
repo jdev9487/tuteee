@@ -19,4 +19,5 @@ public interface IRestApiClient
     Task AddRateAsync(int tuteeId, RateDto rateDto, CancellationToken token);
     Task<TuteeDto?> GetTuteeAsync(int id, CancellationToken token);
     Task AddTuteeAsync(TuteeDto tutee, CancellationToken token);
+    Task AddTuteeRoleAsync(TuteeDto tutee, CancellationToken token);
 }

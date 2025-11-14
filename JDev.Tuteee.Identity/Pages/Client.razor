@@ -1,5 +1,6 @@
 @attribute [Route(Routing.Client)]
 
+@using JDev.Tuteee.CustomTypes
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
@@ -15,7 +16,16 @@
 
 <Breadcrumb Items="_navItems"></Breadcrumb>
 
-<Modal @ref="_modal" Title="Enter new tutee details">
+<Modal @ref="_registerSelfPayerModal" Title="Register as self payer">
+    <BodyTemplate>
+        Initial rate (pence per hour)
+        <NumberInput TValue="int" @bind-Value="_selfPayerPencePerHour"></NumberInput>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideRegisterSelfPayerModal">Confirm</Button>
+    </FooterTemplate>
+</Modal>
+<Modal @ref="_addTuteeModal" Title="Enter new tutee details">
     <BodyTemplate>
         First name
         <TextInput @bind-Value="_newTuteeFirstName"></TextInput>
@@ -23,6 +33,8 @@
         <TextInput @bind-Value="_newTuteeLastName"></TextInput>
         Email address
         <TextInput @bind-Value="_newTuteeEmailAddress"></TextInput>
+        Phone number
+        <TextInput @bind-Value="_newTuteePhoneNumber"></TextInput>
         Initial rate (pence per hour)
         <NumberInput TValue="int" @bind-Value="_newTuteePencePerHour"></NumberInput>
     </BodyTemplate>
@@ -33,7 +45,13 @@
 
 <div class="d-flex flex-row justify-content-between mb-2">
     <h3>Tutees</h3>
-    <Button Color="ButtonColor.Primary" @onclick="OnShowAddTuteeModal">Add Tutee</Button>
+    <div>
+        @if (!_client?.IsSelfPaying ?? false)
+        {
+            <Button style="margin-right: 2px" Color="ButtonColor.Primary" @onclick="OnShowRegisterSelfPayerModal">Register as self paying tutee</Button>
+        }
+        <Button Color="ButtonColor.Primary" @onclick="OnShowAddTuteeModal">Add Tutee</Button>
+    </div>
 </div>
 
 @if (_client == null)
@@ -52,12 +70,12 @@ else
         <GridColumns>
             <GridColumn TItem="TuteeDto" HeaderText="First name" PropertyName="FirstName">
                 <NavLink class="nav-link" href=@($"tutees/{context.TuteeId}") Match="NavLinkMatch.All">
-                    @context.FirstName
+                    @context.GetFirstName()
                 </NavLink>
             </GridColumn>
             <GridColumn TItem="TuteeDto" HeaderText="Last name" PropertyName="LastName">
                 <NavLink class="nav-link" href=@($"tutees/{context.TuteeId}") Match="NavLinkMatch.All">
-                    @context.LastName
+                    @context.GetLastName()
                 </NavLink>
             </GridColumn>
             <GridColumn TItem="TuteeDto" HeaderText="Email" PropertyName="EmailAddress">
@@ -75,14 +93,17 @@ else
     public int ClientId { get; set; }
     private ClientDto? _client;
     private Grid<TuteeDto> _tuteeGrid = default!;
-    private Modal _modal = default!;
+    private Modal _addTuteeModal = default!;
+    private Modal _registerSelfPayerModal = default!;
     private List<BreadcrumbItem> _navItems = default!;
     private string _newTuteeFirstName = default!;
     private string _newTuteeLastName = default!;
     private string _newTuteeEmailAddress = default!;
+    private string _newTuteePhoneNumber = default!;
     private int _newTuteePencePerHour;
+    private int _selfPayerPencePerHour;
 
-    private string ClientName => $"{_client?.HolderFirstName} {_client?.HolderLastName}";
+    private string ClientName => $"{_client?.FirstName} {_client?.LastName}";
 
     protected override async Task OnInitializedAsync()
     {
@@ -92,11 +113,39 @@ else
             new() { Text = $"{ClientName} 📂", IsCurrentPage = true }
         };
     }
+    private async Task OnShowRegisterSelfPayerModal()
+    {
+        await _registerSelfPayerModal.ShowAsync();
+    }
     private async Task OnShowAddTuteeModal()
     {
-        await _modal.ShowAsync();
+        await _addTuteeModal.ShowAsync();
     }
 
+    private async Task OnHideRegisterSelfPayerModal()
+    {
+        var dto = new TuteeDto
+        {
+            ClientId = ClientId,
+            Rates =
+            [
+                new RateDto
+                {
+                    PencePerHour = _selfPayerPencePerHour,
+                    ActiveFrom = DateTimeOffset.MinValue
+                }
+            ]
+        };
+        await RestApiClient.AddTuteeRoleAsync(dto, CancellationToken);
+        
+        ResetNewClientInfo();
+
+        _client = await RestApiClient.GetClientAsync(ClientId, CancellationToken);
+        await _tuteeGrid.RefreshDataAsync();
+
+        await _registerSelfPayerModal.HideAsync();
+    }
+    
     private async Task OnHideAddTuteeModal()
     {
         var dto = new TuteeDto
@@ -104,12 +153,16 @@ else
             FirstName = _newTuteeFirstName,
             LastName = _newTuteeLastName,
             EmailAddress = _newTuteeEmailAddress,
+            PhoneNumber = new PhoneNumber { Raw = _newTuteePhoneNumber },
             ClientId = ClientId,
-            Rates = [new RateDto
-            {
-                PencePerHour = _newTuteePencePerHour,
-                ActiveFrom = DateTimeOffset.MinValue
-            }]
+            Rates =
+            [
+                new RateDto
+                {
+                    PencePerHour = _newTuteePencePerHour,
+                    ActiveFrom = DateTimeOffset.MinValue
+                }
+            ]
         };
         await RestApiClient.AddTuteeAsync(dto, CancellationToken);
 
@@ -118,7 +171,7 @@ else
         _client = await RestApiClient.GetClientAsync(ClientId, CancellationToken);
         await _tuteeGrid.RefreshDataAsync();
         
-        await _modal.HideAsync();
+        await _addTuteeModal.HideAsync();
     }
     private void ResetNewClientInfo()
     {
@@ -126,6 +179,7 @@ else
         _newTuteeLastName = "";
         _newTuteeEmailAddress = "";
         _newTuteePencePerHour = 0;
+        _selfPayerPencePerHour = 0;
     }
 
     private async Task<GridDataProviderResult<TuteeDto>> ClientsDataProvider(GridDataProviderRequest<TuteeDto> request)

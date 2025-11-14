@@ -24,7 +24,7 @@
         <AutoComplete @bind-Value="_invoiceClientName"
                       TItem="ClientDto"
                       DataProvider="ClientDataProvider"
-                      PropertyName="HolderName"
+                      PropertyName="Name"
                       Placeholder="Search billable client"
                       OnChanged="(ClientDto client) => OnClientChosen(client)"></AutoComplete>
     </BodyTemplate>
@@ -51,7 +51,7 @@ else
           Responsive="true">
         <GridColumns>
             <GridColumn TItem="InvoiceDto" HeaderText="Client" PropertyName="FirstName">
-                @context.Client.HolderFirstName @context.Client.HolderLastName
+                @context.Client.FirstName @context.Client.LastName
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Lessons" PropertyName="Lessons">
                 @GetLessonRender(context.Lessons)

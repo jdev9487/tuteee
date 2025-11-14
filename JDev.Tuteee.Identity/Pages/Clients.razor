@@ -50,12 +50,12 @@ else
         <GridColumns>
             <GridColumn TItem="ClientDto" HeaderText="First name" PropertyName="HolderFirstName">
                 <NavLink class="nav-link" href=@($"clients/{context.ClientId}") Match="NavLinkMatch.All">
-                    @context.HolderFirstName
+                    @context.FirstName
                 </NavLink>
             </GridColumn>
             <GridColumn TItem="ClientDto" HeaderText="Last name" PropertyName="HolderLastName">
                 <NavLink class="nav-link" href=@($"clients/{context.ClientId}") Match="NavLinkMatch.All">
-                    @context.HolderLastName
+                    @context.LastName
                 </NavLink>
             </GridColumn>
             <GridColumn TItem="ClientDto" HeaderText="Email" PropertyName="EmailAddress">
@@ -95,8 +95,8 @@ else
     {
         var dto = new ClientDto
         {
-            HolderFirstName = _newClientFirstName,
-            HolderLastName = _newClientLastName,
+            FirstName = _newClientFirstName,
+            LastName = _newClientLastName,
             EmailAddress = _newClientEmailAddress,
             PhoneNumber = new PhoneNumber{ Raw = _newClientPhoneNumber }
         };
