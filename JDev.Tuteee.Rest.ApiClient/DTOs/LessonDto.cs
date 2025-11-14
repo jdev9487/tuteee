@@ -5,6 +5,7 @@ public class LessonDto
     public int? LessonId { get; set; }
     public DateTimeOffset StartTime { get; set; }
     public DateTimeOffset EndTime { get; set; }
+    public bool EmailSent { get; set; }
     public int TuteeId { get; set; }
     public TuteeDto? Tutee { get; set; } = default!;
     public int? InvoiceId { get; set; }
