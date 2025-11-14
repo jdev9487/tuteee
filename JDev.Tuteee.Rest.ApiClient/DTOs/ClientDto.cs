@@ -13,4 +13,5 @@ public class ClientDto
     public required PhoneNumber PhoneNumber { get; set; } = default!;
     public IEnumerable<TuteeDto>? Tutees { get; set; } = [];
     public IList<InvoiceDto> Invoices { get; set; } = [];
+    public bool? IsSelfPaying => Tutees?.Any(t => t.StakeholderId == StakeholderId);
 }
