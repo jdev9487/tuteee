@@ -8,8 +8,6 @@ public class Lesson : BaseEntity
     public DateOnly Date { get; set; }
     public TimeOnly Start { get; set; }
     public TimeSpan Duration { get; set; }
-    public DateTimeOffset StartTime { get; set; }
-    public DateTimeOffset EndTime { get; set; }
     public bool EmailSent { get; set; } = false;
     public int TuteeRoleId { get; set; }
     public virtual TuteeRole TuteeRole { get; set; } = default!;

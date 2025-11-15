@@ -38,7 +38,7 @@ public class HomeworkService(
         {
             To = lesson.TuteeRole.Stakeholder.EmailAddress,
             Body = await htmlTask,
-            Date = lesson.StartTime.ToString("D")
+            Date = lesson.Date.ToString("D")
         }, context.CancellationToken);
 
         lesson.EmailSent = true;
