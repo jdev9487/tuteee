@@ -1,0 +1,75 @@
+@attribute [Route($"/{Routing.Calendar}")]
+
+@using JDev.Tuteee.CustomTypes
+@using JDev.Tuteee.Rest.ApiClient.DTOs
+@using Microsoft.AspNetCore.Authorization
+
+@inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
+
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Calendar</PageTitle>
+
+<div class="d-flex flex-row justify-content-between mb-2">
+    <h3>Calendar</h3>
+</div>
+
+@if (false)
+{
+    <p>Loading</p>
+}
+else
+{
+    <RadzenScheduler TItem="LessonDto"
+                     style="height: 768px;"
+                     Data=@_lessons
+                     StartProperty="DateTimeStart"
+                     EndProperty="DateTimeEnd"
+                     TextProperty="TuteeName"
+    >
+        <RadzenWeekView/>
+        <RadzenMonthView/>
+    </RadzenScheduler>
+}
+
+@code {
+    private IEnumerable<LessonDto>? _lessons;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _lessons = new List<LessonDto>
+        {
+            new LessonDto
+            {
+                Date = DateOnly.FromDateTime(DateTime.Today),
+                Start = TimeOnly.FromDateTime(DateTime.Now),
+                Duration = new TimeSpan(1, 0, 0),
+                Tutee = new TuteeDto()
+                {
+                    FirstName = "Tom",
+                    LastName = "Riddle",
+                    PhoneNumber = new PhoneNumber { Raw = "7778233321" },
+                    ClientId = 1,
+                    Rates = []
+                }
+            },
+            new LessonDto
+            {
+                Date = DateOnly.FromDateTime(DateTime.Today),
+                Start = TimeOnly.FromDateTime(DateTime.Now.AddHours(1)),
+                Duration = new TimeSpan(1, 0, 0),
+                Tutee = new TuteeDto()
+                {
+                    FirstName = "Virginia",
+                    LastName = "Wolff",
+                    PhoneNumber = new PhoneNumber { Raw = "7778233321" },
+                    ClientId = 1,
+                    Rates = []
+                }
+            }
+        };
+    }
+    
+}
