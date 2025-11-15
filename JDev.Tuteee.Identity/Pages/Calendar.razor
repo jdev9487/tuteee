@@ -1,11 +1,13 @@
 @attribute [Route($"/{Routing.Calendar}")]
 
 @using JDev.Tuteee.CustomTypes
+@using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
+@inject IRestApiClient RestApiClient;
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -16,7 +18,7 @@
     <h3>Calendar</h3>
 </div>
 
-@if (false)
+@if (_lessons is null)
 {
     <p>Loading</p>
 }
@@ -39,37 +41,6 @@ else
     
     protected override async Task OnInitializedAsync()
     {
-        _lessons = new List<LessonDto>
-        {
-            new LessonDto
-            {
-                Date = DateOnly.FromDateTime(DateTime.Today),
-                Start = TimeOnly.FromDateTime(DateTime.Now),
-                Duration = new TimeSpan(1, 0, 0),
-                Tutee = new TuteeDto()
-                {
-                    FirstName = "Tom",
-                    LastName = "Riddle",
-                    PhoneNumber = new PhoneNumber { Raw = "7778233321" },
-                    ClientId = 1,
-                    Rates = []
-                }
-            },
-            new LessonDto
-            {
-                Date = DateOnly.FromDateTime(DateTime.Today),
-                Start = TimeOnly.FromDateTime(DateTime.Now.AddHours(1)),
-                Duration = new TimeSpan(1, 0, 0),
-                Tutee = new TuteeDto()
-                {
-                    FirstName = "Virginia",
-                    LastName = "Wolff",
-                    PhoneNumber = new PhoneNumber { Raw = "7778233321" },
-                    ClientId = 1,
-                    Rates = []
-                }
-            }
-        };
+        _lessons = await RestApiClient.GetLessonsAsync(CancellationToken);
     }
-    
 }

@@ -14,6 +14,7 @@ public interface IRestApiClient
     Task DeleteHomeworkAttachmentAsync(int homeworkAttachmentId, CancellationToken token);
     Task<IReadOnlyList<InvoiceDto>> GetInvoicesAsync(CancellationToken token);
     Task<LessonDto?> GetLessonAsync(int id, CancellationToken token);
+    Task<IReadOnlyList<LessonDto>> GetLessonsAsync(CancellationToken token);
     Task AddLessonAsync(LessonDto lesson, CancellationToken token);
     Task UpdateLessonAsync(LessonDto lesson, CancellationToken token);
     Task AddRateAsync(int tuteeId, RateDto rateDto, CancellationToken token);

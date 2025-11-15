@@ -38,6 +38,9 @@ public class RestApiClient(HttpClient client, JsonSerializerOptions options)
     public async Task<LessonDto?> GetLessonAsync(int id, CancellationToken token) =>
         await GetAsync<LessonDto?>($"{Endpoint.LessonBase}/{id}", token);
 
+    public async Task<IReadOnlyList<LessonDto>> GetLessonsAsync(CancellationToken token) => 
+        await GetAsync<IReadOnlyList<LessonDto>>(Endpoint.LessonBase, token) ?? [];
+
     public async Task AddLessonAsync(LessonDto lesson, CancellationToken token) =>
         await PostAsync(Endpoint.LessonBase, lesson, token);
 
