@@ -113,12 +113,12 @@ else
         return builder =>
         {
             var i = 0;
-            foreach (var lesson in lessons.OrderBy(l => l.StartTime))
+            foreach (var lesson in lessons.OrderBy(l => l.Date).ThenBy(l => l.Start))
             {
                 var sb = new StringBuilder($"{lesson.Tutee.FirstName} {lesson.Tutee.LastName} | ");
-                sb.Append(lesson.StartTime.ToString("D"));
-                var start = lesson.StartTime.ToString("t");
-                var end = lesson.EndTime.ToString("t");
+                sb.Append(lesson.Date.ToString("D"));
+                var start = lesson.Start.ToString("t");
+                var end = lesson.Start.Add(lesson.Duration).ToString("t");
                 sb.Append($": {start} - {end}");
                 builder.AddMarkupContent(i, sb.ToString() );
                 builder.AddMarkupContent(i + 1, "<br/>");

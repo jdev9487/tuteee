@@ -14,6 +14,8 @@ public class TuteeDto
     public ClientDto? Client { get; set; }
     public IEnumerable<LessonDto>? Lessons { get; set; } = [];
     public required IEnumerable<RateDto> Rates { get; set; } = [];
-    public int ActiveRate => Rates.MaxBy(r => r.ActiveFrom).PencePerHour;
+    public int ActiveRate => Rates
+        .Where(r => r.DateEnabled <= DateOnly.FromDateTime(DateTime.Today))
+        .MaxBy(r => r.DateEnabled).PencePerHour;
     public bool IsSelfPaying => StakeholderId == Client?.StakeholderId;
 }

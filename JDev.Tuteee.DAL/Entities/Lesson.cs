@@ -5,6 +5,9 @@ using Core.EfCore;
 public class Lesson : BaseEntity
 {
     public int LessonId { get; set; }
+    public DateOnly Date { get; set; }
+    public TimeOnly Start { get; set; }
+    public TimeSpan Duration { get; set; }
     public DateTimeOffset StartTime { get; set; }
     public DateTimeOffset EndTime { get; set; }
     public bool EmailSent { get; set; } = false;
