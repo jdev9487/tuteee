@@ -19,6 +19,13 @@ public class LessonEndpoints(
         var groupBuilder = routeBuilder.MapGroup($"/{Endpoint.LessonBase}");
         MapHomeworkAttachments(groupBuilder.MapGroup("/{lessonId:int}/homework-attachments"));
         
+        groupBuilder.MapGet("",
+            async (IGenericRepository repo, CancellationToken token) =>
+            {
+                var entities = await repo.GetListAsync<Lesson>(token);
+                return TypedResults.Ok(entities.Select(mapper.Map<LessonDto>));
+            });
+        
         groupBuilder.MapGet("/{id:int}",
             async Task<Results<Ok<LessonDto>, NotFound>> (int id, IGenericRepository repo, CancellationToken token) =>
             {

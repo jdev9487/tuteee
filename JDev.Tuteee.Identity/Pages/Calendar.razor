@@ -1,0 +1,45 @@
+@attribute [Route($"/{Routing.Calendar}")]
+
+@using JDev.Tuteee.Rest.ApiClient.ApiClients
+@using JDev.Tuteee.Rest.ApiClient.DTOs
+@using Microsoft.AspNetCore.Authorization
+
+@inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
+
+@inject IRestApiClient RestApiClient;
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Calendar</PageTitle>
+
+<div class="d-flex flex-row justify-content-between mb-2">
+    <h3>Calendar</h3>
+</div>
+
+@if (_lessons is null)
+{
+    <p>Loading</p>
+}
+else
+{
+    <RadzenScheduler TItem="LessonDto"
+                     style="height: 768px;"
+                     Data=@_lessons
+                     StartProperty="DateTimeStart"
+                     EndProperty="DateTimeEnd"
+                     TextProperty="TuteeName"
+    >
+        <RadzenWeekView/>
+        <RadzenMonthView/>
+    </RadzenScheduler>
+}
+
+@code {
+    private IEnumerable<LessonDto>? _lessons;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _lessons = await RestApiClient.GetLessonsAsync(CancellationToken);
+    }
+}

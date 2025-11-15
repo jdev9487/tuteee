@@ -14,6 +14,9 @@ public class LessonDto
     public string? HomeworkInstructions { get; set; }
     
     public TimeOnly End => Start.Add(Duration);
+    public DateTime DateTimeStart => Date.ToDateTime(Start);
+    public DateTime DateTimeEnd => DateTimeStart.Add(Duration);
+    public string TuteeName => $"{Tutee?.FirstName} {Tutee?.LastName}";
     public decimal Cost => (decimal)CostAsDouble / 100;
     public string CostString => Cost.ToString("0.00");
     

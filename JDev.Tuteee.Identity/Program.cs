@@ -8,6 +8,7 @@ using JDev.Tuteee.Protos;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,6 +67,7 @@ if (grpcApiUrl is null) throw new InvalidOperationException("gRPC API config mis
 builder.Services.AddGrpcApiClient(grpcApiUrl);
 
 builder.Services.AddBlazorBootstrap();
+builder.Services.AddRadzenComponents();
 
 var app = builder.Build();
 
