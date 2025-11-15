@@ -52,8 +52,8 @@ public static class Extensions
                 EmailAddress = "ls@mail.com",
                 PhoneNumber = new PhoneNumber { Raw = "7273899045" }
             };
-            var lisaRate = new Rate { PencePerHour = 4500, ActiveFrom = DateTimeOffset.MinValue, DateEnabled = DateOnly.MinValue};
-            var lisaUpdatedRate = new Rate { PencePerHour = 5000, ActiveFrom = referenceDateTime.AddDays(4), DateEnabled = referenceDate.AddDays(4)};
+            var lisaRate = new Rate { PencePerHour = 4500, DateEnabled = DateOnly.MinValue};
+            var lisaUpdatedRate = new Rate { PencePerHour = 5000, DateEnabled = referenceDate.AddDays(4)};
             var lisaTutee = new TuteeRole
             {
                 Stakeholder = lisaStakeholder,
@@ -65,8 +65,6 @@ public static class Extensions
                 Date = referenceDate.AddDays(3),
                 Start = new TimeOnly(17, 0, 0),
                 Duration = TimeSpan.FromHours(1),
-                StartTime = referenceDateTime,
-                EndTime = referenceDateTime.AddHours(1),
                 TuteeRole = lisaTutee
             };
             var lisaSecondLesson = new Lesson
@@ -74,8 +72,6 @@ public static class Extensions
                 Date = referenceDate.AddDays(7),
                 Start = new TimeOnly(17, 0, 0),
                 Duration = TimeSpan.FromHours(1),
-                StartTime = referenceDateTime.AddDays(7),
-                EndTime = referenceDateTime.AddDays(7).AddHours(1),
                 TuteeRole = lisaTutee
             };
             var tomInvoice = new Invoice
@@ -98,9 +94,9 @@ public static class Extensions
                 PhoneNumber = new PhoneNumber { Raw = "7894677222" }
             };
             var benClient = new ClientRole { Stakeholder = benStakeholder };
-            var benRate = new Rate { PencePerHour = 4500, ActiveFrom = DateTimeOffset.MinValue, DateEnabled = DateOnly.MinValue};
-            var benUpdatedRate = new Rate { PencePerHour = 5000, ActiveFrom = referenceDateTime.AddDays(4), DateEnabled = referenceDate.AddDays(4)};
-            var benUpdatedAgainRate = new Rate { PencePerHour = 6000, ActiveFrom = referenceDateTime.AddDays(10), DateEnabled = referenceDate.AddDays(10)};
+            var benRate = new Rate { PencePerHour = 4500, DateEnabled = DateOnly.MinValue};
+            var benUpdatedRate = new Rate { PencePerHour = 5000, DateEnabled = referenceDate.AddDays(4)};
+            var benUpdatedAgainRate = new Rate { PencePerHour = 6000, DateEnabled = referenceDate.AddDays(10)};
             var benTutee = new TuteeRole
             {
                 Stakeholder = benStakeholder,

@@ -132,7 +132,7 @@ else
                 new RateDto
                 {
                     PencePerHour = _selfPayerPencePerHour,
-                    DateEnabled = DateOnly.MinValue
+                    DateEnabled = DateOnly.FromDateTime(DateTime.Today)
                 }
             ]
         };
@@ -160,7 +160,7 @@ else
                 new RateDto
                 {
                     PencePerHour = _newTuteePencePerHour,
-                    DateEnabled = DateOnly.MinValue
+                    DateEnabled = DateOnly.FromDateTime(DateTime.Today)
                 }
             ]
         };
