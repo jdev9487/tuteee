@@ -7,6 +7,7 @@
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
 @inject IRestApiClient RestApiClient;
+@inject NavigationManager NavigationManager
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
@@ -29,6 +30,7 @@ else
                      StartProperty="DateTimeStart"
                      EndProperty="DateTimeEnd"
                      TextProperty="TuteeName"
+                     AppointmentSelect="OnAppointmentSelect"
     >
         <RadzenWeekView/>
         <RadzenMonthView/>
@@ -41,5 +43,10 @@ else
     protected override async Task OnInitializedAsync()
     {
         _lessons = await RestApiClient.GetLessonsAsync(CancellationToken);
+    }
+
+    private void OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<LessonDto> obj)
+    {
+        NavigationManager.NavigateTo($"lessons/{obj.Data.LessonId}");
     }
 }

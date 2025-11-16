@@ -43,7 +43,7 @@
     </FooterTemplate>
 </Modal>
 
-<h4>Overview</h4>
+<h4>Time</h4>
 @if (_lesson is null)
 {
     <p>
@@ -52,8 +52,7 @@
 }
 else
 {
-    <p>Start: @_lesson.Start.ToString("t")</p>
-    <p>End: @_lesson.Start.Add(_lesson.Duration).ToString("t")</p>
+    <p>@_lesson.Start.ToString("t") - @_lesson.Start.Add(_lesson.Duration).ToString("t")</p>
 }
 <h4>Cost</h4>
 @if (_lesson is null)
@@ -138,7 +137,7 @@ else
         [
             new BreadcrumbItem { Text = $"{ClientName} 📂", Href = $"clients/{_client!.ClientId}" },
             new BreadcrumbItem { Text = $"{TuteeName} 🎓", Href = $"tutees/{_tutee.TuteeId}" },
-            new BreadcrumbItem { Text = $"{_lesson.Date:MM/dd/yyyy} 📚", IsCurrentPage = true }
+            new BreadcrumbItem { Text = $"{_lesson.Date:D} 📚", IsCurrentPage = true }
         ];
     }
 
