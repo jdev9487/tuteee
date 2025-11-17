@@ -10,5 +10,6 @@ public class TuteeRole : BaseEntity
     public int StakeholderId { get; set; }
     public virtual Stakeholder Stakeholder { get; set; } = default!;
     public virtual IList<Lesson> Lessons { get; set; } = [];
+    public virtual IList<ReservationSlot> ReservationSlots { get; set; } = [];
     public virtual required IList<Rate> Rates { get; set; } = [];
 }
