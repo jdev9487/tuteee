@@ -93,6 +93,7 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
     public DbSet<ClientRole> ClientRoles { get; set; } = default!;
     public DbSet<TuteeRole> TuteeRoles { get; set; } = default!;
     public DbSet<Lesson> Lessons { get; set; } = default!;
+    public DbSet<ReservationSlot> ReservationSlots { get; set; } = default!;
     public DbSet<Invoice> Invoices { get; set; } = default!;
     public DbSet<HomeworkAttachment> HomeworkAttachments { get; set; } = default!;
 }

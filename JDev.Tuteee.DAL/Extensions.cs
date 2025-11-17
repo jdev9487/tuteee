@@ -3,6 +3,7 @@ namespace JDev.Tuteee.DAL;
 using Core.EfCore.Repository;
 using CustomTypes;
 using Entities;
+using Enums;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +61,14 @@ public static class Extensions
                 Rates = [lisaRate, lisaUpdatedRate],
                 ClientRole = tomClient
             };
+            var listReservationSlot = new ReservationSlot
+            {
+                ReferenceDate = referenceDate.AddDays(3),
+                Time = new TimeOnly(17, 0, 0),
+                Duration = TimeSpan.FromHours(1),
+                TuteeRole = lisaTutee,
+                Type = ReservationSlotType.Weekly
+            };
             var lisaFirstLesson = new Lesson
             {
                 Date = referenceDate.AddDays(3),
@@ -82,6 +91,7 @@ public static class Extensions
             };
             await context.Invoices.AddAsync(tomInvoice, token);
             await context.Lessons.AddRangeAsync(lisaFirstLesson, lisaSecondLesson);
+            await context.ReservationSlots.AddAsync(listReservationSlot, token);
             await context.Stakeholders.AddRangeAsync(tomStakeholder, lisaStakeholder);
             await context.ClientRoles.AddAsync(tomClient, token);
             await context.TuteeRoles.AddAsync(lisaTutee, token);
