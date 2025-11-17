@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JDev.Tuteee.Rest.Api.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20251117151146_AddReservationSlot")]
+    [Migration("20251117151822_AddReservationSlot")]
     partial class AddReservationSlot
     {
         /// <inheritdoc />
@@ -159,6 +159,15 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ReservationSlotId"));
+
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("interval");
+
+                    b.Property<DateOnly>("ReferenceDate")
+                        .HasColumnType("date");
+
+                    b.Property<TimeOnly>("Time")
+                        .HasColumnType("time without time zone");
 
                     b.Property<int>("TuteeRoleId")
                         .HasColumnType("integer");

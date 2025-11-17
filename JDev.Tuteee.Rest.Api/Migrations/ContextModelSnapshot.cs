@@ -157,6 +157,15 @@ namespace JDev.Tuteee.Rest.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ReservationSlotId"));
 
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("interval");
+
+                    b.Property<DateOnly>("ReferenceDate")
+                        .HasColumnType("date");
+
+                    b.Property<TimeOnly>("Time")
+                        .HasColumnType("time without time zone");
+
                     b.Property<int>("TuteeRoleId")
                         .HasColumnType("integer");
 
