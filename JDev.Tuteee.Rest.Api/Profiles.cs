@@ -52,6 +52,18 @@ public class LessonProfile : Profile
     }
 }
 
+public class ReservationSlotProfile : Profile
+{
+    public ReservationSlotProfile()
+    {
+        CreateMap<ReservationSlot, ReservationSlotDto>()
+            .ForMember(dto => dto.TuteeId, cfg => cfg.MapFrom(l => l.TuteeRoleId))
+            .ForMember(dto => dto.Tutee, cfg => cfg.MapFrom(l => l.TuteeRole));
+        CreateMap<ReservationSlotDto, ReservationSlot>()
+            .ForMember(l => l.TuteeRoleId, cfg => cfg.MapFrom(dto => dto.TuteeId));
+    }
+}
+
 public class RateProfile : Profile
 {
     public RateProfile()

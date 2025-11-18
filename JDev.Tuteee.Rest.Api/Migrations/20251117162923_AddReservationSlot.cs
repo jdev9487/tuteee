@@ -13,7 +13,7 @@ namespace JDev.Tuteee.Rest.Api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ReservationSlot",
+                name: "ReservationSlots",
                 columns: table => new
                 {
                     ReservationSlotId = table.Column<int>(type: "integer", nullable: false)
@@ -26,9 +26,9 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReservationSlot", x => x.ReservationSlotId);
+                    table.PrimaryKey("PK_ReservationSlots", x => x.ReservationSlotId);
                     table.ForeignKey(
-                        name: "FK_ReservationSlot_TuteeRole_TuteeRoleId",
+                        name: "FK_ReservationSlots_TuteeRole_TuteeRoleId",
                         column: x => x.TuteeRoleId,
                         principalTable: "TuteeRole",
                         principalColumn: "TuteeRoleId",
@@ -36,8 +36,8 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReservationSlot_TuteeRoleId",
-                table: "ReservationSlot",
+                name: "IX_ReservationSlots_TuteeRoleId",
+                table: "ReservationSlots",
                 column: "TuteeRoleId");
         }
 
@@ -45,7 +45,7 @@ namespace JDev.Tuteee.Rest.Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ReservationSlot");
+                name: "ReservationSlots");
         }
     }
 }

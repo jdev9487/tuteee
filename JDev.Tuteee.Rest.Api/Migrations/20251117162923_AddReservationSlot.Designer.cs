@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JDev.Tuteee.Rest.Api.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20251117151822_AddReservationSlot")]
+    [Migration("20251117162923_AddReservationSlot")]
     partial class AddReservationSlot
     {
         /// <inheritdoc />
@@ -179,7 +179,7 @@ namespace JDev.Tuteee.Rest.Api.Migrations
 
                     b.HasIndex("TuteeRoleId");
 
-                    b.ToTable("ReservationSlot");
+                    b.ToTable("ReservationSlots");
                 });
 
             modelBuilder.Entity("JDev.Tuteee.DAL.Entities.Stakeholder", b =>

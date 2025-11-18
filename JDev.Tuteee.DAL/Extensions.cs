@@ -113,6 +113,15 @@ public static class Extensions
                 Rates = [benRate, benUpdatedRate, benUpdatedAgainRate],
                 ClientRole = benClient
             };
+            var benReservationSlot = new ReservationSlot
+            {
+                ReferenceDate = referenceDate.AddDays(4),
+                Time = new TimeOnly(16, 0, 0),
+                Duration = TimeSpan.FromHours(1),
+                TuteeRole = benTutee,
+                Type = ReservationSlotType.Biweekly
+            };
+            await context.ReservationSlots.AddAsync(benReservationSlot, token);
             await context.Stakeholders.AddAsync(benStakeholder, token);
             await context.ClientRoles.AddAsync(benClient, token);
             await context.TuteeRoles.AddAsync(benTutee, token);

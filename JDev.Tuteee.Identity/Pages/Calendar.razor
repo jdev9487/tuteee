@@ -1,5 +1,6 @@
 @attribute [Route($"/{Routing.Calendar}")]
 
+@using JDev.Tuteee.Identity.Models
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
@@ -18,35 +19,39 @@
     <h3>Calendar</h3>
 </div>
 
-@if (_lessons is null)
-{
-    <p>Loading</p>
-}
-else
-{
-    <RadzenScheduler TItem="LessonDto"
-                     style="height: 768px;"
-                     Data=@_lessons
-                     StartProperty="DateTimeStart"
-                     EndProperty="DateTimeEnd"
-                     TextProperty="TuteeName"
-                     AppointmentSelect="OnAppointmentSelect"
-    >
-        <RadzenWeekView/>
-        <RadzenMonthView/>
-    </RadzenScheduler>
-}
+<RadzenScheduler TItem="ScheduleItem"
+                 style="height: 768px;"
+                 Data=@_scheduleItems
+                 SelectedIndex="1"
+                 StartProperty="Start"
+                 EndProperty="End"
+                 TextProperty="Text"
+                 AppointmentSelect="OnAppointmentSelect"
+                 LoadData="OnLoadData"
+>
+    <RadzenWeekView/>
+    <RadzenMonthView/>
+</RadzenScheduler>
 
 @code {
-    private IEnumerable<LessonDto>? _lessons;
+    private IEnumerable<ScheduleItem>? _scheduleItems;
     
-    protected override async Task OnInitializedAsync()
+    private void OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<ScheduleItem> obj)
     {
-        _lessons = await RestApiClient.GetLessonsAsync(CancellationToken);
+        if (obj.Data.Link is not null)
+            NavigationManager.NavigateTo(obj.Data.Link);
     }
 
-    private void OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<LessonDto> obj)
+    private async Task OnLoadData(SchedulerLoadDataEventArgs obj)
     {
-        NavigationManager.NavigateTo($"lessons/{obj.Data.LessonId}");
+        var reservations = (await RestApiClient.GetReservationSlotsAsync(CancellationToken))
+            .SelectMany(rs => rs.GetReservedSlots(obj.Start, obj.End).Select(rsl => new ScheduleItem
+            {
+                Start = rsl.Start,
+                End = rsl.End,
+                Text = $"{rs.Tutee.FirstName} {rs.Tutee.LastName}"
+            }));
+        _scheduleItems = reservations;
     }
+
 }

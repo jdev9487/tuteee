@@ -176,7 +176,7 @@ namespace JDev.Tuteee.Rest.Api.Migrations
 
                     b.HasIndex("TuteeRoleId");
 
-                    b.ToTable("ReservationSlot");
+                    b.ToTable("ReservationSlots");
                 });
 
             modelBuilder.Entity("JDev.Tuteee.DAL.Entities.Stakeholder", b =>
