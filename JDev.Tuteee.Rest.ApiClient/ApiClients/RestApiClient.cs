@@ -38,8 +38,14 @@ public class RestApiClient(HttpClient client, JsonSerializerOptions options)
     public async Task<LessonDto?> GetLessonAsync(int id, CancellationToken token) =>
         await GetAsync<LessonDto?>($"{Endpoint.LessonBase}/{id}", token);
 
-    public async Task<IReadOnlyList<LessonDto>> GetLessonsAsync(CancellationToken token) => 
-        await GetAsync<IReadOnlyList<LessonDto>>(Endpoint.LessonBase, token) ?? [];
+    public async Task<IReadOnlyList<LessonDto>> GetLessonsAsync(
+        DateOnly? start = null, DateOnly? end = null, CancellationToken token = default)
+    {
+        var queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+        if (start is not null) queryString.Add("start", start.Value.ToString("yyyy-MM-dd"));
+        if (end is not null) queryString.Add("end", end.Value.ToString("yyyy-MM-dd"));
+        return await GetAsync<IReadOnlyList<LessonDto>>($"{Endpoint.LessonBase}?{queryString}", token) ?? [];
+    }
 
     public async Task AddLessonAsync(LessonDto lesson, CancellationToken token) =>
         await PostAsync(Endpoint.LessonBase, lesson, token);

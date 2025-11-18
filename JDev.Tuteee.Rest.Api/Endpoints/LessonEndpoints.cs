@@ -7,6 +7,7 @@ using ApiClient.DTOs;
 using Core.EfCore.Repository;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 public class LessonEndpoints(
     IMapper mapper,
@@ -20,9 +21,11 @@ public class LessonEndpoints(
         MapHomeworkAttachments(groupBuilder.MapGroup("/{lessonId:int}/homework-attachments"));
         
         groupBuilder.MapGet("",
-            async (IGenericRepository repo, CancellationToken token) =>
+            async (IGenericRepository repo, [FromQuery]DateOnly start, [FromQuery]DateOnly end, CancellationToken token) =>
             {
-                var entities = await repo.GetListAsync<Lesson>(token);
+                var entities = (await repo.GetListAsync<Lesson>(token))
+                    .Where(l => l.Date <= end)
+                    .Where(l => l.Date >= start);
                 return TypedResults.Ok(entities.Select(mapper.Map<LessonDto>));
             });
         

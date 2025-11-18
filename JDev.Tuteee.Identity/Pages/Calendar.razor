@@ -1,8 +1,9 @@
 @attribute [Route($"/{Routing.Calendar}")]
 
+@using System.Security.Cryptography
+@using System.Text
 @using JDev.Tuteee.Identity.Models
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
-@using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
@@ -25,9 +26,10 @@
                  SelectedIndex="1"
                  StartProperty="Start"
                  EndProperty="End"
-                 TextProperty="Text"
+                 TextProperty="Name"
                  AppointmentSelect="OnAppointmentSelect"
                  LoadData="OnLoadData"
+                 AppointmentRender="OnAppointmentRender"
 >
     <RadzenWeekView/>
     <RadzenMonthView/>
@@ -44,14 +46,40 @@
 
     private async Task OnLoadData(SchedulerLoadDataEventArgs obj)
     {
-        var reservations = (await RestApiClient.GetReservationSlotsAsync(CancellationToken))
-            .SelectMany(rs => rs.GetReservedSlots(obj.Start, obj.End).Select(rsl => new ScheduleItem
+        var lessons = (await RestApiClient.GetLessonsAsync(
+                DateOnly.FromDateTime(obj.Start),
+                DateOnly.FromDateTime(obj.End),
+                CancellationToken))
+            .Select(l => new ScheduleItem
             {
-                Start = rsl.Start,
-                End = rsl.End,
-                Text = $"{rs.Tutee.FirstName} {rs.Tutee.LastName}"
-            }));
-        _scheduleItems = reservations;
+                Start = l.Date.ToDateTime(l.Start),
+                End = l.Date.ToDateTime(l.Start).Add(l.Duration),
+                Name = $"{l.Tutee.FirstName} {l.Tutee.LastName}",
+                Link = $"lessons/{l.LessonId}"
+            });
+        var reservations = (await RestApiClient.GetReservationSlotsAsync(CancellationToken))
+            .SelectMany(rs => rs.GetReservedSlots(obj.Start, obj.End)
+                .Select(rsl => new ScheduleItem
+                {
+                    Start = rsl.Start,
+                    End = rsl.End,
+                    Name = $"{rs.Tutee.FirstName} {rs.Tutee.LastName}"
+                }))
+            .Where(si => lessons.All(lsi => !lsi.Equals(si)));
+        _scheduleItems = reservations.Concat(lessons);
     }
 
+    private void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<ScheduleItem> args)
+    {
+        using var sha512 = SHA512.Create();
+        var bytes = Encoding.UTF8.GetBytes(args.Data.Name);
+        var hash = sha512.ComputeHash(bytes);
+        var red = (int)hash[0];
+        var green = (int)hash[1];
+        var blue = (int)hash[2];
+        var opacity = args.Data.Link is null ? 0.4 : 1;
+        var fontWeight = args.Data.Link is null ? "normal" : "bold";
+        args.Attributes["style"] =
+            $"background: rgba({red}, {green}, {blue}, {opacity}); color: rgb({255 - red}, {255 - green}, {255 - blue}); font-weight: {fontWeight};";
+    }
 }
