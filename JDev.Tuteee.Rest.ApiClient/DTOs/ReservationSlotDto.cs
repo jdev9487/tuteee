@@ -14,6 +14,7 @@ public class ReservationSlotDto
 
     public IEnumerable<ReservationSlotLimit> GetReservedSlots(DateTime start, DateTime end)
     {
+        if (start > end) return [];
         var period = Type switch
         {
             ReservationSlotType.Weekly => 7,

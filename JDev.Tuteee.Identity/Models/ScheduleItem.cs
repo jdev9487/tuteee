@@ -1,11 +1,12 @@
 namespace JDev.Tuteee.Identity.Models;
 
-public class ScheduleItem : IEquatable<ScheduleItem>
+public abstract class ScheduleItem : IEquatable<ScheduleItem>
 {
     public string Name { get; set; } = default!;
     public DateTime Start { get; init; }
     public DateTime End { get; init; }
     public string? Link { get; init; }
+    public abstract string Text { get; }
 
     public bool Equals(ScheduleItem? other)
     {
@@ -18,8 +19,7 @@ public class ScheduleItem : IEquatable<ScheduleItem>
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
-        return Equals((ScheduleItem)obj);
+        return obj.GetType() == GetType() && Equals((ScheduleItem)obj);
     }
 
     public override int GetHashCode()

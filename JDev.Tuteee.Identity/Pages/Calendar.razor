@@ -26,10 +26,10 @@
                  SelectedIndex="1"
                  StartProperty="Start"
                  EndProperty="End"
-                 TextProperty="Name"
+                 TextProperty="Text"
                  AppointmentSelect="OnAppointmentSelect"
-                 LoadData="OnLoadData"
                  AppointmentRender="OnAppointmentRender"
+                 LoadData="OnLoadData"
 >
     <RadzenWeekView/>
     <RadzenMonthView/>
@@ -50,7 +50,7 @@
                 DateOnly.FromDateTime(obj.Start),
                 DateOnly.FromDateTime(obj.End),
                 CancellationToken))
-            .Select(l => new ScheduleItem
+            .Select(l => new LessonScheduleItem
             {
                 Start = l.Date.ToDateTime(l.Start),
                 End = l.Date.ToDateTime(l.Start).Add(l.Duration),
@@ -58,18 +58,19 @@
                 Link = $"lessons/{l.LessonId}"
             });
         var reservations = (await RestApiClient.GetReservationSlotsAsync(CancellationToken))
-            .SelectMany(rs => rs.GetReservedSlots(obj.Start, obj.End)
-                .Select(rsl => new ScheduleItem
+            .SelectMany(rs => rs.GetReservedSlots(obj.Start < DateTime.Today ? DateTime.Today : obj.Start, obj.End)
+                .Select(rsl => new ReservationScheduleItem
                 {
                     Start = rsl.Start,
                     End = rsl.End,
                     Name = $"{rs.Tutee.FirstName} {rs.Tutee.LastName}"
                 }))
             .Where(si => lessons.All(lsi => !lsi.Equals(si)));
-        _scheduleItems = reservations.Concat(lessons);
+        _scheduleItems = reservations;
+        _scheduleItems = _scheduleItems.Concat(lessons);
     }
 
-    private void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<ScheduleItem> args)
+    private static void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<ScheduleItem> args)
     {
         using var sha512 = SHA512.Create();
         var bytes = Encoding.UTF8.GetBytes(args.Data.Name);
@@ -77,9 +78,12 @@
         var red = (int)hash[0];
         var green = (int)hash[1];
         var blue = (int)hash[2];
-        var opacity = args.Data.Link is null ? 0.4 : 1;
-        var fontWeight = args.Data.Link is null ? "normal" : "bold";
-        args.Attributes["style"] =
-            $"background: rgba({red}, {green}, {blue}, {opacity}); color: rgb({255 - red}, {255 - green}, {255 - blue}); font-weight: {fontWeight};";
+        var opacity = args.Data.GetType() == typeof(ReservationScheduleItem) ? 0.1 : 0.2;
+        var sb = new StringBuilder($"background-color: rgba({red}, {green}, {blue}, {opacity});");
+        sb.Append("color: black;");
+        sb.Append($"border-color: rgb({red}, {green}, {blue});");
+        sb.Append("border-width: 1px;");
+        sb.Append(args.Data.GetType() == typeof(ReservationScheduleItem) ? "border-style: dashed;" : "border-style: solid;");
+        args.Attributes["style"] = sb.ToString();
     }
 }
