@@ -53,6 +53,9 @@ public class RestApiClient(HttpClient client, JsonSerializerOptions options)
     public async Task UpdateLessonAsync(LessonDto lesson, CancellationToken token) =>
         await PatchAsync(Endpoint.LessonBase, lesson, token);
 
+    public async Task DeleteLessonAsync(int lessonId, CancellationToken token) =>
+        await DeleteAsync($"{Endpoint.LessonBase}/{lessonId}", token);
+
     public async Task<IReadOnlyList<ReservationSlotDto>> GetReservationSlotsAsync(CancellationToken token) =>
         await GetAsync<IReadOnlyList<ReservationSlotDto>>(Endpoint.ReservationSlotBase, token) ?? [];
 

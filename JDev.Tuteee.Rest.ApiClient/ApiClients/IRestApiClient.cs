@@ -17,6 +17,7 @@ public interface IRestApiClient
     Task<IReadOnlyList<LessonDto>> GetLessonsAsync(DateOnly? start = null, DateOnly? end = null, CancellationToken token = default);
     Task AddLessonAsync(LessonDto lesson, CancellationToken token);
     Task UpdateLessonAsync(LessonDto lesson, CancellationToken token);
+    Task DeleteLessonAsync(int lessonId, CancellationToken token);
     Task<IReadOnlyList<ReservationSlotDto>> GetReservationSlotsAsync(CancellationToken token);
     Task AddRateAsync(int tuteeId, RateDto rateDto, CancellationToken token);
     Task AddReservationSlotAsync(int tuteeId, ReservationSlotDto reservationSlotDto, CancellationToken token);
