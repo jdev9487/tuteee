@@ -14,6 +14,9 @@ public class TuteeDto
     public ClientDto? Client { get; set; }
     public IEnumerable<LessonDto>? Lessons { get; set; } = [];
     public required IEnumerable<RateDto> Rates { get; set; } = [];
+    public IEnumerable<ReservationSlotDto> ReservationSlots { get; set; } = [];
+    public IEnumerable<ReservationSlotLimit> NextReservationSlotLimits =>
+        ReservationSlots.Select(rs => rs.NextReservedSlot());
     public int ActiveRate => Rates
         .Where(r => r.DateEnabled <= DateOnly.FromDateTime(DateTime.Today))
         .MaxBy(r => r.DateEnabled).PencePerHour;

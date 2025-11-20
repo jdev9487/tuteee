@@ -5,8 +5,6 @@ using AutoMapper;
 using DAL.Entities;
 using ApiClient.DTOs;
 using Core.EfCore.Repository;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 public class ReservationSlotEndpoints(
     IMapper mapper) : IEndpoints

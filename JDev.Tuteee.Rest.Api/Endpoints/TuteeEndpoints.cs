@@ -13,6 +13,7 @@ public class TuteeEndpoints(IMapper mapper) : IEndpoints
     {
         var groupBuilder = routeBuilder.MapGroup($"/{Endpoint.TuteeBase}");
         MapRates(groupBuilder.MapGroup("/{tuteeId:int}/rates"));
+        MapReservationSlots(groupBuilder.MapGroup("/{tuteeId:int}/reservation-slots"));
         groupBuilder.MapGet("/{id:int}",
             async Task<Results<Ok<TuteeDto>, NotFound>> (int id, IGenericRepository repo, CancellationToken token) =>
             {
@@ -65,6 +66,20 @@ public class TuteeEndpoints(IMapper mapper) : IEndpoints
                 if (tutee is null) return TypedResults.NotFound();
                 var rateEntity = mapper.Map<Rate>(dto);
                 tutee.Rates.Add(rateEntity);
+                await repo.SaveChangesAsync(token);
+                return TypedResults.Created();
+            });
+    }
+    
+    private void MapReservationSlots(IEndpointRouteBuilder group)
+    {
+        group.MapPost("",
+            async Task<Results<Created, NotFound>>(int tuteeId, ReservationSlot dto, IGenericRepository repo, CancellationToken token) =>
+            {
+                var tutee = await repo.FindAsync<TuteeRole>(tuteeId, token);
+                if (tutee is null) return TypedResults.NotFound();
+                var reservationSlotEntity = mapper.Map<ReservationSlot>(dto);
+                tutee.ReservationSlots.Add(reservationSlotEntity);
                 await repo.SaveChangesAsync(token);
                 return TypedResults.Created();
             });

@@ -59,6 +59,9 @@ public class RestApiClient(HttpClient client, JsonSerializerOptions options)
     public async Task AddRateAsync(int tuteeId, RateDto rateDto, CancellationToken token) =>
         await PostAsync($"{Endpoint.TuteeBase}/{tuteeId}/{Endpoint.RateBase}", rateDto, token);
     
+    public async Task AddReservationSlotAsync(int tuteeId, ReservationSlotDto reservationSlotDto, CancellationToken token) =>
+        await PostAsync($"{Endpoint.TuteeBase}/{tuteeId}/{Endpoint.ReservationSlotBase}", reservationSlotDto, token);
+
     public async Task<TuteeDto?> GetTuteeAsync(int id, CancellationToken token) =>
         await GetAsync<TuteeDto?>($"{Endpoint.TuteeBase}/{id}", token);
 
