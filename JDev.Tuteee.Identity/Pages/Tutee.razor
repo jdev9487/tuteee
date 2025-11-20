@@ -1,6 +1,5 @@
 @attribute [Route($"/{Routing.Tutee}")]
 
-@using BlazorBootstrap
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using JDev.Tuteee.Rest.ApiClient.Enums
@@ -68,11 +67,11 @@ else
     <p>Current rate: £@_tutee.ActiveRate.ToCurrency()/hr <DeadLink OnClick="OnShowEditRateModal">update</DeadLink></p>
     @if (!_tutee.ReservationSlots.Any())
     {
-        <DeadLink OnClick="OnShowAddReservationSlotModal">Add reservation slot</DeadLink>
+        <DeadLink OnClick="OnShowAddReservationSlotModal">add reservation slot</DeadLink>
     }
     else
     {
-        <p>Next reserved slots: @DisplayNextReservationSlots(_tutee) <DeadLink OnClick="OnShowAddReservationSlotModal">Add</DeadLink></p>
+        <p>Next reserved slots: @DisplayNextReservationSlots(_tutee) <DeadLink OnClick="OnShowAddReservationSlotModal">add</DeadLink></p>
     }
     <div class="d-flex flex-row justify-content-between my-2">
         <h4>Lessons</h4>

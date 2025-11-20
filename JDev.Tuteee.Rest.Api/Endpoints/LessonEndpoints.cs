@@ -55,6 +55,14 @@ public class LessonEndpoints(
                 await repo.SaveChangesAsync(token);
                 return TypedResults.Ok();
             });
+
+        groupBuilder.MapDelete("/{id:int}",
+            async Task<Results<NoContent, NotFound>>(int id, IGenericRepository repo, CancellationToken token) =>
+            {
+                var deletedLesson = await repo.DeleteAsync<Lesson>(id, token);
+                await repo.SaveChangesAsync(token);
+                return deletedLesson is null ? TypedResults.NotFound() : TypedResults.NoContent();
+            });
     }
 
     private void MapHomeworkAttachments(IEndpointRouteBuilder group)
