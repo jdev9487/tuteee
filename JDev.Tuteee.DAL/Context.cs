@@ -87,6 +87,8 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
         
         modelBuilder.Entity<HomeworkAttachment>()
             .ToTable("HomeworkAttachment");
+
+        modelBuilder.AddIsDeletedQueryFilter();
     }
 
     public DbSet<Stakeholder> Stakeholders { get; set; } = default!;

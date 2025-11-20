@@ -1,5 +1,7 @@
 namespace JDev.Tuteee.DAL;
 
+using System.Linq.Expressions;
+using Core.EfCore;
 using Core.EfCore.Repository;
 using CustomTypes;
 using Entities;
@@ -30,6 +32,24 @@ public static class Extensions
         }
 
         return app;
+    }
+
+    public static void AddIsDeletedQueryFilter(this ModelBuilder builder)
+    {
+        var entityTypes = builder.Model.GetEntityTypes()
+            .Where(x => typeof(BaseEntity).IsAssignableFrom(x.ClrType));
+
+        foreach (var entityType in entityTypes)
+        {
+            builder.Entity(entityType.ClrType, entityBuilder =>
+            {
+                var parameter = Expression.Parameter(entityType.ClrType);
+                var member = Expression.Property(parameter, nameof(BaseEntity.IsDeleted));
+                var body = Expression.Equal(member, Expression.Constant(false));
+                var lambdaExp = Expression.Lambda(body, parameter);
+                entityBuilder.HasQueryFilter(lambdaExp);
+            });
+        }
     }
 
     private static async Task SeedDevelopmentDataAsync(this Context context, CancellationToken token)
