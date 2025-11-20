@@ -2,6 +2,7 @@ namespace JDev.Tuteee.DAL;
 
 using CustomTypes;
 using Entities;
+using Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -56,6 +57,16 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
             .HasMany(t => t.Rates)
             .WithOne(l => l.TuteeRole)
             .HasForeignKey("TuteeRoleId");
+        modelBuilder.Entity<TuteeRole>()
+            .HasMany(t => t.ReservationSlots)
+            .WithOne(rs => rs.TuteeRole)
+            .HasForeignKey("TuteeRoleId");
+
+        modelBuilder.Entity<ReservationSlot>()
+            .Property(rs => rs.Type)
+            .HasConversion(
+                x => (int)x,
+                y => (ReservationSlotType)y);
 
         modelBuilder.Entity<Invoice>()
             .ToTable("Invoice");
@@ -82,6 +93,7 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
     public DbSet<ClientRole> ClientRoles { get; set; } = default!;
     public DbSet<TuteeRole> TuteeRoles { get; set; } = default!;
     public DbSet<Lesson> Lessons { get; set; } = default!;
+    public DbSet<ReservationSlot> ReservationSlots { get; set; } = default!;
     public DbSet<Invoice> Invoices { get; set; } = default!;
     public DbSet<HomeworkAttachment> HomeworkAttachments { get; set; } = default!;
 }

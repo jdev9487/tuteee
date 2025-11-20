@@ -5,6 +5,7 @@ public static class Endpoint
     public const string ClientBase = "clients";
     public const string InvoiceBase = "invoices";
     public const string LessonBase = "lessons";
+    public const string ReservationSlotBase = "reservation-slots";
     public const string TuteeBase = "tutees";
     public const string RateBase = "rates";
     public const string HomeworkAttachmentsBase = "homework-attachments";

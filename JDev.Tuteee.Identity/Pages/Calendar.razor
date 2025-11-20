@@ -1,7 +1,9 @@
 @attribute [Route($"/{Routing.Calendar}")]
 
+@using System.Security.Cryptography
+@using System.Text
+@using JDev.Tuteee.Identity.Models
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
-@using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
@@ -18,35 +20,70 @@
     <h3>Calendar</h3>
 </div>
 
-@if (_lessons is null)
-{
-    <p>Loading</p>
-}
-else
-{
-    <RadzenScheduler TItem="LessonDto"
-                     style="height: 768px;"
-                     Data=@_lessons
-                     StartProperty="DateTimeStart"
-                     EndProperty="DateTimeEnd"
-                     TextProperty="TuteeName"
-                     AppointmentSelect="OnAppointmentSelect"
-    >
-        <RadzenWeekView/>
-        <RadzenMonthView/>
-    </RadzenScheduler>
-}
+<RadzenScheduler TItem="ScheduleItem"
+                 style="height: 768px;"
+                 Data=@_scheduleItems
+                 SelectedIndex="1"
+                 StartProperty="Start"
+                 EndProperty="End"
+                 TextProperty="Text"
+                 AppointmentSelect="OnAppointmentSelect"
+                 AppointmentRender="OnAppointmentRender"
+                 LoadData="OnLoadData"
+>
+    <RadzenWeekView/>
+    <RadzenMonthView/>
+</RadzenScheduler>
 
 @code {
-    private IEnumerable<LessonDto>? _lessons;
+    private IEnumerable<ScheduleItem>? _scheduleItems;
     
-    protected override async Task OnInitializedAsync()
+    private void OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<ScheduleItem> obj)
     {
-        _lessons = await RestApiClient.GetLessonsAsync(CancellationToken);
+        if (obj.Data.Link is not null)
+            NavigationManager.NavigateTo(obj.Data.Link);
     }
 
-    private void OnAppointmentSelect(SchedulerAppointmentSelectEventArgs<LessonDto> obj)
+    private async Task OnLoadData(SchedulerLoadDataEventArgs obj)
     {
-        NavigationManager.NavigateTo($"lessons/{obj.Data.LessonId}");
+        var lessons = (await RestApiClient.GetLessonsAsync(
+                DateOnly.FromDateTime(obj.Start),
+                DateOnly.FromDateTime(obj.End),
+                CancellationToken))
+            .Select(l => new LessonScheduleItem
+            {
+                Start = l.Date.ToDateTime(l.Start),
+                End = l.Date.ToDateTime(l.Start).Add(l.Duration),
+                Name = $"{l.Tutee.FirstName} {l.Tutee.LastName}",
+                Link = $"lessons/{l.LessonId}"
+            });
+        var reservations = (await RestApiClient.GetReservationSlotsAsync(CancellationToken))
+            .SelectMany(rs => rs.GetReservedSlots(obj.Start < DateTime.Today ? DateTime.Today : obj.Start, obj.End)
+                .Select(rsl => new ReservationScheduleItem
+                {
+                    Start = rsl.Start,
+                    End = rsl.End,
+                    Name = $"{rs.Tutee.FirstName} {rs.Tutee.LastName}"
+                }))
+            .Where(si => lessons.All(lsi => !lsi.Equals(si)));
+        _scheduleItems = reservations;
+        _scheduleItems = _scheduleItems.Concat(lessons);
+    }
+
+    private static void OnAppointmentRender(SchedulerAppointmentRenderEventArgs<ScheduleItem> args)
+    {
+        using var sha512 = SHA512.Create();
+        var bytes = Encoding.UTF8.GetBytes(args.Data.Name);
+        var hash = sha512.ComputeHash(bytes);
+        var red = (int)hash[0];
+        var green = (int)hash[1];
+        var blue = (int)hash[2];
+        var opacity = args.Data.GetType() == typeof(ReservationScheduleItem) ? 0.1 : 0.2;
+        var sb = new StringBuilder($"background-color: rgba({red}, {green}, {blue}, {opacity});");
+        sb.Append("color: black;");
+        sb.Append($"border-color: rgb({red}, {green}, {blue});");
+        sb.Append("border-width: 1px;");
+        sb.Append(args.Data.GetType() == typeof(ReservationScheduleItem) ? "border-style: dashed;" : "border-style: solid;");
+        args.Attributes["style"] = sb.ToString();
     }
 }

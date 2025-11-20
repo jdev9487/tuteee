@@ -3,6 +3,7 @@
 @using BlazorBootstrap
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
+@using JDev.Tuteee.Rest.ApiClient.Enums
 @using Microsoft.AspNetCore.Authorization
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
@@ -19,11 +20,11 @@
 <Modal @ref="_scheduleLessonModal" Title="Enter lesson details">
     <BodyTemplate>
         Date
-        <DateInput TValue="DateOnly" @bind-Value="@_lessonDate" Placeholder="Enter date" />
+        <DateInput TValue="DateOnly" @bind-Value="@_lessonDate" Placeholder="Enter date"/>
         Start
-        <TimeInput TValue="TimeOnly" @bind-Value="@_lessonStart" />
+        <TimeInput TValue="TimeOnly" @bind-Value="@_lessonStart"/>
         Duration
-        <NumberInput TValue="int" @bind-Value="@_lessonMinutes" />
+        <NumberInput TValue="int" @bind-Value="@_lessonMinutes"/>
     </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Primary" @onclick="OnHideAddLessonModal">Schedule lesson</Button>
@@ -40,19 +41,20 @@
     </FooterTemplate>
 </Modal>
 
-<h4>Overview</h4>
-@if (_tutee == null)
-{
-    <p>Current rate: <em>Loading...</em></p>
-}
-else
-{
-    <p>Current rate: £@_tutee.ActiveRate.ToCurrency()/hr <DeadLink OnClick="OnShowEditRateModal">update</DeadLink></p>
-}
-<div class="d-flex flex-row justify-content-between my-2">
-    <h4>Lessons</h4>
-    <Button Color="ButtonColor.Primary" @onclick="OnShowAddLessonModal">Schedule lesson</Button>
-</div>
+<Modal @ref="_addReservationSlotModal" Title="Add Reservation Slot">
+    <BodyTemplate>
+        Reference Date
+        <DateInput TValue="DateOnly" @bind-Value="@_reservationReferenceDate" Placeholder="Enter date"/>
+        Start
+        <TimeInput TValue="TimeOnly" @bind-Value="@_reservationStart"/>
+        Duration
+        <NumberInput TValue="int" @bind-Value="@_reservationMinutes"/>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideAddReservationSlotModal">Confirm</Button>
+    </FooterTemplate>
+</Modal>
+
 
 @if (_tutee == null)
 {
@@ -62,6 +64,20 @@ else
 }
 else
 {
+    <h4>Overview</h4>
+    <p>Current rate: £@_tutee.ActiveRate.ToCurrency()/hr <DeadLink OnClick="OnShowEditRateModal">update</DeadLink></p>
+    @if (!_tutee.ReservationSlots.Any())
+    {
+        <DeadLink OnClick="OnShowAddReservationSlotModal">Add reservation slot</DeadLink>
+    }
+    else
+    {
+        <p>Next reserved slots: @DisplayNextReservationSlots(_tutee) <DeadLink OnClick="OnShowAddReservationSlotModal">Add</DeadLink></p>
+    }
+    <div class="d-flex flex-row justify-content-between my-2">
+        <h4>Lessons</h4>
+        <Button Color="ButtonColor.Primary" @onclick="OnShowAddLessonModal">Schedule lesson</Button>
+    </div>
     <Grid @ref="_lessonGrid"
           TItem="LessonDto"
           Class="table table-hover table-bordered table-striped"
@@ -95,10 +111,14 @@ else
     private Grid<LessonDto> _lessonGrid = default!;
     private Modal _scheduleLessonModal = default!;
     private Modal _updateRateModal = default!;
+    private Modal _addReservationSlotModal = default!;
     private List<BreadcrumbItem> _navItems = default!;
     private DateOnly _lessonDate;
     private TimeOnly _lessonStart;
     private int _lessonMinutes;
+    private DateOnly _reservationReferenceDate;
+    private TimeOnly _reservationStart;
+    private int _reservationMinutes;
     private int _editablePencePerHour;
 
     private string TuteeName => $"{_tutee?.GetFirstName()} {_tutee?.GetLastName()}".Trim();
@@ -109,6 +129,9 @@ else
         _lessonDate = DateOnly.FromDateTime(DateTime.Now);
         _lessonStart = TimeOnly.FromDateTime(DateTime.Now);
         _lessonMinutes = 60;
+        _reservationReferenceDate = DateOnly.FromDateTime(DateTime.Now);
+        _reservationStart = TimeOnly.FromDateTime(DateTime.Now);
+        _reservationMinutes = 60;
         _tutee = await RestApiClient.GetTuteeAsync(TuteeId, CancellationToken);
         _client = _tutee.Client;
         _editablePencePerHour = _tutee.ActiveRate;
@@ -143,6 +166,11 @@ else
         await _updateRateModal.ShowAsync();
     }
 
+    private async Task OnShowAddReservationSlotModal()
+    {
+        await _addReservationSlotModal.ShowAsync();
+    }
+
     private async Task OnHideUpdateRateModal()
     {
         var rateDto = new RateDto
@@ -156,10 +184,27 @@ else
         await _updateRateModal.HideAsync();
     }
 
+    private async Task OnHideAddReservationSlotModal()
+    {
+        var reservationSlotDto = new ReservationSlotDto
+        {
+            ReferenceDate = _reservationReferenceDate,
+            Time = _reservationStart,
+            Duration = new TimeSpan(_lessonMinutes / 60, _lessonMinutes % 60, 0),
+            Type = ReservationSlotType.Weekly
+        };
+        await RestApiClient.AddReservationSlotAsync(TuteeId, reservationSlotDto, CancellationToken);
+        _tutee = await RestApiClient.GetTuteeAsync(TuteeId, CancellationToken);
+        await _addReservationSlotModal.HideAsync();
+    }
+
     private async Task<GridDataProviderResult<LessonDto>> LessonsDataProvider(GridDataProviderRequest<LessonDto> request)
     {
         return await Task.FromResult(request.ApplyTo(_tutee?.Lessons ?? []));
     }
 
     private static string DisplayHomeworkInstructions(string? s) => s ?? "None set";
+
+    private static string DisplayNextReservationSlots(TuteeDto tutee) =>
+        string.Join(" | ", tutee.NextReservationSlotLimits.OrderBy(rsl => rsl.Start));
 }
