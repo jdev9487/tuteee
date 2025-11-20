@@ -9,6 +9,7 @@ using Enums;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 
 public static class Extensions
@@ -32,6 +33,23 @@ public static class Extensions
         }
 
         return app;
+    }
+
+    public static void SetIsDeleted(this Context context)
+    {
+        var deletedEntries = context.ChangeTracker.Entries().Where(x => x.State is EntityState.Deleted);
+
+        foreach (var de in deletedEntries)
+        {
+            if (de.Entity is not BaseEntity entity) continue;
+            entity.IsDeleted = true;
+            de.State = EntityState.Modified;
+            foreach (var prop in de.Properties)
+            {
+                if (prop.Metadata.ValueGenerated == ValueGenerated.OnAdd)
+                    prop.IsModified = false;
+            }
+        }
     }
 
     public static void AddIsDeletedQueryFilter(this ModelBuilder builder)

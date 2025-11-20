@@ -20,6 +20,18 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
             });
     }
 
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        this.SetIsDeleted();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
+    {
+        this.SetIsDeleted();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Stakeholder>()
