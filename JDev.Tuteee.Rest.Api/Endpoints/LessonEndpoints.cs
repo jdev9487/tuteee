@@ -51,7 +51,12 @@ public class LessonEndpoints(
                 if (dto.LessonId is null) return TypedResults.NotFound();
                 var existing = await repo.FindAsync<Lesson>(dto.LessonId.Value, token);
                 if (existing is null) return TypedResults.NotFound();
-                existing.HomeworkInstructions = dto.HomeworkInstructions;
+                if (dto.HomeworkInstructions is not null && existing.HomeworkInstructions != dto.HomeworkInstructions)
+                    existing.HomeworkInstructions = dto.HomeworkInstructions;
+                if (existing.Start != dto.Start)
+                    existing.Start = dto.Start;
+                if (existing.Duration != dto.Duration)
+                    existing.Duration = dto.Duration;
                 await repo.SaveChangesAsync(token);
                 return TypedResults.Ok();
             });
