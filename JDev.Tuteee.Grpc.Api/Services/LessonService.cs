@@ -1,33 +1,33 @@
 namespace JDev.Tuteee.Grpc.Api.Services;
 
 using Core.EfCore.Repository;
-using Protos;
 using Messages;
 using MassTransit;
-using DAL.Entities;
 using global::Grpc.Core;
+using Protos;
+using Lesson = DAL.Entities.Lesson;
 
-public class HomeworkService(
+public class LessonService(
     IGenericRepository repository,
-    IBus bus) : Homework.HomeworkBase
+    IBus bus) : Protos.Lesson.LessonBase
 {
-    public override async Task<ReleaseResponse> Release(ReleaseRequest request, ServerCallContext context)
+    public override async Task<ReleaseSummaryResponse> ReleaseSummary(ReleaseSummaryRequest request, ServerCallContext context)
     {
         var lesson = await repository.FindAsync<Lesson>(request.LessonId, context.CancellationToken);
         if (lesson is null)
-            return new ReleaseResponse
+            return new ReleaseSummaryResponse
             {
                 Success = false,
                 Message = $"Could not find lesson with id {request.LessonId}"
             };
         if (lesson.EmailSent)
-            return new ReleaseResponse
+            return new ReleaseSummaryResponse
             {
                 Success = false,
                 Message = $"Email already sent for lesson with id {request.LessonId}"
             };
 
-        _ = bus.Publish(new EmailHomeworkEvent
+        _ = bus.Publish(new LessonSummaryEvent
         {
             LessonId = lesson.LessonId,
         }, context.CancellationToken);
@@ -35,6 +35,6 @@ public class HomeworkService(
         lesson.EmailSent = true;
         await repository.SaveChangesAsync(context.CancellationToken);
 
-        return new ReleaseResponse { Success = true };
+        return new ReleaseSummaryResponse { Success = true };
     }
 }

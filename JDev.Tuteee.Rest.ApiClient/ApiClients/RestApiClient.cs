@@ -19,18 +19,18 @@ public class RestApiClient(HttpClient client, JsonSerializerOptions options)
     public async Task SaveTemporaryFileAsync(FileDto temporaryFile, CancellationToken token) =>
         await PostAsync("temporary-files", temporaryFile, token);
     
-    public async Task SaveHomeworkAttachmentAsync(int lessonId, HomeworkAttachmentDto homeworkAttachmentDto, CancellationToken token) =>
-        await PostAsync($"{Endpoint.LessonBase}/{lessonId}/homework-attachments", homeworkAttachmentDto, token);
+    public async Task SaveLessonAttachmentAsync(int lessonId, LessonAttachmentDto lessonAttachmentDto, CancellationToken token) =>
+        await PostAsync($"{Endpoint.LessonBase}/{lessonId}/lesson-attachments", lessonAttachmentDto, token);
 
-    public async Task<IReadOnlyList<HomeworkAttachmentDto>> GetHomeworkAttachmentsAsync(int lessonId, CancellationToken token) =>
-        await GetAsync<IReadOnlyList<HomeworkAttachmentDto>>(
-            $"{Endpoint.LessonBase}/{lessonId}/homework-attachments", token) ?? [];
+    public async Task<IReadOnlyList<LessonAttachmentDto>> GetLessonAttachmentsAsync(int lessonId, CancellationToken token) =>
+        await GetAsync<IReadOnlyList<LessonAttachmentDto>>(
+            $"{Endpoint.LessonBase}/{lessonId}/lesson-attachments", token) ?? [];
 
-    public async Task<FileDto?> GetHomeworkAttachmentAsync(int homeworkAttachmentId, CancellationToken token) =>
-        await GetAsync<FileDto>($"{Endpoint.HomeworkAttachmentsBase}/{homeworkAttachmentId}", token);
+    public async Task<FileDto?> GetLessonAttachmentAsync(int lessonAttachmentId, CancellationToken token) =>
+        await GetAsync<FileDto>($"{Endpoint.LessonAttachmentsBase}/{lessonAttachmentId}", token);
 
-    public async Task DeleteHomeworkAttachmentAsync(int homeworkAttachmentId, CancellationToken token) =>
-        await DeleteAsync($"{Endpoint.HomeworkAttachmentsBase}/{homeworkAttachmentId}", token);
+    public async Task DeleteLessonAttachmentAsync(int lessonAttachmentId, CancellationToken token) =>
+        await DeleteAsync($"{Endpoint.LessonAttachmentsBase}/{lessonAttachmentId}", token);
     
     public async Task<IReadOnlyList<InvoiceDto>> GetInvoicesAsync(CancellationToken token) =>
         await GetAsync<IReadOnlyList<InvoiceDto>>(Endpoint.InvoiceBase, token) ?? [];

@@ -18,7 +18,7 @@ public class LessonEndpoints(
     public void MapRoutes(IEndpointRouteBuilder routeBuilder)
     {
         var groupBuilder = routeBuilder.MapGroup($"/{Endpoint.LessonBase}");
-        MapHomeworkAttachments(groupBuilder.MapGroup("/{lessonId:int}/homework-attachments"));
+        MapLessonAttachments(groupBuilder.MapGroup("/{lessonId:int}/lesson-attachments"));
         
         groupBuilder.MapGet("",
             async (IGenericRepository repo, [FromQuery]DateOnly start, [FromQuery]DateOnly end, CancellationToken token) =>
@@ -70,17 +70,17 @@ public class LessonEndpoints(
             });
     }
 
-    private void MapHomeworkAttachments(IEndpointRouteBuilder group)
+    private void MapLessonAttachments(IEndpointRouteBuilder group)
     {
         group.MapGet("",
-            async Task<Results<Ok<IEnumerable<HomeworkAttachmentDto>>, NotFound>> (int lessonId, IGenericRepository repo, CancellationToken token) =>
+            async Task<Results<Ok<IEnumerable<LessonAttachmentDto>>, NotFound>> (int lessonId, IGenericRepository repo, CancellationToken token) =>
             {
                 var lesson = await repo.FindAsync<Lesson>(lessonId, token);
                 if (lesson is not null)
                 {
-                    return TypedResults.Ok(lesson.HomeworkAttachments.Select(ha => new HomeworkAttachmentDto
+                    return TypedResults.Ok(lesson.LessonAttachments.Select(ha => new LessonAttachmentDto
                     {
-                        HomeworkAttachmentId = ha.HomeworkAttachmentId,
+                        LessonAttachmentId = ha.LessonAttachmentId,
                         FileName = Path.GetFileName(ha.Path),
                         LessonId = lessonId
                     }));
@@ -89,17 +89,17 @@ public class LessonEndpoints(
             });
         
         group.MapPost("",
-            async (int lessonId, HomeworkAttachmentDto dto, IGenericRepository repo, CancellationToken token) =>
+            async (int lessonId, LessonAttachmentDto dto, IGenericRepository repo, CancellationToken token) =>
             {
                 Directory.CreateDirectory(Path.Join(_appSettings.AttachmentDirectory, lessonId.ToString()));
                 var newFileName = Path.Join(_appSettings.AttachmentDirectory, lessonId.ToString(), dto.FileName);
                 File.Move(Path.Join(Path.GetTempPath(), dto.TemporaryFileName), newFileName);
-                var homeworkAttachment = new HomeworkAttachment
+                var lessonAttachment = new LessonAttachment
                 {
                     LessonId = lessonId,
                     Path = newFileName
                 };
-                await repo.AddAsync(homeworkAttachment, token);
+                await repo.AddAsync(lessonAttachment, token);
                 await repo.SaveChangesAsync(token);
                 return TypedResults.Created();
             });

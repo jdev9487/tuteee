@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "JDev.Tuteee.Protos";
+
+service Lesson {
+  rpc ReleaseSummary (ReleaseSummaryRequest) returns (ReleaseSummaryResponse);
+}
+
+message ReleaseSummaryRequest {
+  int32 lesson_id = 1;
+}
+
+message ReleaseSummaryResponse {
+  bool success = 1;
+  string message = 2;
+}

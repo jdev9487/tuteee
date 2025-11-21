@@ -19,7 +19,7 @@ builder.Services.AddDataAccess();
 var app = builder.Build();
 
 app.MapGrpcService<InvoiceService>();
-app.MapGrpcService<HomeworkService>();
+app.MapGrpcService<LessonService>();
 
 if (app.Environment.IsDevelopment())
 {

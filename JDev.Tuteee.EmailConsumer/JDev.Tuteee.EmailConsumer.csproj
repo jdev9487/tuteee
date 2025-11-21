@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="EmailTemplates\Homework.cshtml" />
+        <AdditionalFiles Include="EmailTemplates\LessonSummary.cshtml" />
     </ItemGroup>
 
 </Project>

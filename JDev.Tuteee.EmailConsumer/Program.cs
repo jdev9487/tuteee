@@ -11,7 +11,7 @@ builder.Configuration.AddJsonFile("appsettings.Secret.json", optional: true);
 var auth = new Auth();
 builder.Configuration.GetSection("RabbitMQ").Bind(auth);
 
-builder.Services.AddRabbitMqConsumer<EmailHomeworkHandler>(auth);
+builder.Services.AddRabbitMqConsumer<LessonSummaryEmailHandler>(auth);
 
 builder.Services.AddRazorTemplating();
 
