@@ -16,6 +16,8 @@ public class EmailClient(IOptions<Auth.Email> options) : IEmailClient
         };
         email.From.Add(MailboxAddress.Parse(_settings.Username));
         email.To.Add(MailboxAddress.Parse(request.ToAddress));
+        if (request.ToAddress != request.CopyAddress)
+            email.Cc.Add(MailboxAddress.Parse(request.CopyAddress));
         var bodyBuilder = new BodyBuilder { HtmlBody = request.Body };
         foreach (var attachment in request.Attachments)
         {

@@ -8,6 +8,7 @@ public interface IEmailClient
 public class SendEmailRequest
 {
     public required string ToAddress { get; init; } = "";
+    public required string CopyAddress { get; init; } = "";
     public required string Subject { get; init; } = "";
     public required string Body { get; init; } = "";
     public IEnumerable<Attachment> Attachments { get; init; } = [];

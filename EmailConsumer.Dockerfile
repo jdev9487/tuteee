@@ -3,9 +3,11 @@ WORKDIR /app
 
 RUN mkdir "JDev.Tuteee.EmailConsumer"
 RUN mkdir "JDev.Tuteee.Grpc.Api.Messages"
+RUN mkdir "JDev.Tuteee.RestApiClient"
 
 COPY JDev.Tuteee.EmailConsumer ./JDev.Tuteee.EmailConsumer/
 COPY JDev.Tuteee.Grpc.Api.Messages ./JDev.Tuteee.Grpc.Api.Messages/
+COPY JDev.Tuteee.Rest.ApiClient ./JDev.Tuteee.Rest.ApiClient/
 
 COPY nuget.config .
 
