@@ -6,11 +6,9 @@ using Messages;
 using MassTransit;
 using DAL.Entities;
 using global::Grpc.Core;
-using Razor.Templating.Core;
 
 public class HomeworkService(
     IGenericRepository repository,
-    IRazorTemplateEngine razorTemplateEngine,
     IBus bus) : Homework.HomeworkBase
 {
     public override async Task<ReleaseResponse> Release(ReleaseRequest request, ServerCallContext context)
@@ -29,18 +27,9 @@ public class HomeworkService(
                 Message = $"Email already sent for lesson with id {request.LessonId}"
             };
 
-        var htmlTask = razorTemplateEngine.RenderAsync("EmailTemplates/Homework.cshtml", new EmailTemplates.Homework
-        {
-            FirstName = lesson.TuteeRole.Stakeholder.FirstName,
-            Instructions = lesson.HomeworkInstructions
-        });
         _ = bus.Publish(new EmailHomeworkEvent
         {
             LessonId = lesson.LessonId,
-            To = lesson.TuteeRole.Stakeholder.EmailAddress,
-            Copy = lesson.TuteeRole.ClientRole.Stakeholder.EmailAddress,
-            Body = await htmlTask,
-            Date = lesson.Date.ToString("D")
         }, context.CancellationToken);
 
         lesson.EmailSent = true;

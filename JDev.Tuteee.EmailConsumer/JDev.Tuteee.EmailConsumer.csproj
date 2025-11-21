@@ -9,6 +9,7 @@
     
     <ItemGroup>
         <PackageReference Include="MailKit" Version="4.13.0" />
+        <PackageReference Include="Razor.Templating.Core" Version="2.1.0" />
         <PackageReference Include="JDev.Core.RabbitMQ" Version="0.1.0" />
     </ItemGroup>
 
@@ -19,6 +20,10 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Templates\Homework.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="EmailTemplates\Homework.cshtml" />
     </ItemGroup>
 
 </Project>
