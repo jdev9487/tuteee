@@ -40,7 +40,7 @@ public class HomeworkService(
             To = lesson.TuteeRole.Stakeholder.EmailAddress,
             Copy = lesson.TuteeRole.ClientRole.Stakeholder.EmailAddress,
             Body = await htmlTask,
-            Date = lesson.Date.ToString("D"),
+            Date = lesson.Date.ToString("D")
         }, context.CancellationToken);
 
         lesson.EmailSent = true;

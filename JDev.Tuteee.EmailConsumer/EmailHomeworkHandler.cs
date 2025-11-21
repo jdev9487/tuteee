@@ -3,7 +3,6 @@ namespace JDev.Tuteee.EmailConsumer;
 using Clients;
 using MassTransit;
 using Grpc.Api.Messages;
-using MassTransit.Initializers;
 using Rest.ApiClient.ApiClients;
 
 public class EmailHomeworkHandler(
