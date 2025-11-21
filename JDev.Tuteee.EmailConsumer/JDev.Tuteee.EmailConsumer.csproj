@@ -14,6 +14,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\JDev.Tuteee.Grpc.Api.Messages\JDev.Tuteee.Grpc.Api.Messages.csproj" />
+      <ProjectReference Include="..\JDev.Tuteee.Rest.ApiClient\JDev.Tuteee.Rest.ApiClient.csproj" />
     </ItemGroup>
 
     <ItemGroup>
