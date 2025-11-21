@@ -8,7 +8,7 @@
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
 @inject IRestApiClient RestApiClient
-@inject Homework.HomeworkClient HomeworkClient
+@inject Protos.Lesson.LessonClient LessonClient
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
 @attribute [StreamRendering]
@@ -73,9 +73,6 @@
 }
 else
 {
-    <div class="d-flex flex-row-reverse">
-        <Button Color="ButtonColor.Danger" @onclick="OnShowDeleteLessonConfirmationModal">Delete lesson</Button>
-    </div>
     <div class="d-flex flex-row justify-content-between my-2">
         <h4>
             Time
@@ -92,9 +89,13 @@ else
         </h4>
     </div>
     <p>@_lesson.HomeworkInstructions</p>
-    <div class="d-flex flex-row my-2">
-        <Button style="margin-right: 2px" Color="ButtonColor.Primary" @onclick="OnShowAddAttachmentModal">Add attachments</Button>
-        <Button Disabled="@_lesson.EmailSent" Color="ButtonColor.Danger" @onclick="OnReleaseHomework">Release</Button>
+    <h4>
+    </h4>
+    <div class="d-flex flex-row justify-content-between my-2">
+        <h4>
+            Attachments
+            <DeadLink OnClick="OnShowAddAttachmentModal">➕</DeadLink>
+        </h4>
     </div>
     @foreach (var ha in _homeworkAttachments)
     {
@@ -105,6 +106,13 @@ else
             </div>
         </div>
     }
+    <h4 style="margin-top: 20px">
+        Actions
+    </h4>
+    <div class="d-flex justify-content-between flex-row my-2">
+        <Button style="margin-right: 2px" Disabled="@_lesson.EmailSent" Color="ButtonColor.Primary" @onclick="OnReleaseHomework">Send email ✉️</Button>
+        <Button Color="ButtonColor.Danger" @onclick="OnShowDeleteLessonConfirmationModal">Delete lesson</Button>
+    </div>
 }
 
 <script>
@@ -134,7 +142,7 @@ else
     private LessonDto? _lesson;
     private TuteeDto? _tutee;
     private ClientDto? _client;
-    private IReadOnlyList<HomeworkAttachmentDto> _homeworkAttachments = [];
+    private IReadOnlyList<LessonAttachmentDto> _homeworkAttachments = [];
     private string _filename = default!;
     private string _homeworkInstructions = default!;
     private string _temporaryFileName = default!;
@@ -150,7 +158,7 @@ else
         _lessonMinutes = (int)_lesson.Duration.TotalMinutes;
         _tutee = _lesson.Tutee;
         _client = _tutee.Client;
-        _homeworkAttachments = await RestApiClient.GetHomeworkAttachmentsAsync(LessonId, CancellationToken);
+        _homeworkAttachments = await RestApiClient.GetLessonAttachmentsAsync(LessonId, CancellationToken);
         _navItems =
         [
             new BreadcrumbItem { Text = $"{ClientName} 📂", Href = $"clients/{_client!.ClientId}" },
@@ -159,19 +167,19 @@ else
         ];
     }
 
-    private async Task DownloadFile(HomeworkAttachmentDto dto)
+    private async Task DownloadFile(LessonAttachmentDto dto)
     {
-        var response = await RestApiClient.GetHomeworkAttachmentAsync(dto.HomeworkAttachmentId, CancellationToken);
+        var response = await RestApiClient.GetLessonAttachmentAsync(dto.LessonAttachmentId, CancellationToken);
         var fileName = Path.GetFileName(response.FileName);
         var stream = new MemoryStream(response.Contents);
         using var streamRef = new DotNetStreamReference(stream: stream);
         await JsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
     }
     
-    private async Task DeleteFile(HomeworkAttachmentDto dto)
+    private async Task DeleteFile(LessonAttachmentDto dto)
     {
-        await RestApiClient.DeleteHomeworkAttachmentAsync(dto.HomeworkAttachmentId, CancellationToken);
-        _homeworkAttachments = await RestApiClient.GetHomeworkAttachmentsAsync(_lesson.LessonId.Value, CancellationToken);
+        await RestApiClient.DeleteLessonAttachmentAsync(dto.LessonAttachmentId, CancellationToken);
+        _homeworkAttachments = await RestApiClient.GetLessonAttachmentsAsync(_lesson.LessonId.Value, CancellationToken);
     }
 
 
@@ -181,13 +189,13 @@ else
     }
     private async Task OnHideAddAttachmentModal()
     {
-        await RestApiClient.SaveHomeworkAttachmentAsync(_lesson.LessonId.Value, new HomeworkAttachmentDto
+        await RestApiClient.SaveLessonAttachmentAsync(_lesson.LessonId.Value, new LessonAttachmentDto
         {
             FileName = _filename,
             TemporaryFileName = _temporaryFileName,
             LessonId = _lesson!.LessonId
         }, CancellationToken);
-        _homeworkAttachments = await RestApiClient.GetHomeworkAttachmentsAsync(LessonId, CancellationToken);
+        _homeworkAttachments = await RestApiClient.GetLessonAttachmentsAsync(LessonId, CancellationToken);
         await _fileUploadModal.HideAsync();
     }
 
@@ -197,7 +205,7 @@ else
     }
     private async Task OnReleaseHomework()
     {
-        await HomeworkClient.ReleaseAsync(new ReleaseRequest
+        await LessonClient.ReleaseSummaryAsync(new ReleaseSummaryRequest
         {
             LessonId = LessonId
         });

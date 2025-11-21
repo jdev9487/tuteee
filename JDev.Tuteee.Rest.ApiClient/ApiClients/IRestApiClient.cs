@@ -8,10 +8,10 @@ public interface IRestApiClient
     Task<IReadOnlyList<ClientDto>> GetClientsAsync(CancellationToken token);
     Task AddClientAsync(ClientDto clientDto, CancellationToken token);
     Task SaveTemporaryFileAsync(FileDto temporaryFile, CancellationToken token);
-    Task SaveHomeworkAttachmentAsync(int lessonId, HomeworkAttachmentDto homeworkAttachmentDto, CancellationToken token);
-    Task<IReadOnlyList<HomeworkAttachmentDto>> GetHomeworkAttachmentsAsync(int lessonId, CancellationToken token);
-    Task<FileDto?> GetHomeworkAttachmentAsync(int homeworkAttachmentId, CancellationToken token);
-    Task DeleteHomeworkAttachmentAsync(int homeworkAttachmentId, CancellationToken token);
+    Task SaveLessonAttachmentAsync(int lessonId, LessonAttachmentDto lessonAttachmentDto, CancellationToken token);
+    Task<IReadOnlyList<LessonAttachmentDto>> GetLessonAttachmentsAsync(int lessonId, CancellationToken token);
+    Task<FileDto?> GetLessonAttachmentAsync(int lessonAttachmentId, CancellationToken token);
+    Task DeleteLessonAttachmentAsync(int lessonAttachmentId, CancellationToken token);
     Task<IReadOnlyList<InvoiceDto>> GetInvoicesAsync(CancellationToken token);
     Task<LessonDto?> GetLessonAsync(int id, CancellationToken token);
     Task<IReadOnlyList<LessonDto>> GetLessonsAsync(DateOnly? start = null, DateOnly? end = null, CancellationToken token = default);

@@ -1,21 +1,18 @@
-@model JDev.Tuteee.EmailConsumer.EmailTemplates.Homework
+@model JDev.Tuteee.EmailConsumer.EmailTemplates.LessonSummary
 
 <!DOCTYPE html>
  
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>Homework</title>
+    <title>Your recent lesson</title>
 </head>
 <body>
 <p>
     Hi @Model.FirstName,
 </p>
 <p>
-    Here is your homework:
-</p>
-<p>
-    @Model.Instructions
+    <b>Homework:</b> @Model.Instructions
 </p>
  
 <p>John</p>

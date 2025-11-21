@@ -90,15 +90,15 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
         modelBuilder.Entity<Lesson>()
             .ToTable("Lesson");
         modelBuilder.Entity<Lesson>()
-            .HasMany(l => l.HomeworkAttachments)
+            .HasMany(l => l.LessonAttachments)
             .WithOne(ha => ha.Lesson)
             .HasForeignKey("LessonId");
         
         modelBuilder.Entity<Rate>()
             .ToTable("Rate");
         
-        modelBuilder.Entity<HomeworkAttachment>()
-            .ToTable("HomeworkAttachment");
+        modelBuilder.Entity<LessonAttachment>()
+            .ToTable("LessonAttachment");
 
         modelBuilder.AddIsDeletedQueryFilter();
     }
@@ -109,5 +109,5 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
     public DbSet<Lesson> Lessons { get; set; } = default!;
     public DbSet<ReservationSlot> ReservationSlots { get; set; } = default!;
     public DbSet<Invoice> Invoices { get; set; } = default!;
-    public DbSet<HomeworkAttachment> HomeworkAttachments { get; set; } = default!;
+    public DbSet<LessonAttachment> LessonAttachments { get; set; } = default!;
 }

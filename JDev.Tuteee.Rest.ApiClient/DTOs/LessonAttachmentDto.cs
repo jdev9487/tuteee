@@ -1,8 +1,8 @@
 namespace JDev.Tuteee.Rest.ApiClient.DTOs;
 
-public class HomeworkAttachmentDto
+public class LessonAttachmentDto
 {
-    public int HomeworkAttachmentId { get; init; }
+    public int LessonAttachmentId { get; init; }
     public string FileName { get; set; } = string.Empty;
     public string TemporaryFileName { get; set; } = string.Empty;
     public int? LessonId { get; set; }

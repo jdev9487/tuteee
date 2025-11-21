@@ -8,7 +8,7 @@
 
     <ItemGroup>
         <Protobuf Include="invoice.proto" GrpcServices="Both"/>
-        <Protobuf Include="homework.proto" GrpcServices="Both" />
+        <Protobuf Include="lesson.proto" GrpcServices="Both" />
     </ItemGroup>
 
     <ItemGroup>

@@ -8,5 +8,5 @@ public static class Endpoint
     public const string ReservationSlotBase = "reservation-slots";
     public const string TuteeBase = "tutees";
     public const string RateBase = "rates";
-    public const string HomeworkAttachmentsBase = "homework-attachments";
+    public const string LessonAttachmentsBase = "lesson-attachments";
 }
