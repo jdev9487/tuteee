@@ -13,6 +13,8 @@ builder.Configuration.GetSection("RabbitMQ").Bind(auth);
 
 builder.Services.AddRabbitMqConsumer<EmailHomeworkHandler>(auth);
 
+builder.Services.AddRazorTemplating();
+
 var restApiUrl = builder.Configuration.GetSection("RestApiUrl").Value;
 if (restApiUrl is null) throw new InvalidOperationException("REST API config missing");
 builder.Services.AddRestApiClient(restApiUrl);

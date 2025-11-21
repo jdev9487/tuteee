@@ -15,7 +15,6 @@ builder.Services.AddRabbitMqPublisher(auth);
 
 builder.Services.AddDataAccess();
 
-builder.Services.AddRazorTemplating();
 
 var app = builder.Build();
 
