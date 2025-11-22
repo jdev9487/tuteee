@@ -64,8 +64,9 @@
 }
 else
 {
-    <h4>Overview</h4>
-    <p>Current rate: £@_tutee.ActiveRate.ToCurrency()/hr <DeadLink OnClick="OnShowEditRateModal">update</DeadLink></p>
+    <div class="d-flex flex-row-reverse">
+        <p>@_tutee.EmailAddress | @_tutee.PhoneNumber.ToDisplay()</p>
+    </div>
     <h4>
         Lessons
         <Button Color="ButtonColor.None" Size="ButtonSize.Small" @onclick="OnShowAddLessonModal">
@@ -84,6 +85,9 @@ else
                     @context.Date.ToString("D")
                 </NavLink>
             </GridColumn>
+            <GridColumn TItem="LessonDto" HeaderText="Cost" PropertyName="Cost">
+                £@context.CostString
+            </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="Start" PropertyName="Start">
                 @context.Start.ToString("t")
             </GridColumn>
@@ -96,13 +100,22 @@ else
         </GridColumns>
     </Grid>
     <h4>
+        Rate
+        <Button Color="ButtonColor.None" Size="ButtonSize.Small" @onclick="OnShowEditRateModal">
+            <Icon Name="IconName.Pencil" Color="IconColor.Primary" Size="IconSize.x5"/>
+        </Button>
+    </h4>
+    <p>
+        £@_tutee.ActiveRate.ToCurrency()/hr
+    </p>
+    <h4>
         Holding reservations
         <Button Color="ButtonColor.None" Size="ButtonSize.Small" @onclick="OnShowAddReservationSlotModal">
             <Icon Name="IconName.PlusSquare" Color="IconColor.Primary" Size="IconSize.x5"/>
         </Button>
     </h4>
     <ul>
-        @foreach (var slot in _tutee.NextReservationSlotLimits)
+        @foreach (var slot in _tutee.ReservationSlots)
         {
             <li>
                 @slot

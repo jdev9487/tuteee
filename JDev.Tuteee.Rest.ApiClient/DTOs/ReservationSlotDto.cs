@@ -17,6 +17,12 @@ public class ReservationSlotDto
     public int TuteeId { get; set; }
     public TuteeDto? Tutee { get; set; }
 
+    public override string ToString() => Type switch
+    {
+        ReservationSlotType.Weekly => $"{ReferenceDate.DayOfWeek}s, {Time:h:mm tt} - {Time.Add(Duration):h:mm tt}",
+        ReservationSlotType.Biweekly => $"Every other {ReferenceDate.DayOfWeek}, {Time:h:mm tt} - {Time.Add(Duration):h:mm tt} (next: {NextReservedSlot().Start:M})"
+    };
+
     public IEnumerable<ReservationSlotLimit> GetReservedSlots(DateTime start, DateTime end)
     {
         if (start > end) return [];
