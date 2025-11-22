@@ -4,6 +4,7 @@
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
+@using ButtonSize = BlazorBootstrap.ButtonSize
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
@@ -43,16 +44,7 @@
     </FooterTemplate>
 </Modal>
 
-<div class="d-flex flex-row justify-content-between mb-2">
-    <h3>Tutees</h3>
-    <div>
-        @if (!_client?.IsSelfPaying ?? false)
-        {
-            <Button style="margin-right: 2px" Color="ButtonColor.Primary" @onclick="OnShowRegisterSelfPayerModal">Register as self paying tutee</Button>
-        }
-        <Button Color="ButtonColor.Primary" @onclick="OnShowAddTuteeModal">Add Tutee</Button>
-    </div>
-</div>
+
 
 @if (_client == null)
 {
@@ -62,6 +54,15 @@
 }
 else
 {
+    <div class="d-flex flex-row-reverse">
+        <p>@_client.EmailAddress | @_client.PhoneNumber.ToDisplay()</p>
+    </div>
+    <h4>
+        Tutees
+        <Button Color="ButtonColor.None" Size="ButtonSize.Small" @onclick="OnShowAddTuteeModal">
+            <Icon Name="IconName.PlusSquare" Color="IconColor.Primary" Size="IconSize.x5"/>
+        </Button>
+    </h4>
     <Grid @ref="_tuteeGrid"
           TItem="TuteeDto"
           Class="table table-hover table-bordered table-striped"
@@ -86,11 +87,16 @@ else
             </GridColumn>
         </GridColumns>
     </Grid>
+    <h4 style="margin-top: 20px">
+        Actions
+    </h4>
+    <div class="d-flex justify-content-between flex-row my-2">
+        <Button style="margin-right: 2px" Color="ButtonColor.Primary" @onclick="OnShowRegisterSelfPayerModal">Register as self paying tutee</Button>
+    </div>
 }
 
 @code {
-    [Parameter]
-    public int ClientId { get; set; }
+    [Parameter] public int ClientId { get; set; }
     private ClientDto? _client;
     private Grid<TuteeDto> _tuteeGrid = default!;
     private Modal _addTuteeModal = default!;
@@ -113,10 +119,12 @@ else
             new() { Text = $"{ClientName} 📂", IsCurrentPage = true }
         };
     }
+
     private async Task OnShowRegisterSelfPayerModal()
     {
         await _registerSelfPayerModal.ShowAsync();
     }
+
     private async Task OnShowAddTuteeModal()
     {
         await _addTuteeModal.ShowAsync();
@@ -137,7 +145,7 @@ else
             ]
         };
         await RestApiClient.AddTuteeRoleAsync(dto, CancellationToken);
-        
+
         ResetNewClientInfo();
 
         _client = await RestApiClient.GetClientAsync(ClientId, CancellationToken);
@@ -145,7 +153,7 @@ else
 
         await _registerSelfPayerModal.HideAsync();
     }
-    
+
     private async Task OnHideAddTuteeModal()
     {
         var dto = new TuteeDto
@@ -170,9 +178,10 @@ else
 
         _client = await RestApiClient.GetClientAsync(ClientId, CancellationToken);
         await _tuteeGrid.RefreshDataAsync();
-        
+
         await _addTuteeModal.HideAsync();
     }
+
     private void ResetNewClientInfo()
     {
         _newTuteeFirstName = "";
@@ -186,4 +195,5 @@ else
     {
         return await Task.FromResult(request.ApplyTo(_client?.Tutees ?? []));
     }
+
 }

@@ -4,6 +4,7 @@
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
+@using ButtonSize = BlazorBootstrap.ButtonSize
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
@@ -73,39 +74,45 @@
 }
 else
 {
-    <div class="d-flex flex-row justify-content-between my-2">
-        <h4>
-            Time
-            <DeadLink OnClick="OnShowEditLessonTimeModal">✎</DeadLink>
-        </h4>
-    </div>
+    <h4>
+        Time
+        <Button Size="ButtonSize.Small" Color="ButtonColor.None" @onclick="OnShowEditLessonTimeModal">
+            <Icon Name="IconName.Pencil" Color="IconColor.Primary" Size="IconSize.x5"/>
+        </Button>
+    </h4>
     <p>@_lesson.Start.ToString("t") - @_lesson.Start.Add(_lesson.Duration).ToString("t")</p>
     <h4>Cost</h4>
     <p>£@_lesson.CostString</p>
-    <div class="d-flex flex-row justify-content-between my-2">
-        <h4>
-            Homework
-            <DeadLink OnClick="OnShowEditHomeworkInstructionsModal">✎</DeadLink>
-        </h4>
-    </div>
+    <h4>
+        Homework
+        <Button Size="ButtonSize.Small" Color="ButtonColor.None" @onclick="OnShowEditHomeworkInstructionsModal">
+            <Icon Name="IconName.Pencil" Color="IconColor.Primary" Size="IconSize.x5"/>
+        </Button>
+    </h4>
     <p>@_lesson.HomeworkInstructions</p>
     <h4>
     </h4>
-    <div class="d-flex flex-row justify-content-between my-2">
-        <h4>
-            Attachments
-            <DeadLink OnClick="OnShowAddAttachmentModal">➕</DeadLink>
-        </h4>
-    </div>
-    @foreach (var ha in _homeworkAttachments)
-    {
-        <div class="d-flex flex-row">
-            <DeadLink OnClick="() => DownloadFile(ha)">@Path.GetFileName(ha.FileName)</DeadLink>
-            <div class="mx-2">
-                <DeadClick OnClick="() => DeleteFile(ha)">🗑️</DeadClick>
-            </div>
-        </div>
-    }
+    <h4>
+        Attachments
+        <Button Size="ButtonSize.Small" Color="ButtonColor.None" @onclick="OnShowAddAttachmentModal">
+            <Icon Name="IconName.FileEarmarkPlus" Color="IconColor.Primary" Size="IconSize.x5"/>
+        </Button>
+    </h4>
+    <ul>
+        @foreach (var ha in _homeworkAttachments)
+        {
+            <li>
+                <div class="d-flex flex-row">
+                    <DeadLink OnClick="() => DownloadFile(ha)">@Path.GetFileName(ha.FileName)</DeadLink>
+                    <div class="mx-2">
+                        <DeadClick OnClick="() => DeleteFile(ha)">
+                            <Icon Name="IconName.Trash3" Color="IconColor.Danger"/>
+                        </DeadClick>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
     <h4 style="margin-top: 20px">
         Actions
     </h4>
@@ -130,8 +137,7 @@ else
 </script>
 
 @code {
-    [Parameter]
-    public int LessonId { get; set; }
+    [Parameter] public int LessonId { get; set; }
     private List<BreadcrumbItem> _navItems = default!;
     private Modal _fileUploadModal = default!;
     private Modal _homeworkEditModal = default!;
@@ -175,7 +181,7 @@ else
         using var streamRef = new DotNetStreamReference(stream: stream);
         await JsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
     }
-    
+
     private async Task DeleteFile(LessonAttachmentDto dto)
     {
         await RestApiClient.DeleteLessonAttachmentAsync(dto.LessonAttachmentId, CancellationToken);
@@ -187,6 +193,7 @@ else
     {
         await _fileUploadModal.ShowAsync();
     }
+
     private async Task OnHideAddAttachmentModal()
     {
         await RestApiClient.SaveLessonAttachmentAsync(_lesson.LessonId.Value, new LessonAttachmentDto
@@ -203,6 +210,7 @@ else
     {
         await _homeworkEditModal.ShowAsync();
     }
+
     private async Task OnReleaseHomework()
     {
         await LessonClient.ReleaseSummaryAsync(new ReleaseSummaryRequest
@@ -211,7 +219,7 @@ else
         });
         _lesson = await RestApiClient.GetLessonAsync(LessonId, CancellationToken);
     }
-    
+
     private async Task OnHideEditHomeworkInstructionsModal()
     {
         _lesson.HomeworkInstructions = _homeworkInstructions;

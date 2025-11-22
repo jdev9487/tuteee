@@ -4,6 +4,7 @@
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using JDev.Tuteee.Rest.ApiClient.Enums
 @using Microsoft.AspNetCore.Authorization
+@using ButtonSize = BlazorBootstrap.ButtonSize
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
@@ -63,20 +64,15 @@
 }
 else
 {
-    <h4>Overview</h4>
-    <p>Current rate: £@_tutee.ActiveRate.ToCurrency()/hr <DeadLink OnClick="OnShowEditRateModal">update</DeadLink></p>
-    @if (!_tutee.ReservationSlots.Any())
-    {
-        <DeadLink OnClick="OnShowAddReservationSlotModal">add reservation slot</DeadLink>
-    }
-    else
-    {
-        <p>Next reserved slots: @DisplayNextReservationSlots(_tutee) <DeadLink OnClick="OnShowAddReservationSlotModal">add</DeadLink></p>
-    }
-    <div class="d-flex flex-row justify-content-between my-2">
-        <h4>Lessons</h4>
-        <Button Color="ButtonColor.Primary" @onclick="OnShowAddLessonModal">Schedule lesson</Button>
+    <div class="d-flex flex-row-reverse">
+        <p>@_tutee.EmailAddress | @_tutee.PhoneNumber.ToDisplay()</p>
     </div>
+    <h4>
+        Lessons
+        <Button Color="ButtonColor.None" Size="ButtonSize.Small" @onclick="OnShowAddLessonModal">
+            <Icon Name="IconName.PlusSquare" Color="IconColor.Primary" Size="IconSize.x5"/>
+        </Button>
+    </h4>
     <Grid @ref="_lessonGrid"
           TItem="LessonDto"
           Class="table table-hover table-bordered table-striped"
@@ -89,6 +85,9 @@ else
                     @context.Date.ToString("D")
                 </NavLink>
             </GridColumn>
+            <GridColumn TItem="LessonDto" HeaderText="Cost" PropertyName="Cost">
+                £@context.CostString
+            </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="Start" PropertyName="Start">
                 @context.Start.ToString("t")
             </GridColumn>
@@ -100,6 +99,29 @@ else
             </GridColumn>
         </GridColumns>
     </Grid>
+    <h4>
+        Rate
+        <Button Color="ButtonColor.None" Size="ButtonSize.Small" @onclick="OnShowEditRateModal">
+            <Icon Name="IconName.Pencil" Color="IconColor.Primary" Size="IconSize.x5"/>
+        </Button>
+    </h4>
+    <p>
+        £@_tutee.ActiveRate.ToCurrency()/hr
+    </p>
+    <h4>
+        Holding reservations
+        <Button Color="ButtonColor.None" Size="ButtonSize.Small" @onclick="OnShowAddReservationSlotModal">
+            <Icon Name="IconName.PlusSquare" Color="IconColor.Primary" Size="IconSize.x5"/>
+        </Button>
+    </h4>
+    <ul>
+        @foreach (var slot in _tutee.ReservationSlots)
+        {
+            <li>
+                @slot
+            </li>
+        }
+    </ul>
 }
 
 @code {
@@ -189,7 +211,7 @@ else
         {
             ReferenceDate = _reservationReferenceDate,
             Time = _reservationStart,
-            Duration = new TimeSpan(_lessonMinutes / 60, _lessonMinutes % 60, 0),
+            Duration = new TimeSpan(_reservationMinutes / 60, _reservationMinutes % 60, 0),
             Type = ReservationSlotType.Weekly
         };
         await RestApiClient.AddReservationSlotAsync(TuteeId, reservationSlotDto, CancellationToken);
@@ -203,7 +225,4 @@ else
     }
 
     private static string DisplayHomeworkInstructions(string? s) => s ?? "None set";
-
-    private static string DisplayNextReservationSlots(TuteeDto tutee) =>
-        string.Join(" | ", tutee.NextReservationSlotLimits.OrderBy(rsl => rsl.Start));
 }

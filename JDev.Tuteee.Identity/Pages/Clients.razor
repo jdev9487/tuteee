@@ -5,6 +5,7 @@
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
+@using ButtonSize = BlazorBootstrap.ButtonSize
 
 @inherits JDev.Tuteee.Identity.Components.CancellableComponentBase
 
@@ -31,10 +32,6 @@
     </FooterTemplate>
 </Modal>
 
-<div class="d-flex flex-row justify-content-between mb-2">
-    <h3>Clients</h3>
-    <Button Color="ButtonColor.Primary" @onclick="OnShowAddClientModal">Add client</Button>
-</div>
 
 @if (_clients is null)
 {
@@ -42,6 +39,12 @@
 }
 else
 {
+    <h4>
+        Clients
+        <Button Color="ButtonColor.None" Size="ButtonSize.Small" @onclick="OnShowAddClientModal">
+            <Icon Name="IconName.PlusSquare" Color="IconColor.Primary" Size="IconSize.x5"/>
+        </Button>
+    </h4>
     <Grid @ref="_clientGrid"
           TItem="ClientDto"
           Class="table table-hover table-bordered table-striped"
