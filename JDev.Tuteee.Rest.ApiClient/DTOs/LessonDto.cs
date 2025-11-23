@@ -13,6 +13,8 @@ public class LessonDto
     public int? InvoiceId { get; set; }
     public InvoiceDto? Invoice { get; set; }
     public string? HomeworkInstructions { get; set; }
+    public string? Title { get; set; }
+    public string? Summary { get; set; }
     
     public TimeOnly End => Start.Add(Duration);
     public decimal Cost => (decimal)CostAsDouble / 100;

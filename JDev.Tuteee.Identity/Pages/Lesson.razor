@@ -42,27 +42,27 @@
     </FooterTemplate>
 </Modal>
 
-<Modal @ref="_homeworkEditModal" Title="What are the homework instructions?">
+<Modal @ref="_lessonEditModal" Title="Edit lesson">
     <BodyTemplate>
+        Title
+        <div class="d-flex flex-column">
+            <TextInput @bind-Value="@_lessonTitle"/>
+        </div>
+        Summary
+        <div class="d-flex flex-column">
+            <TextInput @bind-Value="@_lessonSummary"/>
+        </div>
         Instructions
         <div class="d-flex flex-column">
             <TextInput @bind-Value="@_homeworkInstructions"/>
         </div>
-    </BodyTemplate>
-    <FooterTemplate>
-        <Button Color="ButtonColor.Primary" @onclick="OnHideEditHomeworkInstructionsModal">Confirm</Button>
-    </FooterTemplate>
-</Modal>
-
-<Modal @ref="_lessonTimeEditModal" Title="Change lesson time">
-    <BodyTemplate>
         Start
         <TimeInput TValue="TimeOnly" @bind-Value="@_lessonStart"/>
         Duration
         <NumberInput TValue="int" @bind-Value="@_lessonMinutes"/>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Primary" @onclick="OnHideEditLessonTimeModal">Confirm</Button>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideEditLessonModal">Confirm</Button>
     </FooterTemplate>
 </Modal>
 
@@ -74,20 +74,20 @@
 }
 else
 {
+    <div class="d-flex justify-content-center flex-row my-2">
+        <h2>@GetTitle(_lesson.Title)</h2>
+    </div>
+    <div class="d-flex justify-content-center flex-row my-2">
+        <p>@GetSummary(_lesson.Summary)</p>
+    </div>
     <h4>
         Time
-        <Button Size="ButtonSize.Small" Color="ButtonColor.None" @onclick="OnShowEditLessonTimeModal">
-            <Icon Name="IconName.Pencil" Color="IconColor.Primary" Size="IconSize.x5"/>
-        </Button>
     </h4>
     <p>@_lesson.Start.ToString("t") - @_lesson.Start.Add(_lesson.Duration).ToString("t")</p>
     <h4>Cost</h4>
     <p>£@_lesson.CostString</p>
     <h4>
         Homework
-        <Button Size="ButtonSize.Small" Color="ButtonColor.None" @onclick="OnShowEditHomeworkInstructionsModal">
-            <Icon Name="IconName.Pencil" Color="IconColor.Primary" Size="IconSize.x5"/>
-        </Button>
     </h4>
     <p>@_lesson.HomeworkInstructions</p>
     <h4>
@@ -117,7 +117,10 @@ else
         Actions
     </h4>
     <div class="d-flex justify-content-between flex-row my-2">
-        <Button style="margin-right: 2px" Disabled="@_lesson.EmailSent" Color="ButtonColor.Primary" @onclick="OnReleaseHomework">Send email ✉️</Button>
+        <div class="d-flex flex-row">
+            <Button style="margin-right: 2px" Color="ButtonColor.Info" @onclick="OnShowEditLessonModal">Edit lesson</Button>
+            <Button style="margin-right: 2px" Disabled="@_lesson.EmailSent" Color="ButtonColor.Primary" @onclick="OnReleaseHomework">Send email ✉️</Button>
+        </div>
         <Button Color="ButtonColor.Danger" @onclick="OnShowDeleteLessonConfirmationModal">Delete lesson</Button>
     </div>
 }
@@ -140,8 +143,7 @@ else
     [Parameter] public int LessonId { get; set; }
     private List<BreadcrumbItem> _navItems = default!;
     private Modal _fileUploadModal = default!;
-    private Modal _homeworkEditModal = default!;
-    private Modal _lessonTimeEditModal = default!;
+    private Modal _lessonEditModal = default!;
     private Modal _deleteLessonConfirmationModal = default!;
     private TimeOnly _lessonStart;
     private int _lessonMinutes;
@@ -150,6 +152,8 @@ else
     private ClientDto? _client;
     private IReadOnlyList<LessonAttachmentDto> _homeworkAttachments = [];
     private string _filename = default!;
+    private string _lessonTitle = default!;
+    private string _lessonSummary = default!;
     private string _homeworkInstructions = default!;
     private string _temporaryFileName = default!;
 
@@ -159,6 +163,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         _lesson = await RestApiClient.GetLessonAsync(LessonId, CancellationToken);
+        _lessonTitle = _lesson.Title;
+        _lessonSummary = _lesson.Summary;
         _homeworkInstructions = _lesson.HomeworkInstructions;
         _lessonStart = _lesson.Start;
         _lessonMinutes = (int)_lesson.Duration.TotalMinutes;
@@ -206,9 +212,9 @@ else
         await _fileUploadModal.HideAsync();
     }
 
-    private async Task OnShowEditHomeworkInstructionsModal()
+    private async Task OnShowEditLessonModal()
     {
-        await _homeworkEditModal.ShowAsync();
+        await _lessonEditModal.ShowAsync();
     }
 
     private async Task OnReleaseHomework()
@@ -220,12 +226,16 @@ else
         _lesson = await RestApiClient.GetLessonAsync(LessonId, CancellationToken);
     }
 
-    private async Task OnHideEditHomeworkInstructionsModal()
+    private async Task OnHideEditLessonModal()
     {
+        _lesson.Title = _lessonTitle;
+        _lesson.Summary = _lessonSummary;
         _lesson.HomeworkInstructions = _homeworkInstructions;
+        _lesson.Start = _lessonStart;
+        _lesson.Duration = new TimeSpan(_lessonMinutes / 60, _lessonMinutes % 60, 0);
         await RestApiClient.UpdateLessonAsync(_lesson, CancellationToken);
         _lesson = await RestApiClient.GetLessonAsync(LessonId, CancellationToken);
-        await _homeworkEditModal.HideAsync();
+        await _lessonEditModal.HideAsync();
     }
 
     private async Task LoadFile(InputFileChangeEventArgs obj)
@@ -256,17 +266,6 @@ else
         NavigationManager.NavigateTo($"tutees/{_tutee.TuteeId}");
     }
 
-    private async Task OnShowEditLessonTimeModal()
-    {
-        await _lessonTimeEditModal.ShowAsync();
-    }
-
-    private async Task OnHideEditLessonTimeModal()
-    {
-        _lesson.Start = _lessonStart;
-        _lesson.Duration = new TimeSpan(_lessonMinutes / 60, _lessonMinutes % 60, 0);
-        await RestApiClient.UpdateLessonAsync(_lesson, CancellationToken);
-        _lesson = await RestApiClient.GetLessonAsync(LessonId, CancellationToken);
-        await _lessonTimeEditModal.HideAsync();
-    }
+    private string GetTitle(string? title) => title ?? "Add a title";
+    private string GetSummary(string? summary) => summary ?? "Add a summary";
 }

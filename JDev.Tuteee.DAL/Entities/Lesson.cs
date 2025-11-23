@@ -15,5 +15,7 @@ public class Lesson : BaseEntity
     public int? InvoiceId { get; set; }
     public virtual Invoice? Invoice { get; set; }
     public string? HomeworkInstructions { get; set; }
+    public string? Title { get; set; }
+    public string? Summary { get; set; }
     public virtual IList<LessonAttachment> LessonAttachments { get; set; } = [];
 }
