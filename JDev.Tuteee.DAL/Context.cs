@@ -86,6 +86,13 @@ public class Context(IConfiguration configuration, IOptions<DbConfig> dbConfig) 
             .HasMany(i => i.Lessons)
             .WithOne(l => l.Invoice)
             .HasForeignKey("InvoiceId");
+        modelBuilder.Entity<Invoice>()
+            .HasMany(i => i.Snapshots)
+            .WithOne(s => s.Invoice)
+            .HasForeignKey("InvoiceId");
+
+        modelBuilder.Entity<InvoiceSnapshot>()
+            .ToTable("InvoiceSnapshot");
         
         modelBuilder.Entity<Lesson>()
             .ToTable("Lesson");

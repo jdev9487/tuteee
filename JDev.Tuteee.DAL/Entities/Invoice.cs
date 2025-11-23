@@ -11,4 +11,5 @@ public class Invoice : BaseEntity
     public int ClientRoleId { get; set; }
     public virtual ClientRole ClientRole { get; set; } = default!;
     public virtual IList<Lesson> Lessons { get; set; } = [];
+    public virtual IList<InvoiceSnapshot> Snapshots { get; set; } = [];
 }
