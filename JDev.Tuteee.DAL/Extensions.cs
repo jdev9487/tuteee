@@ -124,8 +124,7 @@ public static class Extensions
             var tomInvoice = new Invoice
             {
                 ClientRole = tomClient,
-                Lessons = [lisaFirstLesson, lisaSecondLesson],
-                Paid = false
+                Lessons = [lisaFirstLesson, lisaSecondLesson]
             };
             await context.Invoices.AddAsync(tomInvoice, token);
             await context.Lessons.AddRangeAsync(lisaFirstLesson, lisaSecondLesson);

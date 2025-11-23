@@ -7,6 +7,7 @@ public class LessonDto
     public TimeOnly Start { get; set; }
     public TimeSpan Duration { get; set; }
     public bool EmailSent { get; set; }
+    public bool Paid { get; set; }
     public int TuteeId { get; set; }
     public TuteeDto? Tutee { get; set; } = default!;
     public int? InvoiceId { get; set; }

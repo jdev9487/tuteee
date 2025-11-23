@@ -5,6 +5,7 @@ using Core.EfCore;
 public class Lesson : BaseEntity
 {
     public int LessonId { get; set; }
+    public bool Paid { get; set; }
     public DateOnly Date { get; set; }
     public TimeOnly Start { get; set; }
     public TimeSpan Duration { get; set; }
