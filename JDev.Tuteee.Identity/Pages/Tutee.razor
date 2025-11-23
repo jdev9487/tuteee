@@ -85,6 +85,9 @@ else
                     @context.Date.ToString("D")
                 </NavLink>
             </GridColumn>
+            <GridColumn TItem="LessonDto" HeaderText="Title" PropertyName="Title">
+                @context.Title
+            </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="Cost" PropertyName="Cost">
                 £@context.CostString
             </GridColumn>

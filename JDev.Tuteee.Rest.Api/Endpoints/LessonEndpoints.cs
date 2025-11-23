@@ -53,6 +53,10 @@ public class LessonEndpoints(
                 if (existing is null) return TypedResults.NotFound();
                 if (dto.HomeworkInstructions is not null && existing.HomeworkInstructions != dto.HomeworkInstructions)
                     existing.HomeworkInstructions = dto.HomeworkInstructions;
+                if (dto.Title is not null && existing.Title != dto.Title)
+                    existing.Title = dto.Title;
+                if (dto.Summary is not null && existing.Summary != dto.Summary)
+                    existing.Summary = dto.Summary;
                 if (existing.Start != dto.Start)
                     existing.Start = dto.Start;
                 if (existing.Duration != dto.Duration)
