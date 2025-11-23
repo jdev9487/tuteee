@@ -3,6 +3,7 @@ using System;
 using JDev.Tuteee.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JDev.Tuteee.Rest.Api.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20251122233033_AddFromAndToToInvoice")]
+    partial class AddFromAndToToInvoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,31 +75,6 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                     b.HasIndex("ClientRoleId");
 
                     b.ToTable("Invoice", (string)null);
-                });
-
-            modelBuilder.Entity("JDev.Tuteee.DAL.Entities.InvoiceSnapshot", b =>
-                {
-                    b.Property<int>("InvoiceSnapshotId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("InvoiceSnapshotId"));
-
-                    b.Property<int>("InvoiceId")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("InvoiceSnapshotId");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.ToTable("InvoiceSnapshot", (string)null);
                 });
 
             modelBuilder.Entity("JDev.Tuteee.DAL.Entities.Lesson", b =>
@@ -309,17 +287,6 @@ namespace JDev.Tuteee.Rest.Api.Migrations
                     b.Navigation("ClientRole");
                 });
 
-            modelBuilder.Entity("JDev.Tuteee.DAL.Entities.InvoiceSnapshot", b =>
-                {
-                    b.HasOne("JDev.Tuteee.DAL.Entities.Invoice", "Invoice")
-                        .WithMany("Snapshots")
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Invoice");
-                });
-
             modelBuilder.Entity("JDev.Tuteee.DAL.Entities.Lesson", b =>
                 {
                     b.HasOne("JDev.Tuteee.DAL.Entities.Invoice", "Invoice")
@@ -399,8 +366,6 @@ namespace JDev.Tuteee.Rest.Api.Migrations
             modelBuilder.Entity("JDev.Tuteee.DAL.Entities.Invoice", b =>
                 {
                     b.Navigation("Lessons");
-
-                    b.Navigation("Snapshots");
                 });
 
             modelBuilder.Entity("JDev.Tuteee.DAL.Entities.Lesson", b =>

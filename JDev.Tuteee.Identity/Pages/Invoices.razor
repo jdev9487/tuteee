@@ -53,14 +53,14 @@ else
             <GridColumn TItem="InvoiceDto" HeaderText="Client" PropertyName="FirstName">
                 @context.Client.FirstName @context.Client.LastName
             </GridColumn>
+            <GridColumn TItem="InvoiceDto" HeaderText="Month" PropertyName="Month">
+                @context.Month
+            </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Lessons" PropertyName="Lessons">
                 @GetLessonRender(context.Lessons)
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Amount" PropertyName="Amount">
                 @ToCurrency(context.Amount)
-            </GridColumn>
-            <GridColumn TItem="InvoiceDto" HeaderText="Paid" PropertyName="Paid">
-                @GetPaidString(context.Paid)
             </GridColumn>
         </GridColumns>
     </Grid>

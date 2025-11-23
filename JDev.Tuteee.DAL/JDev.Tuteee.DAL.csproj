@@ -16,7 +16,7 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.0" />
-        <PackageReference Include="JDev.Core.EfCore" Version="1.0.0" />
+        <PackageReference Include="JDev.Core.EfCore" Version="1.1.0" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0" />
     </ItemGroup>
     

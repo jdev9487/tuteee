@@ -4,6 +4,7 @@ option csharp_namespace = "JDev.Tuteee.Protos";
 
 service Invoice {
   rpc BillClient (BillClientRequest) returns (BillClientResponse);
+  rpc Send (SendRequest) returns (SendResponse);
 }
 
 message BillClientRequest {
@@ -11,5 +12,13 @@ message BillClientRequest {
 }
 
 message BillClientResponse {
+  bool success = 1;
+}
+
+message SendRequest {
+  int32 invoice_id = 1;
+}
+
+message SendResponse {
   bool success = 1;
 }
