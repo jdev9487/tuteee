@@ -78,9 +78,11 @@ else
           Class="table table-hover table-bordered table-striped"
           DataProvider="LessonsDataProvider"
           AllowSorting="true"
+          AllowPaging="true"
+          PageSize="5"
           Responsive="true">
         <GridColumns>
-            <GridColumn TItem="LessonDto" HeaderText="Date" SortKeySelector="item => item.Start">
+            <GridColumn TItem="LessonDto" HeaderText="Date" SortKeySelector="item => item.Date" IsDefaultSortColumn="true" SortDirection="SortDirection.Descending">
                 <NavLink class="nav-link" href=@($"lessons/{context.LessonId}") Match="NavLinkMatch.All">
                     @context.Date.ToString("D")
                 </NavLink>
@@ -96,9 +98,6 @@ else
             </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="End" PropertyName="End">
                 @context.End.ToString("t")
-            </GridColumn>
-            <GridColumn TItem="LessonDto" HeaderText="Homework" PropertyName="HomeworkInstructions">
-                @DisplayHomeworkInstructions(context.HomeworkInstructions)
             </GridColumn>
         </GridColumns>
     </Grid>
@@ -226,6 +225,4 @@ else
     {
         return await Task.FromResult(request.ApplyTo(_tutee?.Lessons ?? []));
     }
-
-    private static string DisplayHomeworkInstructions(string? s) => s ?? "None set";
 }
