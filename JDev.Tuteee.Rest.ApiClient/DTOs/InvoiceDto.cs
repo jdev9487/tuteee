@@ -8,6 +8,4 @@ public class InvoiceDto
     public DateOnly To { get; set; }
     public ClientDto Client { get; set; } = default!;
     public IEnumerable<LessonDto> Lessons { get; set; } = [];
-    public decimal Amount => Lessons.Sum(l => l.Cost);
-    public string Month => $"{From:Y}";
 }
