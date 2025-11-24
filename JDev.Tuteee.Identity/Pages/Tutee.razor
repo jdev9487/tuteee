@@ -1,5 +1,6 @@
 @attribute [Route($"/{Routing.Tutee}")]
 
+@using JDev.Tuteee.Identity.Extensions
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using JDev.Tuteee.Rest.ApiClient.Enums
@@ -108,7 +109,7 @@ else
         </Button>
     </h4>
     <p>
-        £@_tutee.ActiveRate.ToCurrency()/hr
+        £@_tutee.ToActiveRateCurrency()/hr
     </p>
     <h4>
         Holding reservations

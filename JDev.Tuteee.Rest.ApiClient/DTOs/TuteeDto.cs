@@ -20,5 +20,5 @@ public class TuteeDto
     public int ActiveRate => Rates
         .Where(r => r.DateEnabled <= DateOnly.FromDateTime(DateTime.Today))
         .MaxBy(r => r.DateEnabled).PencePerHour;
-    public bool IsSelfPaying => StakeholderId == Client?.StakeholderId;
+    // public bool IsSelfPaying => StakeholderId == Client?.StakeholderId;
 }
