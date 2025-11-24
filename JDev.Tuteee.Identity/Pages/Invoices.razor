@@ -48,12 +48,15 @@ else
           TItem="InvoiceDto"
           Class="table table-hover table-bordered table-striped"
           DataProvider="InvoicesDataProvider"
+          AllowSorting="true"
+          AllowPaging="true"
+          PageSize="5"
           Responsive="true">
         <GridColumns>
-            <GridColumn TItem="InvoiceDto" HeaderText="Client" PropertyName="FirstName">
+            <GridColumn TItem="InvoiceDto" HeaderText="Client" PropertyName="FirstName" SortKeySelector="item => item.Client.LastName">
                 @context.Client.FirstName @context.Client.LastName
             </GridColumn>
-            <GridColumn TItem="InvoiceDto" HeaderText="Month" PropertyName="Month">
+            <GridColumn TItem="InvoiceDto" HeaderText="Month" PropertyName="Month" SortKeySelector="item => item.Month" IsDefaultSortColumn="true" SortDirection="SortDirection.Descending">
                 @context.Month
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Lessons" PropertyName="Lessons">
