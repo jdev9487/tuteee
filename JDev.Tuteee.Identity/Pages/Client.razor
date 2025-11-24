@@ -1,6 +1,7 @@
 @attribute [Route(Routing.Client)]
 
 @using JDev.Tuteee.CustomTypes
+@using JDev.Tuteee.Identity.Extensions
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using Microsoft.AspNetCore.Authorization
@@ -83,7 +84,7 @@ else
                 @context.EmailAddress
             </GridColumn>
             <GridColumn TItem="TuteeDto" HeaderText="Rate (£/hr)">
-                @context.ActiveRate.ToCurrency()
+                @context.ToActiveRateCurrency()
             </GridColumn>
         </GridColumns>
     </Grid>

@@ -1,5 +1,6 @@
 @attribute [Route($"/{Routing.Lesson}")]
 
+@using JDev.Tuteee.Identity.Extensions
 @using JDev.Tuteee.Protos
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
@@ -85,7 +86,7 @@ else
     </h4>
     <p>@_lesson.Start.ToString("t") - @_lesson.Start.Add(_lesson.Duration).ToString("t")</p>
     <h4>Cost</h4>
-    <p>£@_lesson.CostString</p>
+    <p>£@_lesson.GetCostString()</p>
     <h4>
         Homework
     </h4>

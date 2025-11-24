@@ -1,5 +1,6 @@
 @attribute [Route($"/{Routing.Tutee}")]
 
+@using JDev.Tuteee.Identity.Extensions
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
 @using JDev.Tuteee.Rest.ApiClient.Enums
@@ -91,13 +92,13 @@ else
                 @context.Title
             </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="Cost" PropertyName="Cost">
-                £@context.CostString
+                £@context.GetCostString()
             </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="Start" PropertyName="Start">
                 @context.Start.ToString("t")
             </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="End" PropertyName="End">
-                @context.End.ToString("t")
+                @context.GetEnd().ToString("t")
             </GridColumn>
         </GridColumns>
     </Grid>
@@ -108,7 +109,7 @@ else
         </Button>
     </h4>
     <p>
-        £@_tutee.ActiveRate.ToCurrency()/hr
+        £@_tutee.ToActiveRateCurrency()/hr
     </p>
     <h4>
         Holding reservations
@@ -120,7 +121,7 @@ else
         @foreach (var slot in _tutee.ReservationSlots)
         {
             <li>
-                @slot
+                @slot.ToDisplay()
             </li>
         }
     </ul>
@@ -157,7 +158,7 @@ else
         _reservationMinutes = 60;
         _tutee = await RestApiClient.GetTuteeAsync(TuteeId, CancellationToken);
         _client = _tutee.Client;
-        _editablePencePerHour = _tutee.ActiveRate;
+        _editablePencePerHour = _tutee.GetActiveRate();
         _navItems = new List<BreadcrumbItem>
         {
             new() { Text = $"{ClientName} 📂", Href = $"clients/{_client!.ClientId}" },
@@ -203,7 +204,7 @@ else
         };
         await RestApiClient.AddRateAsync(TuteeId, rateDto, CancellationToken);
         _tutee = await RestApiClient.GetTuteeAsync(TuteeId, CancellationToken);
-        _editablePencePerHour = _tutee.ActiveRate;
+        _editablePencePerHour = _tutee.GetActiveRate();
         await _updateRateModal.HideAsync();
     }
 

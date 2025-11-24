@@ -3,6 +3,7 @@
 @using System.Globalization
 @using System.Text
 @using BlazorBootstrap
+@using JDev.Tuteee.Identity.Extensions
 @using JDev.Tuteee.Protos
 @using JDev.Tuteee.Rest.ApiClient.ApiClients
 @using JDev.Tuteee.Rest.ApiClient.DTOs
@@ -56,14 +57,14 @@ else
             <GridColumn TItem="InvoiceDto" HeaderText="Client" PropertyName="FirstName" SortKeySelector="item => item.Client.LastName">
                 @context.Client.FirstName @context.Client.LastName
             </GridColumn>
-            <GridColumn TItem="InvoiceDto" HeaderText="Month" PropertyName="Month" SortKeySelector="item => item.Month" IsDefaultSortColumn="true" SortDirection="SortDirection.Descending">
-                @context.Month
+            <GridColumn TItem="InvoiceDto" HeaderText="Month" PropertyName="Month" SortKeySelector="item => item.GetMonth()" IsDefaultSortColumn="true" SortDirection="SortDirection.Descending">
+                @context.GetMonth()
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Lessons" PropertyName="Lessons">
                 @GetLessonRender(context.Lessons)
             </GridColumn>
             <GridColumn TItem="InvoiceDto" HeaderText="Amount" PropertyName="Amount">
-                @ToCurrency(context.Amount)
+                @ToCurrency(context.GetAmount())
             </GridColumn>
         </GridColumns>
     </Grid>
