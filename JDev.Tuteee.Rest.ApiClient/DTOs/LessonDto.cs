@@ -15,22 +15,4 @@ public class LessonDto
     public string? HomeworkInstructions { get; set; }
     public string? Title { get; set; }
     public string? Summary { get; set; }
-    
-    public TimeOnly End => Start.Add(Duration);
-    public decimal Cost => (decimal)CostAsDouble / 100;
-    public string CostString => Cost.ToString("0.00");
-    
-    private double CostAsDouble
-    {
-        get
-        {
-            if (Tutee is null) return 0;
-            var rates = Tutee.Rates;
-            var activeRate = rates
-                .Where(r => r.DateEnabled <= Date)
-                .MaxBy(r => r.DateEnabled);
-            return 
-                activeRate.PencePerHour * Duration.TotalHours;
-        }
-    }
 }

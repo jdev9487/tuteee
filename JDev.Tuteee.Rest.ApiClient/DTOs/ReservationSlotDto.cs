@@ -8,45 +8,14 @@ public class ReservationSlotDto
     public TimeOnly Time { get; set; }
     public TimeSpan Duration { get; set; }
     public ReservationSlotType Type { get; set; }
-    private int Period => Type switch
-    {
-        ReservationSlotType.Weekly => 7,
-        ReservationSlotType.Biweekly => 14,
-        _ => throw new ArgumentOutOfRangeException()
-    };
     public int TuteeId { get; set; }
     public TuteeDto? Tutee { get; set; }
-
-    public override string ToString() => Type switch
-    {
-        ReservationSlotType.Weekly => $"{ReferenceDate.DayOfWeek}s, {Time:h:mm tt} - {Time.Add(Duration):h:mm tt}",
-        ReservationSlotType.Biweekly => $"Every other {ReferenceDate.DayOfWeek}, {Time:h:mm tt} - {Time.Add(Duration):h:mm tt} (next: {NextReservedSlot().Start:M})"
-    };
-
-    public IEnumerable<ReservationSlotLimit> GetReservedSlots(DateTime start, DateTime end)
-    {
-        if (start > end) return [];
-        var startDayNumber = DateOnly.FromDateTime(start).DayNumber;
-        var endDayNumber = DateOnly.FromDateTime(end).DayNumber;
-        return Enumerable.Range(startDayNumber, endDayNumber - startDayNumber + 1)
-            .Where(i => (i - ReferenceDate.DayNumber) % Period == 0)
-            .Select(i => new ReservationSlotLimit
-            {
-                Start = DateOnly.FromDayNumber(i).ToDateTime(Time),
-                End = DateOnly.FromDayNumber(i).ToDateTime(Time).Add(Duration)
-            });
-    }
-    
-    public ReservationSlotLimit NextReservedSlot()
-    {
-        var daysToAdd = (Period - DateOnly.FromDateTime(DateTime.Today).DayNumber + ReferenceDate.DayNumber) % Period;
-        if (daysToAdd < 0) daysToAdd += Period;
-        return new ReservationSlotLimit
-        {
-            Start = DateOnly.FromDateTime(DateTime.Today.AddDays(daysToAdd)).ToDateTime(Time),
-            End = DateOnly.FromDateTime(DateTime.Today.AddDays(daysToAdd)).ToDateTime(Time).Add(Duration)
-        };
-    }
+    //
+    // public override string ToString() => Type switch
+    // {
+    //     ReservationSlotType.Weekly => $"{ReferenceDate.DayOfWeek}s, {Time:h:mm tt} - {Time.Add(Duration):h:mm tt}",
+    //     ReservationSlotType.Biweekly => $"Every other {ReferenceDate.DayOfWeek}, {Time:h:mm tt} - {Time.Add(Duration):h:mm tt} (next: {this.GetNextReservedSlot().Start:M})"
+    // };
 }
 
 public class ReservationSlotLimit

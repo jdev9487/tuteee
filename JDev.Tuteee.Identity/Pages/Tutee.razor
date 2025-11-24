@@ -92,13 +92,13 @@ else
                 @context.Title
             </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="Cost" PropertyName="Cost">
-                £@context.CostString
+                £@context.GetCostString()
             </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="Start" PropertyName="Start">
                 @context.Start.ToString("t")
             </GridColumn>
             <GridColumn TItem="LessonDto" HeaderText="End" PropertyName="End">
-                @context.End.ToString("t")
+                @context.GetEnd().ToString("t")
             </GridColumn>
         </GridColumns>
     </Grid>
@@ -121,7 +121,7 @@ else
         @foreach (var slot in _tutee.ReservationSlots)
         {
             <li>
-                @slot
+                @slot.ToDisplay()
             </li>
         }
     </ul>
