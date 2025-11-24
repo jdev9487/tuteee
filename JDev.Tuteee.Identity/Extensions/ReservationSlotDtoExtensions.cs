@@ -43,3 +43,11 @@ public static class ReservationSlotDtoExtensions
         };
     }
 }
+
+public class ReservationSlotLimit
+{
+    public DateTime Start { get; init; }
+    public DateTime End { get; init; }
+
+    public override string ToString() => $"{Start:f} - {End:t}";
+}

@@ -158,7 +158,7 @@ else
         _reservationMinutes = 60;
         _tutee = await RestApiClient.GetTuteeAsync(TuteeId, CancellationToken);
         _client = _tutee.Client;
-        _editablePencePerHour = _tutee.ActiveRate;
+        _editablePencePerHour = _tutee.GetActiveRate();
         _navItems = new List<BreadcrumbItem>
         {
             new() { Text = $"{ClientName} 📂", Href = $"clients/{_client!.ClientId}" },
@@ -204,7 +204,7 @@ else
         };
         await RestApiClient.AddRateAsync(TuteeId, rateDto, CancellationToken);
         _tutee = await RestApiClient.GetTuteeAsync(TuteeId, CancellationToken);
-        _editablePencePerHour = _tutee.ActiveRate;
+        _editablePencePerHour = _tutee.GetActiveRate();
         await _updateRateModal.HideAsync();
     }
 

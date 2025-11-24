@@ -4,19 +4,15 @@ using CustomTypes;
 
 public class TuteeDto
 {
-    public int? TuteeId { get; set; }
-    public int StakeholderId { get; set; }
-    public string FirstName { get; set; } = default!;
-    public string LastName { get; set; } = default!;
-    public string EmailAddress { get; set; } = default!;
-    public PhoneNumber PhoneNumber { get; set; } = default!;
-    public required int ClientId { get; set; }
-    public ClientDto? Client { get; set; }
-    public IEnumerable<LessonDto>? Lessons { get; set; } = [];
-    public required IEnumerable<RateDto> Rates { get; set; } = [];
-    public IEnumerable<ReservationSlotDto> ReservationSlots { get; set; } = [];
-    public int ActiveRate => Rates
-        .Where(r => r.DateEnabled <= DateOnly.FromDateTime(DateTime.Today))
-        .MaxBy(r => r.DateEnabled).PencePerHour;
-    // public bool IsSelfPaying => StakeholderId == Client?.StakeholderId;
+    public int? TuteeId { get; init; }
+    public int StakeholderId { get; init; }
+    public string FirstName { get; init; } = default!;
+    public string LastName { get; init; } = default!;
+    public string EmailAddress { get; init; } = default!;
+    public PhoneNumber PhoneNumber { get; init; } = default!;
+    public required int ClientId { get; init; }
+    public ClientDto? Client { get; init; }
+    public IEnumerable<LessonDto>? Lessons { get; init; } = [];
+    public required IEnumerable<RateDto> Rates { get; init; } = [];
+    public IEnumerable<ReservationSlotDto> ReservationSlots { get; init; } = [];
 }
