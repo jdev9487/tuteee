@@ -28,6 +28,7 @@
                  StartProperty="Start"
                  EndProperty="End"
                  TextProperty="Text"
+                 SlotRender="OnSlotRender"
                  AppointmentSelect="OnAppointmentSelect"
                  AppointmentRender="OnAppointmentRender"
                  LoadData="OnLoadData"
@@ -87,4 +88,13 @@
         sb.Append(args.Data.GetType() == typeof(ReservationScheduleItem) ? "border-style: dashed;" : "border-style: solid;");
         args.Attributes["style"] = sb.ToString();
     }
+
+    private static void OnSlotRender(SchedulerSlotRenderEventArgs args)
+    {
+        if (args.View.Text == "Month" && args.Start.Date == DateTime.Today)
+        {
+            args.Attributes["style"] = "background: rgba(0, 0, 0, 0.1);";
+        }
+    }
+
 }
